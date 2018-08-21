@@ -5,25 +5,31 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/cxcy?characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
-
   thymeleaf:
     #热部署静态文件
     cache: false
     #配置页面标准格式
     encoding: utf-8
-    #配置标准
-    mode: HTML5
+    #配置标准,不强制要求/结尾
+    mode: LEGACYHTML5
+
+    content-type: text/html
+
+
   #配置JPA
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+
   #配置搜索引擎
  # data:
     #elasticsearch:
       #cluster-nodes: localhost:9300
 server:
   port: 8080
+
+
 
 
 
