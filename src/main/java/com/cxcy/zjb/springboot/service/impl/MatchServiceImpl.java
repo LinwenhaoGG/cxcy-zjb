@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Matchs;
+import com.cxcy.zjb.springboot.repository.MatchRepository;
 import com.cxcy.zjb.springboot.service.MatchService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,5 +26,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MatchServiceImpl implements MatchService {
+    @Autowired
+    private MatchRepository matchRepository;
 
+    @Override
+    public Matchs getMatchById(Long id) {
+        return matchRepository.findOne(id);
+    }
+
+    @Override
+    public Matchs saveMatch(Matchs matchs) {
+        return matchRepository.save(matchs);
+    }
 }

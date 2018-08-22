@@ -18,16 +18,15 @@ public class Catagorys implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  //自增长策略
-    private Long c_id;     //作品分类的唯一标识
+    private Long cId;     //作品分类的唯一标识
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="direction_id")
-    private Direction direction;     //作品方向的主键id为作品分类的外键，它们为一对一的关系
+    @Column(name="direction_id")
+    private Long direction;     //作品方向的主键id为作品分类的外键，它们为一对一的关系
 
     @NotEmpty(message = "作品分类名称不能为空")
     @Size(min = 2)
     @Column(nullable = false)      //映射为字段，值不能为空
-    private String ca_name;
+    private String caName;
 
     protected Catagorys(){
 

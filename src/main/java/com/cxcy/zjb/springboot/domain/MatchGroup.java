@@ -36,9 +36,8 @@ public class MatchGroup implements Serializable {
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
     private Timestamp signtime; //报名时间
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)//不级联删除、被访问时才加载
-    @JoinColumn(name="user_id")
-    private Event event;   //参加的项目
+    @Column(name="event_id")
+    private Long event;   //参加的项目
 
     @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "group_people", joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
