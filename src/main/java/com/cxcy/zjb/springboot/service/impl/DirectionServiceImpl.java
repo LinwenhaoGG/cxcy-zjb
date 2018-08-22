@@ -10,8 +10,13 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Direction;
+import com.cxcy.zjb.springboot.repository.DirectionRepository;
 import com.cxcy.zjb.springboot.service.DirectionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -24,4 +29,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class DirectionServiceImpl implements DirectionService {
 
+    @Autowired
+    private DirectionRepository directionRepository;
+
+    @Override
+    public List<Direction> findAll() {
+        return directionRepository.findAll();
+    }
 }

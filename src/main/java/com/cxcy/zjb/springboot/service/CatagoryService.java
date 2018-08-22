@@ -10,6 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Catagorys;
+
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +23,6 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface CatagoryService {
+
+    List<Catagorys> findByDid(Long direction);
 }

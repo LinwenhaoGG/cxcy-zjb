@@ -10,8 +10,13 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Catagorys;
+import com.cxcy.zjb.springboot.repository.CatagoryRepository;
 import com.cxcy.zjb.springboot.service.CatagoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -24,4 +29,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CatagoryServiceImpl implements CatagoryService {
 
+    @Autowired
+    private CatagoryRepository catagoryRepository;
+    @Override
+    public List<Catagorys> findByDid(Long direction) {
+        return catagoryRepository.findByDirection(direction);
+    }
 }
