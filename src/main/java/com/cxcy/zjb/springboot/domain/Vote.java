@@ -16,15 +16,14 @@ public class Vote implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)     //自增长策略
-    private Long v_id;                  //主键
+    private Long vId;                  //主键
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;                  //与User一对一关系
+    @Column(name="user_id")
+    private Long user;                  //与User一对一关系
 
     @Column(nullable = false) // 映射为字段，值不能为空
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
-    private Timestamp v_createTime;
+    private Timestamp vCreateTime;
 
     protected Vote(){                   //无参构造函数
     }

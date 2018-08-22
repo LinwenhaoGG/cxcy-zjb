@@ -25,9 +25,8 @@ public class Comment implements Serializable {
     @Column(nullable = false) // 映射为字段，值不能为空
     private String content;             //评论内容
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;                  //评论者
+    @Column(name="user_id")
+    private Long user;                  //评论者
 
     @Column(nullable = false) // 映射为字段，值不能为空
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间

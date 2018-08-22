@@ -16,24 +16,23 @@ public class Growth implements Serializable{
     @Id
     private Long id;
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="s_id")
-    private User user;                      //外键也是主键
+    @Column(name="s_id")
+    private Long user;                      //外键也是主键
 
     @Column(name="g_vote")
-    private Integer g_vote = 0;                 //总点赞数
+    private Integer gVote = 0;                 //总点赞数
 
     @Column(name="g_comment")
-    private Integer g_comment = 0;              //总评论数
+    private Integer gComment = 0;              //总评论数
 
     @Column(name="g_readSize")
-    private Integer g_readSize = 0;              //总评论数
+    private Integer gReadSize = 0;              //总评论数
 
     @Column(name="g_integration")
-    private Integer g_integration = 0;          //总积分数
+    private Integer gIntegration = 0;          //总积分数
 
     @Column(name="g_rank")
-    private Integer g_rank = 0;                 //排名数
+    private Integer gRank = 0;                 //排名数
 
     protected Growth(){
 

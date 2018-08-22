@@ -11,13 +11,13 @@ spring:
     cache: false
     #配置页面标准格式
     encoding: utf-8
+    mode: LEGACYHTML5
     #配置标准
-    mode: HTML5
   #配置JPA
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   #配置搜索引擎
  # data:
     #elasticsearch:

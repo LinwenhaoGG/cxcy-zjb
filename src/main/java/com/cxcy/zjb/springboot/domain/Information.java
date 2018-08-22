@@ -46,18 +46,16 @@ public class Information implements Serializable {
     @Column(nullable = false) // 映射为字段，值不能为空
     private String author;
 
-    @Column(name="readSize")
+    @Column(name="read_size")
     private Integer readSize = 0; // 访问量、阅读量
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)//不级联删除、被访问时才加载
-    @JoinColumn(name="user_id")
-    private User user;   //发布人
+    @Column(name="user_id")
+    private Long user;   //发布人
 
     @Column(nullable = false) // 映射为字段，值不能为空
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
     private Timestamp createTime;
 
-    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
-    @JoinColumn(name = "catalog_id")
-    private InformationCategory informationCategory; //资讯所属分类
+    @Column(name = "catalog_id")
+    private Long informationCategory; //资讯所属分类
 }

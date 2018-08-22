@@ -57,17 +57,14 @@ public class User implements Serializable,UserDetails {  //
     @Column(name = "style", nullable = false, columnDefinition = "tinyint(2)")
     private Integer style=0;  //账号类型，0为未认证，1为学生，2为老师，3为企业，4为管理员
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)//不级联删除、被访问时才加载
-    @JoinColumn(name="s_id")
-    private Student student;   //认证的学生
+    @Column(name="s_id")
+    private Long student;   //认证的学生
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)//不级联删除、被访问时才加载
-    @JoinColumn(name="c_id")
-    private Company company;   //认证的企业
+    @Column(name="c_id")
+    private Long company;   //认证的企业
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)//不级联删除、被访问时才加载
-    @JoinColumn(name="t_id")
-    private Teacher teacher;   //认证的老师
+    @Column(name="t_id")
+    private Long teacher;   //认证的老师
 
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

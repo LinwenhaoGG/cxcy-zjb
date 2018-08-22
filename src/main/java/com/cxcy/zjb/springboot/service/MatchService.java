@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Matchs;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,13 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface MatchService {
+    /*
+    保存比赛
+     */
+    Matchs saveMatch(Matchs matchs);
+
+    /*
+    通过id查找
+     */
+    Matchs getMatchById(Long id);
 }
