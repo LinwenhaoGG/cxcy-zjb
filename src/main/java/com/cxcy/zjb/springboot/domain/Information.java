@@ -60,4 +60,10 @@ public class Information implements Serializable {
     @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     @JoinColumn(name = "catalog_id")
     private InformationCategory informationCategory; //资讯所属分类
+
+    public Information(String title,String content,String author){
+        this.title = title;
+        this.content = content;
+        this.author = author;
+    }
 }
