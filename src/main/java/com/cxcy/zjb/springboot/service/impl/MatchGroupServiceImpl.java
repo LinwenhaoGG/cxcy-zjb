@@ -10,7 +10,7 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
-import com.cxcy.zjb.springboot.service.MatchService;
+import com.cxcy.zjb.springboot.service.MatchGroupService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,6 +22,6 @@ import org.springframework.stereotype.Service;
  * @since 1.0.0
  */
 @Service
-public class MatchGroupServiceImpl implements MatchService {
+public class MatchGroupServiceImpl implements MatchGroupService {
 
 }

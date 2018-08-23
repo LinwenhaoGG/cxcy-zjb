@@ -1,9 +1,11 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.service.MatchService;
+import com.cxcy.zjb.springboot.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 比赛控制层
@@ -13,17 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/match")
 public class MatchController {
 
-    @RequestMapping("/index")
-    @ResponseBody
-    public String index() {
-        return "/match/index";
-    }
+    @Autowired
+    private UserService userService;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-    @RequestMapping("/a")
-    public ModelAndView listUsers() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("/match/wysiwyg");
-        return mav;
-    }
+    @Autowired
+    private MatchService matchService;
+
 }

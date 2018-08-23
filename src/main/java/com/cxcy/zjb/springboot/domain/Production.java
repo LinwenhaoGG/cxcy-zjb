@@ -137,4 +137,25 @@ public class Production implements Serializable {
         }
         this.eVoteSize = this.votes.size();
     }
+
+    @Override
+    public String toString() {
+        return "Production{" +
+                "pId=" + pId +
+                ", pTitle='" + pTitle + '\'' +
+                ", pContent='" + pContent + '\'' +
+                ", htmlContent='" + htmlContent + '\'' +
+                ", pVideo='" + pVideo + '\'' +
+                ", pSort=" + pSort +
+                ", pUploadTime=" + pUploadTime +
+                ", pCheck=" + pCheck +
+                ", eVoteSize=" + eVoteSize +
+                ", commentSize=" + commentSize +
+                ", readSize=" + readSize +
+                ", catagorys=" + catagorys +
+                ", comments=" + comments +
+                ", votes=" + votes +
+                ", user=" + user +
+                '}';
+    }
 }

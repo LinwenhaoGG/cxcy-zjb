@@ -26,7 +26,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-
   #配置搜索引擎
  # data:
     #elasticsearch:
