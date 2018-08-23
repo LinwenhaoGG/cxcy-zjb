@@ -18,12 +18,12 @@ public class Direction implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long d_id;         //主键，方向的唯一标识
+    private Long dId;         //主键，方向的唯一标识
 
     @NotEmpty(message = "作品方向名称不能为空")
     @Size(min = 1)         //名称字数最少为2
     @Column(nullable = false)      //映射为字段，值不能为空
-    private String d_name;
+    private String dName;
 
     protected Direction(){       //jpa规范要求，无参构造函数，设为protected防止直接使用
 

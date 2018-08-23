@@ -19,19 +19,19 @@ public class Production implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long p_id;                  //作品主键
+    private Long pId;                  //作品主键
 
     @NotEmpty(message = "作品标题不能为空")
     @Size(min=2, max=50)
     @Column(nullable = false, length = 50) // 映射为字段，值不能为空
-    private String p_title;             //作品标题
+    private String pTitle;             //作品标题
 
     @Lob  // 大对象，映射 MySQL 的 Long Text 类型
     @Basic(fetch=FetchType.LAZY) // 懒加载
     @NotEmpty(message = "内容不能为空")
     @Size(min=2)
     @Column(nullable = false) // 映射为字段，值不能为空
-    private String p_content;           //作品内容
+    private String pContent;           //作品内容
 
     @Lob  // 大对象，映射 MySQL 的 Long Text 类型
     @Basic(fetch=FetchType.LAZY) // 懒加载
@@ -41,21 +41,21 @@ public class Production implements Serializable {
     private String htmlContent; // 将 md 转为 html
 
     @Column(length = 100)
-    private String p_video;             //作品视频存储路径
+    private String pVideo;             //作品视频存储路径
 
     @NotEmpty(message = "作品类别不能为空")
     @Column(name = "p_sort", nullable = false, columnDefinition = "tinyint(2)")
-    private Integer p_sort=1;             //作品类别，0代表创意类，1代表实践类
+    private Integer pSort=1;             //作品类别，0代表创意类，1代表实践类
 
     @Column(nullable = false) // 映射为字段，值不能为空
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
-    private Timestamp p_uploadTime;     //作品上传时间
+    private Timestamp pUploadTime;     //作品上传时间
 
     @Column(name = "p_check", nullable = false, columnDefinition = "tinyint(2)")
-    private Integer p_check=1;            //审核情况标识，0表示已审核，1表示未审核，2表示审核未通过
+    private Integer pCheck=1;            //审核情况标识，0表示已审核，1表示未审核，2表示审核未通过
 
     @Column(name="voteSize")
-    private Integer e_voteSize = 0;     //点赞量
+    private Integer eVoteSize = 0;     //点赞量
 
     @Column(name="commentSize")
     private Integer commentSize = 0;    //评论量
@@ -63,23 +63,21 @@ public class Production implements Serializable {
     @Column(name="readSize")
     private Integer readSize = 0;       //访问、阅读量
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="catagory_id")
-    private Catagorys catagorys;          //作品类型,ca_id作为外键
+    @Column(name="catagory_id")
+    private Long catagorys;          //作品类型,ca_id作为外键
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "production_comment", joinColumns = @JoinColumn(name = "prod_id", referencedColumnName = "p_id"),
+    @JoinTable(name = "production_comment", joinColumns = @JoinColumn(name = "prod_id", referencedColumnName = "pId"),
             inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
     private List<Comment> comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "production_vote", joinColumns = @JoinColumn(name = "prod_id", referencedColumnName = "p_id"),
-            inverseJoinColumns = @JoinColumn(name = "vote_id", referencedColumnName = "v_id"))
+    @JoinTable(name = "production_vote", joinColumns = @JoinColumn(name = "prod_id", referencedColumnName = "pId"),
+            inverseJoinColumns = @JoinColumn(name = "vote_id", referencedColumnName = "vId"))
     private List<Vote> votes;
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="u_id")
-    private User user;
+    @Column(name="u_id")
+    private Long user;
 
     /**
      * 添加评论
@@ -113,7 +111,7 @@ public class Production implements Serializable {
         boolean isExist = false;
         // 判断重复
         for (int index=0; index < this.votes.size(); index ++ ) {
-            if (this.votes.get(index).getUser().getId().equals(vote.getUser().getId()) ) {
+            if (this.votes.get(index).getUser().equals(vote.getUser()) ) {
                 isExist = true;
                 break;
             }
@@ -121,7 +119,7 @@ public class Production implements Serializable {
 
         if (!isExist) {
             this.votes.add(vote);
-            this.e_voteSize= this.votes.size();
+            this.eVoteSize= this.votes.size();
         }
 
         return isExist;
@@ -132,11 +130,11 @@ public class Production implements Serializable {
      */
     public void removeVote(Long voteId) {
         for (int index=0; index < this.votes.size(); index ++ ) {
-            if (this.votes.get(index).getV_id() .equals(voteId) ) {
+            if (this.votes.get(index).getVId() .equals(voteId) ) {
                 this.votes.remove(index);
                 break;
             }
         }
-        this.e_voteSize = this.votes.size();
+        this.eVoteSize = this.votes.size();
     }
 }

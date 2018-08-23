@@ -47,14 +47,13 @@ public class Matchs implements Serializable {
     private Timestamp createTime; //创建时间
 
     @Column(nullable = false) // 映射为字段，值不能为空
-    private Timestamp starttime;  //比赛开始时间
+    private Timestamp startTime;  //比赛开始时间
 
     @Column(nullable = false) // 映射为字段，值不能为空
-    private Timestamp overtime;   //比赛结束时间
+    private Timestamp overTime;   //比赛结束时间
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)//不级联删除、被访问时才加载
-    @JoinColumn(name="user_id")
-    private User user;   //发布人
+    @Column(name="user_id")
+    private Long user;   //发布人
 
     @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "match_event", joinColumns = @JoinColumn(name = "match_id", referencedColumnName = "id"),
