@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.User;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,5 +21,17 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface UserService {
+    /**
+     * 根据用户的名字查找用户
+     * @param username
+     * @return
+     */
+    User findByUsername(String username) ;
 
+    /**
+     * 根据uId查找用户
+     * @param uId
+     * @return
+     */
+    User findByUId(Long uId) ;
 }

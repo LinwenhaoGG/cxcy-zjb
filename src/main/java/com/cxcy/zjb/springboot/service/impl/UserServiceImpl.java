@@ -10,6 +10,7 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.repository.UserRepository;
 import com.cxcy.zjb.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +37,16 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User findByUId(Long uId){
+        return userRepository.findOne(uId);
+    }
+
+
 }
