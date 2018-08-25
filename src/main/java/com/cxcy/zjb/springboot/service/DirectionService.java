@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Direction;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,11 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface DirectionService {
+
+    /**
+     * 通过方向id查找
+     * @param directionId
+     * @return
+     */
+    public Direction findById(Long directionId);
 }

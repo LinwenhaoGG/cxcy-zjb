@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Catagorys;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,11 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface CatagoryService {
+
+    /**
+     * 通过类别id查找
+     * @param catagorysId
+     * @return
+     */
+    public Catagorys findByCatagorysId(Long catagorysId);
 }

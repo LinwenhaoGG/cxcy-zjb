@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Direction;
+import com.cxcy.zjb.springboot.repository.DirectionRepository;
 import com.cxcy.zjb.springboot.service.DirectionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,4 +27,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class DirectionServiceImpl implements DirectionService {
 
+    @Autowired
+    private DirectionRepository directionRepository;
+    @Override
+    public Direction findById(Long directionId) {
+        return directionRepository.getOne(directionId);
+    }
 }

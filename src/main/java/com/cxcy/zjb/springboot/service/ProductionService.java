@@ -10,6 +10,12 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Production;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +25,25 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface ProductionService {
+
+    /**
+     * 通过类型分页查找已审核通过的作品
+     * @param categoryId
+     * @return
+     */
+    public Page<Production> findProductionsByCategoryId(Long categoryId,Pageable pageable);
+
+    /**
+     * 查询已审核通过的作品
+     * @param pageable
+     * @return
+     */
+    public Page<Production> findAll(Pageable pageable);
+
+    /**
+     * 按时间降序查找已审核通过的作品
+     * @param pageable
+     * @return
+     */
+    public Page<Production> findOrderByTimeDesc(Pageable pageable);
 }

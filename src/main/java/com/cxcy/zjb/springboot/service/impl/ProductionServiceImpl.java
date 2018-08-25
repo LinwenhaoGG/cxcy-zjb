@@ -10,8 +10,16 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Production;
+import com.cxcy.zjb.springboot.repository.ProductionRepository;
 import com.cxcy.zjb.springboot.service.ProductionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -24,4 +32,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductionServiceImpl implements ProductionService {
 
+    @Autowired
+    private ProductionRepository productionRepository;
+
+    @Override
+    public Page<Production> findProductionsByCategoryId(Long categoryId,Pageable pageable) {
+     //   Page<Production> productions =productionRepository.findByCatagorysAndPCheck(categoryId,0,pageable);
+        Page<Production> page = productionRepository.findByPCheck(0,pageable);
+        return page;
+    }
+
+    @Override
+    public Page<Production> findAll(Pageable pageable) {
+        return productionRepository.findByPCheck(0,pageable);
+    }
+
+    @Override
+    public Page<Production> findOrderByTimeDesc(Pageable pageable) {
+        return productionRepository.findByPCheckOrderByPuploadTimeDesc(0,pageable);
+    }
 }
