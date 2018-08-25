@@ -11,5 +11,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author <a href="https://waylau.com">Way Lau</a> 
  */
 public interface VoteRepository extends JpaRepository<Vote, Long> {
- 
+    /**
+     * 根据uId查询对应的vote，判断是否存在
+     * @param uId
+     * @return
+     */
+    Vote findByUser(Long uId);
 }

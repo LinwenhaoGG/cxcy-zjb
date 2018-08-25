@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Comment;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,26 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface CommentService {
+
+
+
+    /**
+     * 根据id获取相应的评论
+     * @param cId
+     * @return
+     */
+    Comment findByCId(Long cId);
+
+    /**
+     * 根据id移除评论
+     * @param cId
+     */
+    void removeCommentById(Long cId);
+
+    /**
+     * 根据一个cId获取相应的uid
+     * @param cId
+     * @return
+     */
+    Long findUserByCId(Long cId);
 }

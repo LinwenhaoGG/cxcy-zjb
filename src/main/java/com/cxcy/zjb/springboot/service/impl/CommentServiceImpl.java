@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Comment;
+import com.cxcy.zjb.springboot.repository.CommentRepository;
 import com.cxcy.zjb.springboot.service.CommentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,5 +26,22 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CommentServiceImpl implements CommentService {
+    @Autowired
+    private CommentRepository commentRepository;
+    @Override
+    public Comment findByCId(Long cId) {
+        return commentRepository.findOne(cId);
+    }
 
+    @Override
+    public void removeCommentById(Long cId) {
+        commentRepository.delete(cId);
+    }
+
+    @Override
+    public Long findUserByCId(Long cId) {
+        Comment comment = commentRepository.findById(cId);
+        Long uId = comment.getUser();
+        return uId;
+    }
 }

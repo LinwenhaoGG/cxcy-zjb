@@ -35,4 +35,9 @@ public class Comment implements Serializable {
     protected Comment() {               //无参构造函数
         // TODO Auto-generated constructor stub
     }
+//  添加一个构造方法
+    public Comment( Long user,String content) {
+        this.content = content;
+        this.user = user;
+    }
 }

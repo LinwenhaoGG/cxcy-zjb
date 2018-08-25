@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Vote;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,13 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface VoteService {
+
+//    根据id获取vote
+    Vote findById(Long id);
+
+//    根据id移除vote
+    void removeByVId(Long id);
+
+//    根据用户id查询是否有对应的vote
+    Vote findByUser(Long uId);
 }
