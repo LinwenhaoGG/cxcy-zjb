@@ -24,10 +24,10 @@ public class CheckWordUtil {
         try {
             FileInputStream fis = new FileInputStream(file);
             HWPFDocument doc = new HWPFDocument(fis);
-            StringBuilder doc2 = doc.getText();
-            System.out.println(doc2);
+            String doc1 = doc.getDocumentText();
+            System.out.println(doc1);
             fis.close();
-            String msg = checkWord(doc2.toString());
+            String msg = checkWord(doc1);
             return msg;
         } catch (Exception e) {
             e.printStackTrace();
