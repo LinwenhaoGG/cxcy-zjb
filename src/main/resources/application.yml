@@ -6,12 +6,17 @@ spring:
     url: jdbc:mysql://localhost:3306/cxcy?characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
 
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${file.FilePath}
+
   thymeleaf:
     #热部署静态文件
     cache: false
     #配置页面标准格式
     encoding: utf-8
     mode: LEGACYHTML5
+    prefix: classpath:/templates/
+
     #配置标准
   #配置JPA
   jpa:
@@ -24,6 +29,12 @@ spring:
       #cluster-nodes: localhost:9300
 server:
   port: 8080
+
+file:
+  FilePath: E:/Workspace/Temp/file/
+
+
+
 
 
 
