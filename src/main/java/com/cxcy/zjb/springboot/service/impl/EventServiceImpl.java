@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Event;
+import com.cxcy.zjb.springboot.repository.EventRepository;
 import com.cxcy.zjb.springboot.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,5 +26,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EventServiceImpl implements EventService {
+    @Autowired
+    private EventRepository eventRepository;
 
+    @Override
+    public Event getEventById(Long id) {
+        return eventRepository.getOne(id);
+    }
+
+    @Override
+    public void removeEvent(Long id) {
+        eventRepository.delete(id);
+    }
 }

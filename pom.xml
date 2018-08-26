@@ -39,7 +39,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<!--   项目启动web层   -->
 		<dependency>
@@ -68,6 +67,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- 无视规格 -->
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.22</version>
 		</dependency>
 		<!--   前端安全框架security   -->
 		<dependency>
@@ -99,6 +104,12 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.5</version>
 		</dependency>
+		<!-- fastJson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.47</version>
+		</dependency>
 		<!-- 富文本编辑器markdown -->
 		<dependency>
 			<groupId>es.nitaur.markdown</groupId>
@@ -115,17 +126,17 @@
 			</plugin>
 		</plugins>
 	</build>
-	<!-- 前端一些css的放行 -->
-	<resources>
-		<resource>
-			<directory>src/main/resources</directory>
-			<filtering>true</filtering>
-			<excludes>
-				<exclude>**/*.woff</exclude>
-				<exclude>**/*.woff2</exclude>
-				<exclude>**/*.ttf</exclude>
-			</excludes>
-		</resource>
-	</resources>
+	<!--&lt;!&ndash; 前端一些css的放行 &ndash;&gt;-->
+	<!--<resources>-->
+		<!--<resource>-->
+			<!--<directory>src/main/resources</directory>-->
+			<!--<filtering>true</filtering>-->
+			<!--<excludes>-->
+				<!--<exclude>**/*.woff</exclude>-->
+				<!--<exclude>**/*.woff2</exclude>-->
+				<!--<exclude>**/*.ttf</exclude>-->
+			<!--</excludes>-->
+		<!--</resource>-->
+	<!--</resources>-->
 
 </project>

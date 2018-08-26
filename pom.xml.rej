@@ -1,9 +1,0 @@
-diff a/pom.xml b/pom.xml	(rejected hunks)
-@@ -63,6 +63,7 @@
- 			<artifactId>spring-boot-starter-test</artifactId>
- 			<scope>test</scope>
- 		</dependency>
-+		<!--  引入不严格标签库，不需要/ -->
- 		<dependency>
- 			<groupId>net.sourceforge.nekohtml</groupId>
- 			<artifactId>nekohtml</artifactId>

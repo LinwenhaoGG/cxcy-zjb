@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Event;
 import com.cxcy.zjb.springboot.domain.Matchs;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -30,4 +33,24 @@ public interface MatchService {
     通过id查找
      */
     Matchs getMatchById(Long id);
+
+    /*
+    查询所有比赛
+     */
+    List<Matchs> findAll();
+
+    /**
+     * 删除比赛
+     */
+    void deleteMatchById(Long id);
+
+    /**
+     * 添加项目
+     */
+    Matchs createEvent(Long matchsId, Event event);
+
+    /**
+     * 删除项目
+     */
+    void deleteEvent(Long matchsId, Long eventId);
 }

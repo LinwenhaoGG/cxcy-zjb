@@ -39,6 +39,9 @@ public class MatchGroup implements Serializable {
     @Column(name="event_id")
     private Long event;   //参加的项目
 
+    @Column(name="user_id")
+    private Long user;   //报名参加的用户id
+
     @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "group_people", joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "number_id", referencedColumnName = "id"))

@@ -1,13 +1,16 @@
 package com.cxcy.zjb.springboot.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,19 +49,52 @@ public class Matchs implements Serializable {
     @CreationTimestamp  // 由数据库自动创建时间
     private Timestamp createTime; //创建时间
 
-    @Column(nullable = false) // 映射为字段，值不能为空
-    private Timestamp startTime;  //比赛开始时间
+    @Column // 映射为字段
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    private Date startTime;  //比赛开始时间
 
-    @Column(nullable = false) // 映射为字段，值不能为空
-    private Timestamp overTime;   //比赛结束时间
+    @Column // 映射为字段
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    private Date overTime;   //比赛结束时间
+
+    @Column // 映射为字段
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    private Date lastsigntime;  //截止报名时间
+
+    @Column // 映射为字段
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    private Date lastsubmittime;   //截止提交时间
 
     @Column(name="user_id")
     private Long user;   //发布人
 
-    @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "match_event", joinColumns = @JoinColumn(name = "match_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"))
     private List<Event> eventList;   //比赛项目
 
+    /**
+     * 添加比赛项目
+     * @param event
+     */
+    public void addEvent(Event event) {
+        this.eventList.add(event);
+    }
+    /**
+     * 删除比赛项目
+     * @param eventId
+     */
+    public void removeEvent(Long eventId) {
+        for (int index=0; index < this.eventList.size(); index ++ ) {
+            if (eventList.get(index).getId().equals(eventId)) {
+                this.eventList.remove(index);
+                break;
+            }
+        }
 
+    }
 }
