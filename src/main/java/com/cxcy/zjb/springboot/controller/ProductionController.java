@@ -1,9 +1,9 @@
 package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
-import com.cxcy.zjb.springboot.domain.Production;
-import com.cxcy.zjb.springboot.domain.User;
-import com.cxcy.zjb.springboot.domain.Vote;
+import com.cxcy.zjb.springboot.domain.*;
+import com.cxcy.zjb.springboot.service.CatagoryService;
+import com.cxcy.zjb.springboot.service.DirectionService;
 import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
@@ -28,7 +28,13 @@ public class ProductionController {
     @Autowired
     private UserService userService;
 
-//    跳转测试页面
+    @Autowired
+    private CatagoryService catagoryService;
+
+    @Autowired
+    private DirectionService directionService;
+
+    //    跳转测试页面
     @RequestMapping(value = "/totest")
     public String totest() {
         return "file/index";
@@ -101,15 +107,23 @@ public class ProductionController {
 //      查看作品的是否作者本身，初始化否
         boolean isProductionOwner = false;
         // 判断操作用户是否是作品的所有者
-        if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+        /*if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
                 &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
             User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principal !=null && username.equals(principal.getUsername())) {
                 isProductionOwner = true;//作品是作者的，可以显示编辑删除等功能
             }
+        }*/
+
+        Production production = productionService.findByPId(pId);
+        Long uId = production.getUser();
+        User user = userService.findByUId(uId);
+        String username1 = user.getUsername();
+        if(username.equals(username1)){
+            isProductionOwner = true;
         }
 //        根据pid查找对应的作品
-        Production production = productionService.findByPId(pId);
+//        Production production = productionService.findByPId(pId);
         List list = new ArrayList();
 
         // 判断操作用户的点赞情况
@@ -122,6 +136,16 @@ public class ProductionController {
                 break;
             }
         }
+
+        //根据production的分类id查找出对应的内容和方向内容
+        Long cId = production.getCatagorys();
+        Catagorys catagory = catagoryService.findOne(cId);
+        Long dId = catagory.getDirection();
+        Direction direction = directionService.findByID(dId);
+
+        model.addAttribute("direction",direction);
+        model.addAttribute("catagory",catagory);
+
         model.addAttribute("currentVote",currentVote);
         model.addAttribute("isProductionOwner",isProductionOwner);
         list.add(model);

@@ -35,4 +35,9 @@ public class CatagoryServiceImpl implements CatagoryService {
     public List<Catagorys> findByDid(Long direction) {
         return catagoryRepository.findByDirection(direction);
     }
+
+    @Override
+    public Catagorys findOne(Long cId) {
+        return catagoryRepository.findOne(cId);
+    }
 }

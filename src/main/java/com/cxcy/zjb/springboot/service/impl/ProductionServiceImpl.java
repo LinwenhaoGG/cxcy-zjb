@@ -61,6 +61,7 @@ public class ProductionServiceImpl implements ProductionService {
 //        根据pId查找对应的作品
         Production production = productionRepository.findOne(pId);
         production.setReadSize(production.getReadSize()+1);
+        productionRepository.save(production);
         return production.getReadSize();
     }
 

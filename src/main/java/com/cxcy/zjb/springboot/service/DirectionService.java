@@ -25,4 +25,6 @@ import java.util.List;
 public interface DirectionService {
 
     List<Direction> findAll();
+
+    Direction findByID(Long dId);
 }

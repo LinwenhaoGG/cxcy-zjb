@@ -36,4 +36,9 @@ public class DirectionServiceImpl implements DirectionService {
     public List<Direction> findAll() {
         return directionRepository.findAll();
     }
+
+    @Override
+    public Direction findByID(Long dId) {
+        return directionRepository.findOne(dId);
+    }
 }
