@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -52,4 +53,9 @@ public class Student implements Serializable {
     @Size(min=2)
     @Column(nullable = false) // 映射为字段，值不能为空
     private String credential;           //个人简介
+
+
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name="g_id")
+    private Long gId;
 }
