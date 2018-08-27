@@ -13,6 +13,7 @@ package com.cxcy.zjb.springboot.service;
 import com.cxcy.zjb.springboot.domain.Production;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -41,9 +42,22 @@ public interface ProductionService {
     public Page<Production> findAll(Pageable pageable);
 
     /**
-     * 按时间降序查找已审核通过的作品
+     * 按时间降序分页查找已审核通过的作品
      * @param pageable
      * @return
      */
     public Page<Production> findOrderByTimeDesc(Pageable pageable);
+
+    /**
+     * 按时间降序查找已审核通过的作品
+     * @return
+     */
+    public List<Production> findOrderByTimeDesc();
+
+    /**
+     * 按分类查询前7条已审核作品
+     * @param catagoryId
+     * @return
+     */
+    public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort);
 }

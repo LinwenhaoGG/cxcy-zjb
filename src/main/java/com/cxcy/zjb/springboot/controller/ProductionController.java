@@ -3,7 +3,6 @@ package com.cxcy.zjb.springboot.controller;
 import com.cxcy.zjb.springboot.Vo.ProductionVo;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.Catagorys;
-import com.cxcy.zjb.springboot.domain.Direction;
 import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.enums.ResultEnum;
 import com.cxcy.zjb.springboot.service.CatagoryService;
@@ -101,6 +100,13 @@ public class ProductionController {
         return resultVO;
     }
 
+    /**
+     * 最新最热推荐
+     * @param nh
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/nav/{nh}")
     public @ResponseBody Object displayProASNewHot(@PathVariable("nh") String nh,Integer pageIndex,Integer pageSize){
         ResultVO<Production> resultVO = null;
@@ -133,6 +139,14 @@ public class ProductionController {
         resultVO = ResultUtils.success(productionVoList);
         return resultVO;
     }
+
+    /**
+     * 转存视频文件
+     * @param request
+     * @param file
+     * @param url
+     * @return
+     */
     public String saveVideo(HttpServletRequest request,MultipartFile file,String url){
         String video="123.mp4";
         if (!file.isEmpty()) {
@@ -151,6 +165,11 @@ public class ProductionController {
         return video;
     }
 
+    /**
+     * 文档敏感词审核
+     * @param fileName
+     * @return
+     */
     @GetMapping("/checkWord")
     public @ResponseBody Object checkWord(String fileName){
         String suffix = fileName.substring(fileName.indexOf(".")+1);

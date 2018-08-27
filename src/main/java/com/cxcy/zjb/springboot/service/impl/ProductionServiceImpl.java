@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +51,15 @@ public class ProductionServiceImpl implements ProductionService {
     @Override
     public Page<Production> findOrderByTimeDesc(Pageable pageable) {
         return productionRepository.findByPCheckOrderByPuploadTimeDesc(0,pageable);
+    }
+
+    @Override
+    public List<Production> findOrderByTimeDesc() {
+        return productionRepository.findByPCheckOrderByPuploadTimeDesc(0);
+    }
+
+    @Override
+    public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort) {
+        return productionRepository.findFirst7ByCatagorysAndPCheck(catagoryId,0,sort);
     }
 }
