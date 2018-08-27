@@ -34,43 +34,6 @@ public class ProductionController {
         return "file/index";
     }
 
-//    将文件的保存的绝对地址返回给前端，让前端拼接地址进行文件预览
-    @PostMapping(value = "/test")
-    public @ResponseBody ResultVO saveFile(@RequestParam(value = "file") MultipartFile file) {
-        String filePath = "";
-        try {
-            String parentFile = "E:\\Workspace\\Temp\\file\\";
-            filePath =  file.getOriginalFilename();
-            //文件名称在服务器有可能重复
-            String newFileName="";
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            newFileName = sdf.format(new Date());
-            Random r = new Random();
-            for(int i =0 ;i<3;i++){
-                newFileName=newFileName+r.nextInt(10);
-            }
-            //获取文件扩展名
-            String suffix = filePath.substring(filePath.lastIndexOf("."));
-//            判断扩展名为doc或者docx
-            if(suffix.equals("doc")||suffix.equals("docx")) {
-                filePath = parentFile + newFileName + suffix;
-                File in = new File(filePath);
-                File dest = in.getParentFile();
-                filePath = newFileName + suffix;
-                if (!dest.exists()) //如果这个文件不存在
-                {
-                    dest.mkdirs(); //创建
-                }
-                file.transferTo(in); // copy
-            }
-            else{
-                return ResultUtils.error(2,"文件上传格式不符合要求，请重新上传");
-            }
-        }catch(Exception e){
-            return ResultUtils.error(1,"文件上传失败");
-        }
-        return ResultUtils.success(filePath);
-    }
 
 
 //      显示用户的所有作品信息
@@ -181,33 +144,63 @@ public class ProductionController {
     public @ResponseBody
     ResultVO saveProduction(@PathVariable("username") String username,
                             @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
-                            @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys", required = false) Long Catagorys,
-                            @RequestParam("pContent") String pContent, @RequestParam(value = "pVideo", required = false) String pVideo) {
+                            @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
+                            @RequestParam("pContent") MultipartFile pContent, @RequestParam(value = "pVideo", required = false) String pVideo) {
         try {
+            Production production;
             // 判断是修改还是新增
             if(pId!=null){  //说明是修改
 //                根据已有ID查找对应的作品
                 Production orignalProduction = productionService.findByPId(pId);
 //                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题
                 orignalProduction.setPTitle(pTitle);
-                orignalProduction.setPContent(pContent);
                 orignalProduction.setPSort(pSort);
                 orignalProduction.setPVideo(pVideo);
-                productionService.save(orignalProduction);
+                production = orignalProduction;
             }else {
                 // 根据用户名查找到当前的用户
                 User user = userService.findByUsername(username);
                 Long uid = user.getId();
-                Production production = new Production();//新建一个作品
-                production.setUser(uid);
-                production.setPTitle(pTitle);
-                production.setPContent(pContent);
-                production.setPSort(pSort);
-                production.setCatagorys(Catagorys);
-                production.setPVideo(pVideo);
-                productionService.save(production);
-                pId = production.getPId();//获取新的作品的id
+                Production newproduction = new Production();//新建一个作品
+                newproduction.setUser(uid);
+                newproduction.setPTitle(pTitle);
+                newproduction.setPSort(pSort);
+                newproduction.setCatagorys(Catagorys);
+                newproduction.setPVideo(pVideo);
+                production = newproduction;
+
             }
+            String filePath = "";
+            String parentFile = "E:\\Workspace\\Temp\\file\\";
+            filePath =  pContent.getOriginalFilename();
+            //文件名称在服务器有可能重复
+            String newFileName="";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            newFileName = sdf.format(new Date());
+            Random r = new Random();
+            for(int i =0 ;i<3;i++){
+                newFileName=newFileName+r.nextInt(10);
+            }
+            //获取文件扩展名
+            String suffix = filePath.substring(filePath.lastIndexOf("."));
+//            判断扩展名为doc或者docx
+            if(suffix.equals(".doc")||suffix.equals(".docx")) {
+                filePath = parentFile + newFileName + suffix;
+                File in = new File(filePath);
+                File dest = in.getParentFile();
+                filePath = newFileName + suffix;
+                if (!dest.exists()) //如果这个文件不存在
+                {
+                    dest.mkdirs(); //创建
+                }
+                pContent.transferTo(in); // copy
+            }
+            else{
+                return ResultUtils.error(2,"文件上传格式不符合要求，请重新上传");
+            }
+            production.setPContent(filePath);
+            productionService.save(production);
+            pId = production.getPId();//获取新的作品的id
         } catch (Exception e) {
             return ResultUtils.error(1,"添加不成功");
         }
