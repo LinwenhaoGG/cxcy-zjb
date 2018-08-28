@@ -2,10 +2,7 @@ package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.*;
-import com.cxcy.zjb.springboot.service.CatagoryService;
-import com.cxcy.zjb.springboot.service.DirectionService;
-import com.cxcy.zjb.springboot.service.ProductionService;
-import com.cxcy.zjb.springboot.service.UserService;
+import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +30,9 @@ public class ProductionController {
 
     @Autowired
     private DirectionService directionService;
+
+    @Autowired
+    private BrowseService browseService;
 
     //    跳转测试页面
     @RequestMapping(value = "/totest")
@@ -104,6 +104,8 @@ public class ProductionController {
     public @ResponseBody ResultVO getProductionByPId(@PathVariable("username") String username,@PathVariable("pId") Long pId,Model model) {
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);
+
+
 //      查看作品的是否作者本身，初始化否
         boolean isProductionOwner = false;
         // 判断操作用户是否是作品的所有者
@@ -122,6 +124,7 @@ public class ProductionController {
         if(username.equals(username1)){
             isProductionOwner = true;
         }
+
 //        根据pid查找对应的作品
 //        Production production = productionService.findByPId(pId);
         List list = new ArrayList();
@@ -142,6 +145,12 @@ public class ProductionController {
         Catagorys catagory = catagoryService.findOne(cId);
         Long dId = catagory.getDirection();
         Direction direction = directionService.findByID(dId);
+
+
+        //修改用户的最后浏览记录
+        Browse browse = browseService.findCatagoryByUserId(uId);
+        browse.setCatagory(cId);
+        browseService.saveLastBrowse(browse);
 
         model.addAttribute("direction",direction);
         model.addAttribute("catagory",catagory);
@@ -168,6 +177,7 @@ public class ProductionController {
     public @ResponseBody
     ResultVO saveProduction(@PathVariable("username") String username,
                             @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
+                            @RequestParam(value="pSummary") String pSummary,
                             @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
                             @RequestParam("pContent") MultipartFile pContent, @RequestParam(value = "pVideo", required = false) String pVideo) {
         try {
@@ -176,10 +186,11 @@ public class ProductionController {
             if(pId!=null){  //说明是修改
 //                根据已有ID查找对应的作品
                 Production orignalProduction = productionService.findByPId(pId);
-//                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题
+//                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题,作品的简介
                 orignalProduction.setPTitle(pTitle);
                 orignalProduction.setPSort(pSort);
                 orignalProduction.setPVideo(pVideo);
+                orignalProduction.setPSummary(pSummary);
                 production = orignalProduction;
             }else {
                 // 根据用户名查找到当前的用户
@@ -191,6 +202,7 @@ public class ProductionController {
                 newproduction.setPSort(pSort);
                 newproduction.setCatagorys(Catagorys);
                 newproduction.setPVideo(pVideo);
+                newproduction.setPSummary(pSummary);
                 production = newproduction;
 
             }
