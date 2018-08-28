@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Growth;
+import com.cxcy.zjb.springboot.repository.GrowthRepository;
 import com.cxcy.zjb.springboot.service.GrowthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,4 +27,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class GrowthServiceImpl implements GrowthService {
 
+    @Autowired
+    private GrowthRepository growthRepository;
+
+    /**
+     * 根据用户的id查找到对应的成长对象
+     * @param uId
+     * @return
+     */
+    @Override
+    public Growth findByUser(Long uId) {
+        return growthRepository.findByUser(uId);
+    }
+
+    /**
+     * 保存或者更新相应的成长对象
+     * @param growth
+     * @return
+     */
+    @Override
+    public Growth save(Growth growth) {
+        return growthRepository.save(growth);
+    }
 }

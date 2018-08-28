@@ -10,6 +10,8 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Growth;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,8 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface GrowthService {
+
+    Growth findByUser(Long uId);
+
+    Growth save(Growth growth);
 }
