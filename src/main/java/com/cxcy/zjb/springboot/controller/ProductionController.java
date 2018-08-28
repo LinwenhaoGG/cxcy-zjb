@@ -131,7 +131,7 @@ public class ProductionController {
         Vote currentVote = null; // 当前用户的点赞情况
 
         for (Vote vote : votes) {
-            if(userService.findByUId(vote.getUser()).equals(userService.findByUsername(username).getId())) {
+            if(vote.getUser().equals(userService.findByUsername(username).getId())) {
                 currentVote = vote;
                 break;
             }
