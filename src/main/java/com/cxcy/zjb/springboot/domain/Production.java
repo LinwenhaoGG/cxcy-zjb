@@ -1,6 +1,7 @@
 package com.cxcy.zjb.springboot.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -27,6 +28,10 @@ public class Production implements Serializable {
     @Column(nullable = false, length = 50) // 映射为字段，值不能为空
     private String pTitle;             //作品标题
 
+    @NotEmpty(message = "作品概要不能为空")
+    @Column(nullable = false,length = 100)
+    private String pSummary;            //作品简介
+
     @NotEmpty(message = "内容不能为空")
     @Column(nullable = false) // 映射为字段，值不能为空
     private String pContent;           //作品内容文件链接
@@ -39,7 +44,7 @@ public class Production implements Serializable {
     private Integer pSort=1;             //作品类别，0代表创意类，1代表实践类
 
     @Column(nullable = false) // 映射为字段，值不能为空
-    @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
+    @CreationTimestamp  // 由数据库自动创建时间
     private Timestamp pUploadTime;     //作品上传时间
 
     @Column(name = "p_check", nullable = false, columnDefinition = "tinyint(2)")
