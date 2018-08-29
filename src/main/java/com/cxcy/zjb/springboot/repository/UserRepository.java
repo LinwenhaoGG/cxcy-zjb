@@ -4,6 +4,7 @@ import com.cxcy.zjb.springboot.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,4 +37,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return
      */
     List<User> findByusernameIn(Collection<String> usernames);
+
+    /**
+     * 根据用户账号和密码查询用户信息
+     * @return
+     */
+    public User findByUsernameAndPassword(@Param("username")String username,@Param("password") String password);
+
+    public User findById(@Param("id")Long id);
+
 }
