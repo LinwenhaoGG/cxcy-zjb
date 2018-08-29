@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
  * Created by LINWENHAO on 2018/8/20.
  */
 @Controller
+@RequestMapping("/growth")
 @EnableScheduling       //开启定时任务
 public class GrowthController {
 

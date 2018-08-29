@@ -34,7 +34,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +43,7 @@ import java.util.List;
  * Created by LINWENHAO on 2018/8/20.
  */
 @Controller
+@RequestMapping("/production")
 public class ProductionController {
 
     @Autowired

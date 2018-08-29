@@ -18,6 +18,7 @@ import java.util.List;
  * Created by LINWENHAO on 2018/8/20.
  */
 @Controller
+@RequestMapping("/comment")
 public class CommentController {
     @Autowired
     private UserService userService;
