@@ -14,6 +14,10 @@ import com.cxcy.zjb.springboot.domain.Direction;
 
 import java.util.List;
 
+import com.cxcy.zjb.springboot.domain.Direction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -24,7 +28,13 @@ import java.util.List;
  */
 public interface DirectionService {
 
-    List<Direction> findAll();
+    Page<Direction> findAll(Pageable pageable);
 
-    Direction findByID(Long dId);
+
+    /**
+     * 通过方向id查找
+     * @param directionId
+     * @return
+     */
+    public Direction findById(Long directionId);
 }

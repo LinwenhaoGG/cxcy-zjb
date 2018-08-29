@@ -1,8 +1,10 @@
 package com.cxcy.zjb.springboot.repository;
 
 import com.cxcy.zjb.springboot.domain.Direction;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 /**
@@ -13,8 +15,8 @@ import java.util.List;
 public interface DirectionRepository extends JpaRepository<Direction,Long> {
     /**
      * 查找所有的方向列表
-     * @param dId
+     * @param pageable
      * @return
      */
-    List<Direction> findAll();
+    Page<Direction> findAll(Pageable pageable);
 }

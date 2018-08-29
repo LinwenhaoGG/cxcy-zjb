@@ -11,7 +11,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.cxcy.zjb.springboot.Vo.ProductionVo;
+import com.cxcy.zjb.springboot.domain.Catagorys;
+import com.cxcy.zjb.springboot.domain.Production;
+import com.cxcy.zjb.springboot.enums.ResultEnum;
+import com.cxcy.zjb.springboot.service.CatagoryService;
+import com.cxcy.zjb.springboot.service.DirectionService;
+import com.cxcy.zjb.springboot.service.ProductionService;
+import com.cxcy.zjb.springboot.service.UserService;
+import com.cxcy.zjb.springboot.utils.CheckWordUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +30,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * 作品控制层
@@ -45,6 +62,10 @@ public class ProductionController {
     @Autowired
     private BrowseService browseService;
 
+    @Value("${video.VideoPath}")
+    private String VideoPath;
+
+
     //    跳转测试页面
     @RequestMapping(value = "/totest")
     public String totest() {
@@ -52,7 +73,7 @@ public class ProductionController {
     }
 
     /**
-     * 进行全文搜索，首次点击主页面的作品页面时，默认首次加载，其他情况下点击进入是async必须为true
+     * 进行全文搜索
      * @param order
      * @param keyword
      * @param pageIndex
@@ -88,27 +109,24 @@ public class ProductionController {
         model.addAttribute("page", page);
         model.addAttribute("productionList", list);
 
-
-
         return ResultUtils.success(model);
     }
 
 
 
-
-
-
-    //      显示用户的所有作品信息
+    // 分页显示用户的所有作品信息
     @GetMapping("/{username}/production")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
-    public @ResponseBody ResultVO showAllProduction(@PathVariable("username") String username) {
+    public @ResponseBody ResultVO showAllProduction(@PathVariable("username") String username ,Integer pageIndex,Integer pageSize){
+        //设置分页
+        Pageable pageable = new PageRequest(pageIndex, pageSize);
 //        根据用户名查找用户
-        List<Production> productions = new ArrayList<>();
+        Page<Production> productions;
         try {
             User user = userService.findByUsername(username);
             Long uId = user.getId();
 //        根据用户ID查找所有的作品
-            productions = productionService.findByUser(uId);
+            productions = productionService.findByUserAndPCheck(uId,pageable);
         }catch(Exception e) {
             return ResultUtils.error(1, "显示异常");
         }
@@ -130,7 +148,7 @@ public class ProductionController {
         }*/
         Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
-        User user = userService.findByUId(uId);
+        User user = userService.findUserById(uId);
         String username1 = user.getUsername();
         if(username.equals(username1)){
             isProductionOwner = true;
@@ -161,8 +179,6 @@ public class ProductionController {
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);
 
-
-
 //      查看作品的是否作者本身，初始化否
         boolean isProductionOwner = false;
         // 判断操作用户是否是作品的所有者
@@ -176,7 +192,7 @@ public class ProductionController {
 
         Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
-        User user = userService.findByUId(uId);
+        User user = userService.findUserById(uId);
         String username1 = user.getUsername();
         if(username.equals(username1)){
             isProductionOwner = true;
@@ -199,9 +215,9 @@ public class ProductionController {
 
         //根据production的分类id查找出对应的内容和方向内容
         Long cId = production.getCatagorys();
-        Catagorys catagory = catagoryService.findOne(cId);
+        Catagorys catagory = catagoryService.findByCatagorysId(cId);
         Long dId = catagory.getDirection();
-        Direction direction = directionService.findByID(dId);
+        Direction direction = directionService.findById(dId);
 
 
         //修改用户的最后浏览记录
@@ -229,6 +245,159 @@ public class ProductionController {
         list.add(production);
         return ResultUtils.success(list);
     }
+
+
+    //跳转到上传视频的页面
+    @GetMapping("/toUpFile")
+    public ModelAndView toUpFile(Model model){
+
+        return new ModelAndView("production/uploadVideo", "videa", model);
+    }
+
+
+    //得到上传的视频，并转存
+    @PostMapping("/uploadVideo")
+    public @ResponseBody Object uploadVideo(HttpServletRequest request,@RequestParam("videoFile") MultipartFile videoFile){
+        ResultVO resultVO = new ResultVO();
+        String video = saveVideo(request,videoFile,"video");
+        resultVO.setData(video);
+        return resultVO;
+    }
+
+    /**
+     * 作品分类展示,通过地址获取类别id，通过id查找出此id的作品
+     * 只是显示作品列表，因此没有查点赞的人和评论的人
+     * @param catagory
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/nav/cata{catagory}")
+    public @ResponseBody Object displayPro(@PathVariable("catagory") Long catagory,Integer pageIndex,Integer pageSize){
+        //设置分页
+        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Page<Production> productions = productionService.findProductionsByCategoryId(catagory,pageable);
+        ResultVO resultVO;//存放返回的数据
+        if(productions == null){//找不到作品的情况
+            resultVO = ResultUtils.error(ResultEnum.NO_PRODUCTION.getCode(),ResultEnum.NO_PRODUCTION.getMessage());
+        }else {
+            Catagorys catagorys = catagoryService.findByCatagorysId(catagory);//得到类别的对象
+            String caName =catagorys.getCaName();//得到类别的名字
+            String direction = directionService.findById(catagorys.getDirection()).getDName();//得到对应的方向
+
+            List<ProductionVo> productionVoList = new ArrayList<>();//将查到的数据封装到list中
+            for(Production production : productions){
+                ProductionVo productionVo = new ProductionVo();
+
+                productionVo.setDirection(direction);
+                productionVo.setCatagorys(caName);
+                productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+                productionVo.setProduction(production);
+
+                productionVoList.add(productionVo);
+            }
+            resultVO = ResultUtils.success(productionVoList);
+        }
+        return resultVO;
+    }
+
+    /**
+     * 最新最热推荐
+     * @param nh
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/nav/{nh}")
+    public @ResponseBody Object displayProASNewHot(@PathVariable("nh") String nh,Integer pageIndex,Integer pageSize){
+        ResultVO<Production> resultVO = null;
+        Page<Production> productions = null;
+        if (nh.equals("hot")) { // 最热查询
+            Sort sort = new Sort(Sort.Direction.DESC,"eVoteSize","commentSize","readSize");
+
+            Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+            productions = productionService.findAll(pageable);
+        }
+        if (nh.equals("new")) { // 最新查询
+            Pageable pageable = new PageRequest(pageIndex, pageSize);
+            productions = productionService.findOrderByTimeDesc(pageable);
+        }
+
+        List<ProductionVo> productionVoList = new ArrayList<>();//将查到的数据封装到list中
+        for(Production production : productions){
+            ProductionVo productionVo = new ProductionVo();
+            //按类别id查出类别的名称和方向id，由方向id查出方向的名称
+            Catagorys catagorys = catagoryService.findByCatagorysId(production.getCatagorys());
+            productionVo.setDirection(directionService.findById(catagorys.getDirection()).getDName());
+            productionVo.setCatagorys(catagorys.getCaName());
+            //查出作者的昵称
+            productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+
+            productionVo.setProduction(production);
+
+            productionVoList.add(productionVo);
+        }
+        resultVO = ResultUtils.success(productionVoList);
+        return resultVO;
+    }
+
+    /**
+     * 转存视频文件
+     * @param request
+     * @param file
+     * @param url
+     * @return
+     */
+    public String saveVideo(HttpServletRequest request,MultipartFile file,String url){
+        String video="123.mp4";
+        if (!file.isEmpty()) {
+            try {
+                String path = VideoPath.substring(VideoPath.indexOf("/")+1);
+                String filePath = path + url +"/"+ file.getOriginalFilename();
+                System.out.println(filePath);
+                video="temp/"+url+"/"+file.getOriginalFilename();
+                // 转存文件
+                file.transferTo(new File(filePath));
+                System.out.println(video);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return video;
+    }
+
+    /**
+     * 文档敏感词审核
+     * @param fileName
+     * @return
+     */
+    @GetMapping("/checkWord")
+    public @ResponseBody Object checkWord(String fileName){
+        String suffix = fileName.substring(fileName.indexOf(".")+1);
+        CheckWordUtil checkWordUtil = new CheckWordUtil();
+        String msg = "";
+        try {
+            if("doc".equals(suffix)){
+                msg = checkWordUtil.readFileAsDoc(fileName);
+            }else if("docx".equals(suffix)){
+                msg = checkWordUtil.readFileAsDocx(fileName);
+            }else{
+                msg = "请上传doc、docx的文件";
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            msg = "文件格式有误，请重新上传";
+        }
+       ResultVO resultVO;
+        if("文件审核通过".equals(msg)){
+            resultVO = ResultUtils.success(msg);
+        }else{
+            resultVO = ResultUtils.error(1,msg);
+        }
+        return resultVO;
+    }
+
+
 
     /**
      * 新建或者修改作品，成功则返回对应的作品路径

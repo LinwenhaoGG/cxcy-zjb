@@ -15,6 +15,13 @@ import com.cxcy.zjb.springboot.domain.Production;
 
 import java.util.List;
 
+import com.cxcy.zjb.springboot.domain.Production;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
+
 /**
  * 学生业余作品的相关操作
  *
@@ -45,7 +52,7 @@ public interface ProductionService {
     void deleteByPId(Long pId);
 
     /**
-     * 根据pId，每次点击就增加一次
+     * 根据pId，每次点击浏览量就增加一次
      * @param pId
      * @return
      */
@@ -54,9 +61,10 @@ public interface ProductionService {
     /**
      * 根据uId查找到所有的作品
      * @param user
+     * @param pageable
      * @return
      */
-    List<Production> findByUser(Long user);
+    Page<Production> findByUserAndPCheck(Long user,Pageable pageable);
 
 
     /**
@@ -81,4 +89,38 @@ public interface ProductionService {
      */
     void createVoteOrRemoveVote(Long pId,String username);
 
+
+    /**
+     * 通过类型分页查找已审核通过的作品
+     * @param categoryId
+     * @return
+     */
+    public Page<Production> findProductionsByCategoryId(Long categoryId,Pageable pageable);
+
+    /**
+     * 查询已审核通过的作品
+     * @param pageable
+     * @return
+     */
+    public Page<Production> findAll(Pageable pageable);
+
+    /**
+     * 按时间降序分页查找已审核通过的作品
+     * @param pageable
+     * @return
+     */
+    public Page<Production> findOrderByTimeDesc(Pageable pageable);
+
+    /**
+     * 按时间降序查找已审核通过的作品
+     * @return
+     */
+    public List<Production> findOrderByTimeDesc();
+
+    /**
+     * 按分类查询前7条已审核作品
+     * @param catagoryId
+     * @return
+     */
+    public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort);
 }

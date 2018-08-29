@@ -13,10 +13,17 @@ package com.cxcy.zjb.springboot.service.impl;
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.repository.ProductionRepository;
 import com.cxcy.zjb.springboot.service.GrowthService;
+import com.cxcy.zjb.springboot.domain.Production;
+import com.cxcy.zjb.springboot.repository.ProductionRepository;
 import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -81,8 +88,8 @@ public class ProductionServiceImpl implements ProductionService {
 
 
     @Override
-    public List<Production> findByUser(Long user) {
-        return productionRepository.findByUser(user);
+    public Page<Production> findByUserAndPCheck(Long user,Pageable pageable) {
+        return productionRepository.findByUserAndPCheck(user,1,pageable);
     }
 
     @Override
@@ -160,4 +167,31 @@ public class ProductionServiceImpl implements ProductionService {
         growthService.save(growth);
     }
 
+
+    @Override
+    public Page<Production> findProductionsByCategoryId(Long categoryId,Pageable pageable) {
+     //   Page<Production> productions =productionRepository.findByCatagorysAndPCheck(categoryId,0,pageable);
+        Page<Production> page = productionRepository.findByPCheck(0,pageable);
+        return page;
+    }
+
+    @Override
+    public Page<Production> findAll(Pageable pageable) {
+        return productionRepository.findByPCheck(0,pageable);
+    }
+
+    @Override
+    public Page<Production> findOrderByTimeDesc(Pageable pageable) {
+        return productionRepository.findByPCheckOrderByPuploadTimeDesc(0,pageable);
+    }
+
+    @Override
+    public List<Production> findOrderByTimeDesc() {
+        return productionRepository.findByPCheckOrderByPuploadTimeDesc(0);
+    }
+
+    @Override
+    public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort) {
+        return productionRepository.findFirst7ByCatagorysAndPCheck(catagoryId,0,sort);
+    }
 }

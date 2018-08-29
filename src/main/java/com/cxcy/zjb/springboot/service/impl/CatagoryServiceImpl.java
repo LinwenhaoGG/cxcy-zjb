@@ -32,14 +32,15 @@ public class CatagoryServiceImpl implements CatagoryService {
     @Autowired
     private CatagoryRepository catagoryRepository;
     @Override
+    public Catagorys findByCatagorysId(Long catagorysId) {
+        Catagorys catagorys = catagoryRepository.getOne(catagorysId);
+        return catagorys;
+    }
+    @Override
     public List<Catagorys> findByDid(Long direction) {
         return catagoryRepository.findByDirection(direction);
     }
 
-    @Override
-    public Catagorys findOne(Long cId) {
-        return catagoryRepository.findOne(cId);
-    }
 
     @Override
     public void readingIncrease(Long cId) {

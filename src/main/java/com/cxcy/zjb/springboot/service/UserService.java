@@ -29,9 +29,10 @@ public interface UserService {
     User findByUsername(String username) ;
 
     /**
-     * 根据uId查找用户
-     * @param uId
+     * 通过userId查找
+     * @param userId
      * @return
      */
-    User findByUId(Long uId) ;
+    public User findUserById(Long userId);
+
 }

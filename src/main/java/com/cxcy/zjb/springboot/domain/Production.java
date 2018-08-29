@@ -72,7 +72,7 @@ public class Production implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "vote_id", referencedColumnName = "vId"))
     private List<Vote> votes;
 
-    @Column(name="uId")
+    @Column(name="u_id")
     private Long user;
 
 //    添加评论的同时要顺便修改
@@ -131,5 +131,25 @@ public class Production implements Serializable {
             }
         }
         this.eVoteSize = this.votes.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Production{" +
+                "pId=" + pId +
+                ", pTitle='" + pTitle + '\'' +
+                ", pContent='" + pContent + '\'' +
+                ", pVideo='" + pVideo + '\'' +
+                ", pSort=" + pSort +
+                ", pUploadTime=" + puploadTime +
+                ", pCheck=" + pCheck +
+                ", eVoteSize=" + eVoteSize +
+                ", commentSize=" + commentSize +
+                ", readSize=" + readSize +
+                ", catagorys=" + catagorys +
+                ", comments=" + comments +
+                ", votes=" + votes +
+                ", user=" + user +
+                '}';
     }
 }
