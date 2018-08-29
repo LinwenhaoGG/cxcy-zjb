@@ -27,4 +27,6 @@ public interface CatagoryService {
     List<Catagorys> findByDid(Long direction);
 
     Catagorys findOne(Long cId);
+
+    void readingIncrease(Long cId);
 }

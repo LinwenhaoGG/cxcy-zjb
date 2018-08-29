@@ -43,9 +43,9 @@ public class Production implements Serializable {
     @Column(name = "p_sort", nullable = false, columnDefinition = "tinyint(2)")
     private Integer pSort=1;             //作品类别，0代表创意类，1代表实践类
 
-    @Column(nullable = false) // 映射为字段，值不能为空
+    @Column(name = "p_upload_time",nullable = false) // 映射为字段，值不能为空
     @CreationTimestamp  // 由数据库自动创建时间
-    private Timestamp pUploadTime;     //作品上传时间
+    private Timestamp puploadTime;     //作品上传时间
 
     @Column(name = "p_check", nullable = false, columnDefinition = "tinyint(2)")
     private Integer pCheck=1;            //审核情况标识，0表示已审核，1表示未审核，2表示审核未通过

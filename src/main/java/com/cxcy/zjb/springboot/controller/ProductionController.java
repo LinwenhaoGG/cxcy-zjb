@@ -2,9 +2,15 @@ package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.*;
+import com.cxcy.zjb.springboot.domain.es.EsProduction;
 import com.cxcy.zjb.springboot.service.*;
+import com.cxcy.zjb.springboot.service.es.EsProductionService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,12 +20,17 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 /**
  * 作品控制层
  * Created by LINWENHAO on 2018/8/20.
  */
 @Controller
 public class ProductionController {
+
+    @Autowired
+    private EsProductionService esProductionService;
     @Autowired
     private ProductionService productionService;
     @Autowired
@@ -40,9 +51,54 @@ public class ProductionController {
         return "file/index";
     }
 
+    /**
+     * 进行全文搜索，首次点击主页面的作品页面时，默认首次加载，其他情况下点击进入是async必须为true
+     * @param order
+     * @param keyword
+     * @param pageIndex
+     * @param pageSize
+     * @param model
+     * @return
+     */
+    @GetMapping("listAll")
+    public @ResponseBody ResultVO listEsProductions(
+            @RequestParam(value="order",required=false,defaultValue="hot") String order,//查询时默认按最热
+            @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
+            @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
+            @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
+            Model model) {
+
+        Page<EsProduction> page = null;
+        List<EsProduction> list = null;
+//        boolean isEmpty = true; // 系统初始化时，没有作品数据
+        try {
+            Sort sort = new Sort(DESC,"readSize","voteSize","commentSize","createTime");
+            Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+            page = esProductionService.listHotestEsProductions(keyword, pageable);
+//            isEmpty = false;
+        } catch (Exception e) {
+            Pageable pageable = new PageRequest(pageIndex, pageSize);
+            page = esProductionService.listEsProductions(pageable);
+        }
+
+        list = page.getContent();	// 当前所在页面数据列表
 
 
-//      显示用户的所有作品信息
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("page", page);
+        model.addAttribute("productionList", list);
+
+
+
+        return ResultUtils.success(model);
+    }
+
+
+
+
+
+
+    //      显示用户的所有作品信息
     @GetMapping("/{username}/production")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
     public @ResponseBody ResultVO showAllProduction(@PathVariable("username") String username) {
@@ -106,6 +162,7 @@ public class ProductionController {
         productionService.readingIncrease(pId);
 
 
+
 //      查看作品的是否作者本身，初始化否
         boolean isProductionOwner = false;
         // 判断操作用户是否是作品的所有者
@@ -149,8 +206,19 @@ public class ProductionController {
 
         //修改用户的最后浏览记录
         Browse browse = browseService.findCatagoryByUserId(uId);
+        if(browse==null){
+            browse = new Browse();
+            browse.setUser(uId);
+        }
         browse.setCatagory(cId);
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(currentTime);
+        browse.setBrowseTime(dateString);
         browseService.saveLastBrowse(browse);
+
+        //设置这个分类浏览数量加1
+        catagoryService.readingIncrease(cId);
 
         model.addAttribute("direction",direction);
         model.addAttribute("catagory",catagory);

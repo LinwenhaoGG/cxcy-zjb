@@ -40,4 +40,11 @@ public class CatagoryServiceImpl implements CatagoryService {
     public Catagorys findOne(Long cId) {
         return catagoryRepository.findOne(cId);
     }
+
+    @Override
+    public void readingIncrease(Long cId) {
+        Catagorys catagory = catagoryRepository.findOne(cId);
+        catagory.setCount(catagory.getCount()+1);
+        catagoryRepository.save(catagory);
+    }
 }
