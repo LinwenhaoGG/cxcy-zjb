@@ -22,8 +22,8 @@ public class Student implements Serializable {
     private Long id;
 
     @NotEmpty(message = "年级信息不能为空")
-    @Column(name = "edu", nullable = false, columnDefinition = "tinyint(2)")
-    private Integer edu;//年级
+    @Column(name = "edu", nullable = false)
+    private String edu;//年级
 
     @NotEmpty(message = "学院信息不能为空")
     @Size(min=2, max=30)
@@ -36,7 +36,7 @@ public class Student implements Serializable {
     private String classes; //专业班级
 
     @Column(name="number")
-    private Integer number;  // 学号
+    private Long number;  // 学号
 
     @NotEmpty(message = "民族信息不能为空")
     @Column(nullable = false) // 映射为字段，值不能为空
