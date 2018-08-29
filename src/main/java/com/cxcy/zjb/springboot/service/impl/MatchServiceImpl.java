@@ -15,9 +15,9 @@ import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.repository.MatchRepository;
 import com.cxcy.zjb.springboot.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -37,10 +37,6 @@ public class MatchServiceImpl implements MatchService {
         matchRepository.delete(id);
     }
 
-    @Override
-    public List<Matchs> findAll() {
-        return matchRepository.findAll();
-    }
 
     @Override
     public Matchs createEvent(Long matchsId, Event event) {
@@ -72,7 +68,18 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public Page<Matchs> findAll(Pageable pageable) {
+
+        return matchRepository.findAll(pageable);
+    }
+
+    @Override
     public Matchs saveMatch(Matchs matchs) {
         return matchRepository.save(matchs);
+    }
+
+    @Override
+    public Page<Matchs> findAllByUser(Long user,Pageable pageable) {
+        return matchRepository.findByUser(user,pageable);
     }
 }

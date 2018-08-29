@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
+    <style>
+        .page{
+            margin-left: 160px;
+            margin-right: 160px;
+            margin-bottom: 20px;
+            padding-left: 60px;
+            padding-right: 60px;
+            padding-bottom: 60px;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #ededed;
+            margin-top: 10px;
+            /* box-shadow: 10px 10px 5px #ccc; */
+            position: relative;
+        }
+        .pageheader{
+            width: 98%;
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+        .headtext{
+            color: #999;
+        }
+        .object{
+            /* border-bottom: 1px solid #ccc; */
+            font-size: 20px;
+            position: relative;
+            padding-bottom: 5px;
+            color:666;
+            margin-top: 30px;
+        }
+        .object:after{
+            position: absolute;
+            content:'';
+            width: 90px;
+            height: 3px;
+            bottom:0;
+            left: 0;
+            border-bottom: 3px solid #48adff;
+        }
+        .objectitem{
+            color: #999;
+        }
+        .form-group .tip{
+            margin-top: 10px;
+            background-color: skyblue;
+            padding:5px;
+            border-radius: 5px;
+            color:#fff;
+        }
+        .select-item{
+            margin-top: 10px;
+        }
+        .team_name{
+            margin-top: 10px;
+        }
+        .add{
+            margin-top: 10px;
+        }
+        .add_member{
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ccc;
+            text-align: center;
+            display: inline-block;
+        }
+        .add-logo{
+            margin: 10px auto;
+            display: block;
+            font-size: 48px;
+            color:#ccc;
+        }
+        .inputBox{
+            width: 500px;
+        }
+        .modalInput{
+            width: 300px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .content{
+            margin-left: 100px;
+        }
+        .memberInfo{
+            margin-top:10px;
+            width: 600px;
+            border:2px solid #aecae1;
+            padding: 10px;
+            padding-left: 30px;
+            padding-right:30px;
+            position: relative;
+        }
+        .member_name{
+            font-size: 18px;
+            font-weight: bold;
+            color: #666;
+            margin-right: 5px;
+        }
+        .member_grade{
+            color: #999;
+            margin-right: 10px;
+        }
+        .member_id{
+            color: #999;
+        }
+        .delete_member{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .sumbit-btn{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            margin-right: 40px;
+            margin-bottom: 10px;
+        }
+        .post{
+            position: absolute;
+            right:0;
+            top: 0;
+            margin-right: 10px;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #666;
+        }
+        .alert-warning{
+            width:200;
+            padding:6px;
+            display:inline-block;
+            margin-bottom:0;
+            color: #e10013;
+        }
+        .pass{
+            color: green;
+            display: hidden;
+        }
+        #teamname{
+            display: inline-block;
+            width:355px;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <!-- <div class="pageheader">
+        <h2 class="headtext">参赛报名</h2>
+    </div> -->
+    <div class="form-group">
+        <h3 class="text-left text-info" th:text="'欢迎报名'+*{matchs.name}+'!'">
+        </h3>
+        <div class="object"><span class="objectitem">参赛项目</span></div>
+        <div class="tip">请注意不同的比赛项目限制的参数人数不同</div>
+        <div class="select-item">
+            <label for="name">选择参数项目</label>
+            <select class="form-control" id="inputBox" >
+                <option  th:each=" event : ${matchs.eventList}" th:max="${event.pNumber}"  th:value="${event.id}" th:text="${event.name}+' (限制人数:'+${event.pNumber}+'人)'"></option>
+            </select>
+        </div>
+    </div>
+    <div class="object"><span class="objectitem">立即报名</span></div>
+    <div class="team_name">
+        <label  class="control-label">参赛队名</label>
+        <div class="inputBox">
+            <input type="text" class="form-control " id="teamname" placeholder="请输入参赛队名">
+            <div class="alert alert-warning check_team_name" style="display:none;">
+                参赛队名不能为空
+            </div>
+        </div>
+    </div>
+    <div class="add">
+        <div>
+            <label class="control-label">参赛成员</label>
+        </div>
+        <div class="add_member"><i class=" add-logo glyphicon glyphicon-plus"></i></div><span style="margin-left:10px;color:#ccc">点击添加参赛成员</span>
+        <div id="myAlert" class="alert alert-warning" style="display:none;">
+            已达参赛人数上限
+        </div>
+        <div id="myAlert1" class="alert alert-warning" style="display:none;">
+            <a href="#" class="close" onclick="$(this).parent().hide()">&times;</a>
+            至少需一人参赛
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body content">
+                    <form class="form from-inline">
+                        <div class="input_group">
+                            <span style="color:red">*</span>
+                            <span class="labelText">姓名：</span>
+                            <div class="info_name">
+                                <input type="text" class="form-control modalInput"  id="fill_member_name" placeholder="请输入姓名">
+                                <div class="alert alert-warning check_name check"  style="display:none;">
+                                    姓名不能为空
+                                </div>
+                                <div class="alert alert-warning check_name_err check_err"  style="display:none;">
+                                    姓名输入不合法
+                                </div>
+                                <span class="pass pass_name"  style="display:none;" key="0">
+											<i>&radic;</i>&nbsp;&nbsp;通过
+										</span>
+                            </div>
+                        </div>
+                        <div class="input_group">
+                            <span style="color:red">*</span>
+                            <span class="labelText">年级：</span>
+                            <div>
+                                <input type="text" class="form-control modalInput " id="fill_member_grade" placeholder="请输入入学年份,如2010">
+                                <!-- 格式不对 -->
+                                <div class="alert alert-warning check_grade_err check_err"  style="display:none;">
+                                    年级输入不合法
+                                </div>
+                                <!-- 不能为空 -->
+                                <div class="alert alert-warning check_grade check"  style="display:none;">
+                                    年级不能为空
+                                </div>
+                                <span class="pass pass_grade"  style="display:none;" key="0">
+										<i>&radic;</i>&nbsp;&nbsp;通过
+									</span>
+                            </div>
+
+                        </div>
+                        <div class="input_group">
+                            <span style="color:red">*</span>
+                            <span class="labelText">学院：</span>
+                            <div>
+                                <input type="text" class="form-control modalInput "  id="fill_member_college" placeholder="请输入学院">
+                                <!-- 不能为空 -->
+                                <div class="alert alert-warning  check_college check"  style="display:none;">
+                                    学院不能为空
+                                </div>
+                                <!-- 格式不对 -->
+                                <div class="alert alert-warning check_college_err check_err"  style="display:none;">
+                                    学院输入不合法
+                                </div>
+                                <span class="pass pass_college"  style="display:none;" key="0">
+										<i>&radic;</i>&nbsp;&nbsp;通过
+									</span>
+                            </div>
+
+                        </div>
+                        <div class="input_group">
+                            <span style="color:red">*</span>
+                            <span class="labelText">专业班级：</span>
+                            <div>
+                                <input type="text" class="form-control modalInput "   id="fill_member_major" placeholder="请输入专业班级,如xx专业xxx班">
+                                <!-- 不能为空 -->
+                                <div class="alert alert-warning  check_major check"  style="display:none;">
+                                    专业班级不能为空
+                                </div>
+                                <!-- 格式不对 -->
+                                <div class="alert alert-warning check_major_err check_err"  style="display:none;">
+                                    专业班级输入不合法
+                                </div>
+                                <span class="pass pass_major"  style="display:none;" key="0">
+										<i>&radic;</i>&nbsp;&nbsp;通过
+									</span>
+                            </div>
+
+                        </div>
+                        <div class="input_group">
+                            <span style="color:red">*</span>
+                            <span class="labelText">学号：</span>
+                            <div>
+                                <input type="text" min="0" class="form-control modalInput " id="fill_member_id" placeholder="请输入学号">
+                                <!-- 格式不对 -->
+                                <div class="alert alert-warning check_id_err check_err"  style="display:none;">
+                                    学号输入不合法
+                                </div>
+                                <!-- 不能为空 -->
+                                <div class="alert alert-warning check_id check"  style="display:none;">
+                                    学号不能为空
+                                </div>
+                                <span class="pass pass_id"  style="display:none;" key="0">
+										<i>&radic;</i>&nbsp;&nbsp;通过
+									</span>
+                            </div>
+                        </div>
+                        <div class="iinput_group">
+                            <span style="color:red">*</span>
+                            <span class="labelText">手机：</span>
+                            <div>
+                                <input type="text" class="form-control modalInput "  id="fill_member_phone" placeholder="请输入手机号码">
+                                <!-- 不能为空 -->
+                                <div class="alert alert-warning check_phone check"  style="display:none;">
+                                    手机号不能为空
+                                </div>
+                                <!-- 不合法 -->
+                                <div class="alert alert-warning check_phone_err check_err"  style="display:none;">
+                                    手机号输入不合法
+                                </div>
+                                <span class="pass pass_phone"  style="display:none;" key="0">
+										<i>&radic;</i>&nbsp;&nbsp;通过
+									</span>
+                            </div>
+
+                        </div>
+                        <label class="radio-inline" id="caption">
+                            <input type="radio" name="options" id="optionsRadios3" id="caption-option"value="1" checked> 队长
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="options" id="optionsRadios4"  value="0">队员
+                        </label>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close-btn">关闭</button>
+                    <button type="button" class="btn btn-primary" id="add-btn">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 成员信息框 -->
+    <div class="memberBox">
+
+    </div>
+    <button class="sumbit-btn btn btn-primary" id="sumbit_btn">提交报名</button>
+</div>
+</body>
+<script>
+    $(document).ready(function(){
+        var member_num=$("#inputBox").children('option:selected').attr("max");
+
+        // 添加的参数人数
+        var add_num=0;
+
+        // 参赛成员数组
+        var memberList = [];
+
+        // 设置队长
+        var captain = 0;
+
+        // 清理函数
+        function clear(){
+            $(".modalInput").each(function() {
+                $(this).val("");
+                $(this).siblings('.pass').hide();
+                $(this).siblings('.check').hide();
+                $(this).siblings('.check_err').hide();
+            });
+        }
+        // 验证姓名是否为空
+        $("#fill_member_name").blur(function(){
+            var name = $(this).val();
+            var pattern = /^[\u4E00-\u9FA5]{1,6}$/;
+            if(name ==""){
+                $(".check_name").show();
+            }else if(pattern.test(name)){
+                $(".pass_name").show();
+                $(".pass_name").attr({
+                    key: 1
+                });
+            }else{
+                $(".check_name_err").show();
+            }
+        });
+
+        // 验证年级
+        $("#fill_member_grade").blur(function(){
+            var grade = $(this).val();
+            var pattern = /^(201\d|2100)$/;
+            var max = new Date().getFullYear();
+            var min = max-6;
+
+            grade = Number(grade);
+
+            if(grade==""){
+                $(".check_grade").show();
+            }
+            else if(pattern.test(grade)&&(grade>=min||grade<=max)){
+                $(".pass_grade").show();
+                $(".pass_grade").attr({
+                    key: 1
+                });
+            }
+            else{
+                $(".check_grade_err").show();
+            }
+        });
+
+        // 验证学院
+        $("#fill_member_college").blur(function(){
+            var name = $(this).val();
+            var pattern = /^[\u4E00-\u9FA5]+$/;
+            if(name ==""){
+                $(".check_college").show();
+            }else if(pattern.test(name)){
+                $(".pass_college").show();
+                $(".pass_college").attr({
+                    key: 1
+                });
+            }else{
+                $(".check_college_err").show();
+            }
+        });
+
+
+        // 验证专业班级，排除全数字，全字母，或数字和字母的组合
+        $("#fill_member_major").blur(function(){
+            var major = $(this).val();
+            var pattern = /^[0-9a-zA-Z]+$/;
+            if(major ==""){
+                $(".check_major").show();
+            }else if(!pattern.test(major)){
+                $(".pass_major").show();
+                $(".pass_major").attr({
+                    key: 1
+                });
+            }else{
+                $(".check_major_err").show();
+            }
+        });
+
+        // 验证学号,只能输入数字
+        $("#fill_member_id").blur(function(){
+            var id = $(this).val();
+            var pattern = /^[0-9]+$/;
+            if(id ==""){
+                $(".check_id").show();
+            }else if(pattern.test(id)){
+                $(".pass_id").show();
+                $(".pass_id").attr({
+                    key: 1
+                });
+            }else{
+                $(".check_id_err").show();
+            }
+        });
+
+        // 验证手机号
+        $("#fill_member_phone").blur(function(){
+            var phone = $(this).val();
+            var pattern = /^[1][3,4,5,7,8][0-9]{9}$/;
+            if(phone ==""){
+                $(".check_phone").show();
+            }else if(pattern.test(phone)){
+                $(".pass_phone").show();
+                $(".pass_phone").attr({
+                    key: 1
+                });
+            }else{
+                $(".check_phone_err").show();
+            }
+        });
+
+        // 隐藏警告
+        $(".modalInput").focus(function() {
+            $(this).nextAll().hide();
+            $(this).nextAll('.pass').attr({
+                key:0
+            })
+
+        });
+
+        $("#teamname").focus(function() {
+            $(".check_team_name").hide();
+        });
+
+
+
+        // 验证参赛人数是否超过
+        $('.add_member').click(function(event){
+            if(add_num<member_num){
+                if(captain==1){
+                    // 设置队员为默认选项
+                    $("input[name='options']").get(1).checked = true;
+                    // 禁选队长
+                    $("#caption").hide();
+
+                }
+                $("#modal").modal('show');
+            }
+        })
+
+        // 添加参数成员
+        $("#add-btn").click(function(){
+            $("#myAlert1").hide();
+            // 判断是否都通过
+            var key = 1;
+            $(".pass").each(function() {
+                var inputValue = $(this).siblings('.modalInput').val();
+                if($(this).attr('key')==0){
+                    key=0;
+                    if( inputValue==""){
+                        $(this).siblings(".check").show();
+                    }
+                }
+            });
+            if(key==1){
+                // 获取添加的参数成员信息,队长用数字1表示，队员用数字0表示；
+                var name = $("#fill_member_name").val();
+                var grade = $("#fill_member_grade").val();
+                var college =$("#fill_member_college").val();
+                var major = $("#fill_member_major").val();
+                var id = $("#fill_member_id").val();
+                var phone = $("#fill_member_phone").val();
+                var post = $('input:radio:checked').val();
+                if(post==1){
+                    post="队长";
+                    captain = 1;
+                }
+                else{
+                    post="队员"
+                }
+                var dom ='<div class="memberInfo"><p class="info_one"><span class="member_name">'+name+'</span><span class="member_grade" value="'+grade+'">'+grade+'级</span><span class="member_id">'+id+'</span></p><p class="info_two"><span class="member_college">'+college+'</span><span class="member_major">'+major+'</span></p><p class="member_phone">'+phone+'</p><button class="btn btn-primary delete_member">删除</button><span class="post">'+post+'</span></div>';
+                $(".memberBox").append(dom);
+                add_num++;
+                if(add_num==member_num){
+                    // 弹出提示框
+                    $("#myAlert").show();
+                }
+                // 关闭模态框
+                $("#modal").modal('hide');
+                clear();
+                $(".pass").each(function() {
+                    $(this).attr({"key":0});
+                });
+                // 清理
+            }
+        });
+        // 关闭添加框清理
+
+        $("#close-btn").click(function(){
+            clear();
+        })
+
+        // 提交报名
+        $("#sumbit_btn").click(function(){
+            // 获取参赛的项目
+            var matchId = $("#inputBox option:selected").val();
+            // 获取参赛的队名
+            var team_name = $("#teamname").val();
+
+            // 判断队名是否为空
+            if(team_name==""){
+                $('.check_team_name').show();
+                if(add_num==0){
+                    $("#myAlert1").show();
+                }
+            }
+            else if(add_num==0){
+                $("#myAlert1").show();
+            }
+            else{
+                //获取参赛人员信息
+                $(".memberBox").children('.memberInfo').each(function() {
+                    let Member = {};
+                    Member.name = $(this).find(".member_name").text();
+                    Member.grade = $(this).find(".member_grade").attr("value");
+                    Member.id = $(this).find(".member_id").text();
+                    Member.college = $(this).find(".member_college").text();
+                    Member.major = $(this).find(".member_major").text();
+                    Member.phone = $(this).find(".member_phone").text();
+                    var post = $(this).find(".post").text();
+                    if(post=="队长"){
+                        post=1;
+                    }else{
+                        post=0;
+                    }
+                    Member.post = post;
+                    memberList.push(Member);
+
+                });
+
+                //alert("报名成功");
+                //console.log(matchInfo);
+            }
+
+            $.ajax({
+                url: "/group",
+                type:'POST',
+                dataType:"json",
+                contentType:"application/json;charsetset=UTF-8",
+                data: JSON.stringify({memberList:memberList,team_name:team_name,eventId:matchId}),
+                success:function () {
+                    alert("报名成功");
+                    //window.location.href="/match/list";
+                },
+                error:function () {
+                    alert("报名失败");
+                    memberList={};
+                }
+            })
+        });
+        // 删除成员
+        $(document).on("click",".delete_member",function(){
+            if($(this).siblings('.post').text()=="队长"){
+                captain = 0;
+                $("#caption").show();
+                $("input[name='options']").get(0).checked = true;
+            }
+            $(this).parent().remove();
+            add_num--;
+            $("#myAlert1").hide();
+        });
+        // 监听事件
+        $("#inputBox").change(function(){
+
+            member_num = $(this).children('option:selected').attr("max");
+            $(".memberBox .memberInfo").remove();
+            add_num=0;
+            $("#myAlert").hide();
+        });
+    })
+</script>
+</html>

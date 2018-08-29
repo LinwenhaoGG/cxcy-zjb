@@ -25,8 +25,7 @@ public class GroupMember implements Serializable {
     @Column(nullable = false) // 映射为字段，值不能为空
     private String name; //姓名
 
-    @NotEmpty(message = "年级信息不能为空")
-    @Column(name = "edu", nullable = false, columnDefinition = "tinyint(2)")
+    @Column(name = "edu", nullable = false)
     private Integer edu;//年级
 
     @NotEmpty(message = "学院信息不能为空")
@@ -39,8 +38,8 @@ public class GroupMember implements Serializable {
     @Column(nullable = false) // 映射为字段，值不能为空
     private String classes; //专业班级
 
-    @Column(name="number")
-    private Integer number;  // 学号
+    @Column(name="number",columnDefinition ="bigint")
+    private Long number;  // 学号
 
     @Column(name="phone")
     private String phone ;  // 手机号码

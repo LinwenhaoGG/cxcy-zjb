@@ -11,6 +11,9 @@
 package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.Event;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -33,4 +36,18 @@ public interface EventService {
      * @return
      */
     void removeEvent(Long id);
+
+    /**
+     * 通过项目负责人查找项目
+     * @param uid
+     * @return
+     */
+    List<Event> getEventByUser(Long uid, Pageable pageable);
+
+    /**
+     * 通过项目负责人查找项目的个数
+     * @param uid
+     * @return
+     */
+    Integer getEventCountByUid(Long uid);
 }

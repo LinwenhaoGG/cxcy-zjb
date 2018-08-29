@@ -29,7 +29,7 @@ public class MatchGroup implements Serializable {
     @Column(length = 100)
     private String mvAddress;  //小组视频文件地址
 
-    @Column(name = "achievement", columnDefinition = "decimal(3,2)")
+    @Column(name = "achievement", columnDefinition = "decimal(5,2)")
     private double achievement=0.00;//成绩
 
     @Column(nullable = false) // 映射为字段，值不能为空
@@ -42,7 +42,7 @@ public class MatchGroup implements Serializable {
     @Column(name="user_id")
     private Long user;   //报名参加的用户id
 
-    @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "group_people", joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "number_id", referencedColumnName = "id"))
     private List<GroupMember> groupMemberList;   //小组成员

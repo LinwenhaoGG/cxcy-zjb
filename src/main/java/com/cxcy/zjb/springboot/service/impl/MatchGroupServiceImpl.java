@@ -10,7 +10,12 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.MatchGroup;
+import com.cxcy.zjb.springboot.repository.MatchGroupRepository;
 import com.cxcy.zjb.springboot.service.MatchGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,5 +28,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MatchGroupServiceImpl implements MatchGroupService {
+    @Autowired
+    private MatchGroupRepository matchGroupRepository;
 
+    @Override
+    public Page<MatchGroup> getMatchGroupByUid(Long uid, Pageable pageable) {
+        return matchGroupRepository.findByUser(uid,pageable);
+    }
+
+    @Override
+    public MatchGroup saveMatchGroup(MatchGroup matchGroup) {
+        return matchGroupRepository.save(matchGroup);
+    }
 }

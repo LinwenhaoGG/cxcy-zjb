@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
+import com.cxcy.zjb.springboot.converter.EventMatchs2TeacherEvent;
 import com.cxcy.zjb.springboot.domain.Event;
 import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.domain.User;
+import com.cxcy.zjb.springboot.dto.TeacherEvent;
 import com.cxcy.zjb.springboot.service.EventService;
 import com.cxcy.zjb.springboot.service.MatchService;
 import com.cxcy.zjb.springboot.service.UserService;
@@ -15,6 +17,7 @@ import com.cxcy.zjb.springboot.utils.LongUtils;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,37 +45,63 @@ public class EventController {
 
     @Autowired
     private UserService userService;
+
     /**
-     * 新增编辑页面
+     * 通过用户id获得对方比赛管理
+     *
      * @param map
      * @return
      */
-    @RequestMapping("/edit")
-    public ModelAndView addMatchs(Map map) {
-        Event event = new Event();
-        map.put("event", event);
-        return new ModelAndView("matchs/eventEdit", map);
+    @RequestMapping("/teacherEvent")
+    public ModelAndView addMatchs( @RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                                  @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                                  Map map) {
+
+        Long uid = 1L;
+        //分页类
+        PageRequest pageRequest = new PageRequest(page-1, size);
+
+        //获取个数
+        Integer total = eventService.getEventCountByUid(uid);
+        Integer totalPage = 1;
+
+        if (total % size == 0) {
+            totalPage = total / size;
+        } else {
+            totalPage = (total / size) + 1;
+        }
+
+        //通过负责人id获得管理的比赛项目
+        List<Event> eventList = eventService.getEventByUser(uid,pageRequest);
+        List<TeacherEvent> teacherEventList = new ArrayList<>();
+        TeacherEvent teacherEvent;
+        for (Event event : eventList) {
+            teacherEvent = EventMatchs2TeacherEvent.conver(matchService.getMatchById(event.getMatchId()),event);
+            teacherEventList.add(teacherEvent);
+        }
+        map.put("teacherEventList", teacherEventList);
+        map.put("size", size);
+        map.put("page", page);
+        map.put("totalPage", totalPage);
+        return new ModelAndView("matchs/teacher/teacherEventList", map);
     }
 
     /**
-     * 保存队友的项目
-     * @param matchsId
-     * @param event
+     * 测试接口
+     * @param map
      * @return
      */
-    @PostMapping("/save")
-    public ResponseEntity<ResultVO> createEvent(@RequestParam(value="matchsId",required=true) Long matchsId, Event event) {
+    @RequestMapping("/test")
+    @ResponseBody
+    public List<Event> test(Long uid,Map map) {
+        //分页类
+        PageRequest pageRequest = new PageRequest(0, 3);
 
-        try {
-            matchService.createEvent(matchsId,event);
-        } catch (ConstraintViolationException e)  {
-            return ResponseEntity.ok().body(ResultUtils.error(1, ConstraintViolationExceptionHandler.getMessage(e)));
-        } catch (Exception e) {
-            return ResponseEntity.ok().body(ResultUtils.error(1, e.getMessage()));
-        }
-
-        return ResponseEntity.ok().body(ResultUtils.success());
+        //通过负责人id获得管理的比赛项目
+        List<Event> eventList = eventService.getEventByUser(uid,pageRequest);
+        return eventList;
     }
+
 
     /**
      * 删除项目
@@ -90,17 +119,6 @@ public class EventController {
         }
 
         return ResponseEntity.ok().body(ResultUtils.success());
-    }
-
-    /**
-     * 编辑比赛项目
-     * @return
-     */
-    @RequestMapping("/edit/{id}")
-    public ModelAndView editMatchs(@PathVariable("id") Long id,Map map) {
-        Event event = eventService.getEventById(id);
-        map.put("event", event);
-        return new ModelAndView("matchs/eventEdit", map);
     }
 
     /**
@@ -156,6 +174,7 @@ public class EventController {
                 //得到项目名称
                 String event_name=JSONObject.parseObject(JSONObject.toJSONString(createArray.get(i))).getString("item_name");
                 String teacher_list=JSONObject.parseObject(JSONObject.toJSONString(createArray.get(i))).getString("teacher_list");
+                Integer event_number=JSONObject.parseObject(JSONObject.toJSONString(createArray.get(i))).getInteger(    "event_number");
                 //解析teacher_list
                 if (StringUtils.isNotEmpty(teacher_list)) { //判断老师列表是否为空
                     JSONArray teacher_Array=JSONArray.parseArray(teacher_list);
@@ -169,6 +188,8 @@ public class EventController {
                 }
                 event.setName(event_name);//设置名称
                 event.setUserList(users);//设置负责人列表
+                event.setPNumber(event_number);
+                event.setMatchId(mid);
                 eventList.add(event); //将项目加入项目列表
             }
             if (!LongUtils.IsNone(mid)) { //判断mid是否存在

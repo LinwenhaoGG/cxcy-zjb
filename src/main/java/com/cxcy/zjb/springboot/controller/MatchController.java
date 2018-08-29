@@ -8,11 +8,11 @@ import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
@@ -45,6 +45,7 @@ public class MatchController {
     public ResultVO saveMatchs(Matchs matchs) {
         log.info(matchs.toString());
         Matchs re; //数据库保存后返回的值
+        Long uid = 1L;//发布人
         if (matchs.getId() != null) {//判断是增加还是修改
             //如果是修改
             Matchs orignalMatchs = matchService.getMatchById(matchs.getId());
@@ -53,6 +54,7 @@ public class MatchController {
             orignalMatchs.setHtmlContent(matchs.getHtmlContent());
             re=matchService.saveMatch(orignalMatchs);
         } else {
+            matchs.setUser(uid);
             re=matchService.saveMatch(matchs);
         }
        return ResultUtils.success(re.getId());
@@ -75,7 +77,7 @@ public class MatchController {
 
         map.put("userList",userList);
         map.put("matchs",matchs);
-        return new ModelAndView("matchs/edit", map);
+        return new ModelAndView("matchs/matchsEdit", map);
     }
 
     /**
@@ -93,7 +95,7 @@ public class MatchController {
 
         map.put("userList",userList);
         map.put("matchs", matchs);
-        return new ModelAndView("matchs/edit", map);
+        return new ModelAndView("matchs/matchsEdit", map);
     }
 
     /**
@@ -109,30 +111,72 @@ public class MatchController {
 
 
         map.put("matchs", matchs);
-        return new ModelAndView("matchs/view", map);
+        return new ModelAndView("matchs/matchsView", map);
     }
 
     /**
-     * 全部比赛信息预览
+     * 查看全部比赛信息
      * @param map
      * @return
      */
     @GetMapping("/list")
-    public ModelAndView listMatchs(Map map) {
-        List<Matchs> matchsList = matchService.findAll();
-        map.put("matchsList", matchsList);
+    public ModelAndView listMatchs(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                                   @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                                   Map map) {
+        //根据开始时间排序
+        Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
+        PageRequest request = new PageRequest(page - 1, size);
+        //根据排序查出分页
+        Page<Matchs> matchsPage = matchService.findAll(request);
+        map.put("matchsPage", matchsPage);
+        map.put("page", page);
+        map.put("size", size);
+
         return new ModelAndView("matchs/matchsList", map);
     }
 
     /**
-     * 全部比赛信息预览
+     * 查看全部比赛信息
+     * @param map
+     * @return
+     */
+    @GetMapping("/teacherList")
+    public ModelAndView listMatchsTeacher(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                                   @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                                   Map map) {
+
+        //获取当前老师id
+        Long uid = 1L;
+        //根据开始时间排序
+        Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
+        PageRequest request = new PageRequest(page - 1, size);
+        //根据排序查出分页
+        Page<Matchs> matchsPage = matchService.findAllByUser(uid,request);
+        map.put("matchsPage", matchsPage);
+        map.put("page", page);
+        map.put("size", size);
+
+        return new ModelAndView("matchs/teacher/teacherMatchsList", map);
+    }
+
+    /**
+     * 管理员查看所有页面
      * @param map
      * @return
      */
     @GetMapping("/adminslist")
-    public ModelAndView listMatchsAdmin(Map map) {
-        List<Matchs> matchsList = matchService.findAll();
-        map.put("matchsList", matchsList);
+    public ModelAndView listMatchsAdmin(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                                        @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                                         Map map) {
+        //根据开始时间排序
+        Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
+        PageRequest request = new PageRequest(page - 1, size,sort);
+        //根据排序查出分页
+        Page<Matchs> matchsPage = matchService.findAll(request);
+        map.put("matchsPage", matchsPage);
+        map.put("page", page);
+        map.put("size", size);
+
         return new ModelAndView("matchs/adminsMatchsList", map);
     }
 

@@ -28,6 +28,9 @@ public class Event implements Serializable {
     @Column(nullable = false) // 映射为字段，值不能为空
     private Integer pNumber=1;   //报名人数，默认为单人
 
+    @Column
+    private Long matchId; //比赛id
+
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "event_leader", joinColumns = @JoinColumn(name = "e_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))

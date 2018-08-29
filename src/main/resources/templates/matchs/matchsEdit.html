@@ -46,6 +46,9 @@
             right:0;
             padding-right: 10px;
         }
+        .group_number{
+            margin-top:10px;
+        }
         /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
         ::-webkit-scrollbar
         {
@@ -74,6 +77,7 @@
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
+
             <!-- 比赛id与比赛名称 -->
             <input type="hidden" name="id" th:value="*{matchs.id}" id="matchsId">
             <div>比赛名称:</div>
@@ -108,8 +112,13 @@
                                 <form>
                                     <!-- 填写项目名称 -->
                                     <div class="input-group">
-                                        <span class="input-group-addon">子项目名称</span>
+                                        <span class="input-group-addon">比赛的子项目名称</span>
                                         <input type="text" placeholder="请输入子项目名称" class="form-control" id="project_name">
+                                    </div>
+                                    <!-- 填写项目名称 -->
+                                    <div class="input-group group_number">
+                                        <span class="input-group-addon">参赛小组人数限制</span>
+                                        <input class="form-control" id="eventnumber" placeholder="参赛人数最少为1" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
                                     </div>
 
                                     <!-- 选择负责老师 -->
@@ -172,6 +181,7 @@
         // 生成子项目标签
         $("#teacher-btn").click(function(){
             var name = $("#project_name").val();
+            var eventnumber = $("#eventnumber").val();
             // 判断子项目名称是否为空
             if(name==""){
                 // 为空则提示
@@ -191,12 +201,13 @@
                     this.checked = false;
                 });
 
-                dom = '<div class="subprojects-btn btn">'+'<span>'+name+'</span>'+'<i class="close-btn">&times;</i>'+'<div class="choose-teacher">'+tlist+'</div>'+ '</div>';
+                dom = '<div class="subprojects-btn btn">'+'<span class="nameclass">'+name+'</span>'+'<i class="close-btn">&times;</i>'+'<div class="choose-teacher">'+tlist+'</div>'+'<span class="numberclass" value="'+eventnumber+'">'+eventnumber+'人</span>'+'</div>';
                 var newEle = $(dom);
                 // 添加子项目标签
                 $(".subprojects").append(dom);
                 // 清空下一次项目名称
                 $("#project_name").val("");
+                $("#eventnumber").val("");
             }
         })
 
@@ -231,7 +242,9 @@
             var item = $(".subprojects").children('.subprojects-btn').each(function(){
                 var item_object={};
                 // 获取子项目名称
-                var item_name = $(this).children('span').text();
+                var item_name = $(this).children('.nameclass').text();
+                var event_number = $(this).children('.numberclass').attr("value");
+
                 //获取所有子项目的负责老师
                 var teacher_list=[];
                 $(this).children('.choose-teacher').children('label').each(function(){
@@ -240,11 +253,9 @@
                 // 把子项目名称和负责老师转变为一个对象
                 item_object["item_name"] = item_name;
                 item_object["teacher_list"] = teacher_list;
-
+                item_object["event_number"] = event_number;
                 // 把子项目放进数组中
                 itemList.push(item_object);
-
-
 
             });
 

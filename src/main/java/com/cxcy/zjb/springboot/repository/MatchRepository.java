@@ -1,6 +1,8 @@
 package com.cxcy.zjb.springboot.repository;
 
 import com.cxcy.zjb.springboot.domain.Matchs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -9,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by LINWENHAO on 2018/8/6.
  */
 public interface MatchRepository extends JpaRepository<Matchs,Long> {
+    Page<Matchs> findByUser(Long user, Pageable pageable);
 }

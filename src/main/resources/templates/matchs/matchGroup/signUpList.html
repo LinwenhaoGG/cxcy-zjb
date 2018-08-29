@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查看</title>
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        ul{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="thumbnails">
+                <li class="span4">
+                    <div class="thumbnail">
+                        <div class="caption" th:each="eventSignUp : ${eventSignUpList}">
+                            <h3 th:text="'报名的比赛项目名为：'+${eventSignUp.event.name}"></h3>
+                            <h4 th:text="'参赛小队名称为:'+${eventSignUp.name}"></h4>
+                            <p th:text="'报名时间为为:'+${eventSignUp.signtime}"></p>
+                            <p>
+                                <a class="btn btn-primary" th:href="'/group/submit/'+ ${eventSignUp.id}" href="#">提交作品</a>
+                                <a id="modal-102974" href="#modal-container-102974"  role="button" class="btn btn-info" data-toggle="modal">查询成绩</a>
+                            </p>
+                            <div class="modal fade" id="modal-container-102974" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title" id="myModalLabel">
+                                                查看成绩
+                                            </h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            你的小队成绩为：
+                                            <h5 th:if=" ${eventSignUp.achievement} eq 0.00" >未公布成绩！</h5>
+                                            <h5 th:if=" ${eventSignUp.achievement} gt 0.00" th:text="${eventSignUp.achievement}+'分！'">未公布成绩！</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 column">
+    <ul class="pagination pull-right">
+        <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${matchGroupPage.getTotalPages()}+' 页'"></a></li>
+        <li class="disabled" th:if="${page} eq '1'" ><a>首页</a></li>
+        <li th:if="${page} ne '1'"><a th:href="'/group/list?page=1'+'&&size='+${size}">首页</a></li>
+        <li class="disabled" th:if="${page} le '1'"><a>上一页</a></li>
+        <li th:if="${page} gt '1'"><a th:href="'/group/list?page='+${page-1}+'&&size='+${size}">上一页</a></li>
+        <li th:each="pageNo : ${#numbers.sequence(1, matchGroupPage.getTotalPages())}">
+            <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+            <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/group/list?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
+        </li>
+        <li th:if="${page} lt ${matchGroupPage.getTotalPages()}"><a th:href="'/group/list?page='+${page+1}+'&&size='+${size}">下一页</a></li>
+        <li class="disabled" th:if="${page} ge ${matchGroupPage.getTotalPages()}"><a>下一页</a></li>
+        <li class="disabled" th:if="${page} eq ${matchGroupPage.getTotalPages()}"><a>尾页</a></li>
+        <li th:if="${page} ne ${matchGroupPage.getTotalPages()}"><a th:href="'/group/list?page='+${matchGroupPage.getTotalPages()}+'&&size='+${size}">尾页</a></li>
+    </ul>
+</div>
+</body>
+</html>
