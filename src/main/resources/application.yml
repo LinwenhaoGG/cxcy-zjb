@@ -18,12 +18,18 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+#设置图片的大小
+  http:
+    multipart:
+      max-file-size: 2Mb
+      max-request-size: 2Mb
   #配置搜索引擎
  # data:
     #elasticsearch:
       #cluster-nodes: localhost:9300
 server:
   port: 8080
+  context-path: /
 
 
 
