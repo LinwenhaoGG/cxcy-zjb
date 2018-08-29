@@ -112,7 +112,7 @@ public class ProductionController {
 
         map.put("page",pageIndex);
         map.put("size",pageSize);
-        return new ModelAndView("amateurPro",map);
+        return new ModelAndView("production/amateurPro",map);
     }
 
     /**
@@ -167,7 +167,7 @@ public class ProductionController {
 
         map.put("page",pageIndex);
         map.put("size",pageSize);
-        return new ModelAndView("amateurPro",map);
+        return new ModelAndView("production/amateurPro",map);
     }
 
     /**

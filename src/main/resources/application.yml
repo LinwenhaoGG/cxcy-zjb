@@ -33,5 +33,8 @@ spring:
 
 video:
   VideoPath: file:/E:/temp/
+server:
+  port: 8081
+
 
 

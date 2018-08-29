@@ -93,6 +93,6 @@ public class BrowseController {
 
         map.put("page", pageIndex);
         map.put("size", pageSize);
-        return new ModelAndView("amateurPro", map);
+        return new ModelAndView("production/amateurPro", map);
     }
 }
