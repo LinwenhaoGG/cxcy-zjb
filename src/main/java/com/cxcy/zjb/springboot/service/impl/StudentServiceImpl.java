@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Student;
+import com.cxcy.zjb.springboot.repository.StudentRepository;
 import com.cxcy.zjb.springboot.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,5 +26,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StudentServiceImpl implements StudentService {
+    @Autowired
+    private StudentRepository studentRepository;
+    @Override
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
+    }
 
 }
