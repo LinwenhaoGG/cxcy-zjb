@@ -57,7 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()   //基于 Form 表单登录验证
                 .loginPage("/login").failureUrl("/login-error") // 自定义登录界面
                 .and().rememberMe().key(KEY) // 启用 remember me
-                .and().exceptionHandling().accessDeniedPage("/403");  // 处理异常，拒绝访问就重定向到 403 页面
+                .and().exceptionHandling().accessDeniedPage("/403")
+                .and()
+                .csrf().disable();;  // 处理异常，拒绝访问就重定向到 403 页面
     }
 
     /**
