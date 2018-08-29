@@ -1,0 +1,73 @@
+body{
+	margin: 0px;
+	padding: 0px; 
+	width: 1528px;
+	height: 720px;
+}
+/*<!--背景div-->*/
+#backgroundDiv{
+	/*聊天背景图片*/
+	background-image: url(/img/background.jpg);
+	width: 100%;
+	height: 100%;
+	
+}
+/*<!--聊天div-->*/
+#chatDiv{
+	width: 60%;
+	height: 90%; 
+	float: left;
+	margin-left: 20%;
+	margin-top: 40px;
+	background-color: ghostwhite;
+}
+/*聊天窗口*/
+.chatHtml{
+	width: 100%;
+}
+/*聊天头*/
+#headerDiv{  
+	height: 20%;  
+}
+/*聊天体*/
+#bodyDiv{  
+	height: 60%;  
+}
+/*填写信息div*/
+#messageDiv{  
+	height: 20%;   
+	
+}
+#imgId{
+	margin-top: 10px;
+	width:80px;
+	height: 100%;
+}
+#inputDiv{
+	margin: 0px;
+	padding: 0px; 
+}
+hr{
+	margin: 0;
+	padding: 0;
+}
+#inputDiv input{ 
+	background-color:transparent;
+	border:0;
+	width: 100%;
+	height: 60px;
+	border-style:none none solid none;
+	outline: none;
+	margin: 0;
+	padding: 10px;
+} 
+#submitComment{ 
+	margin-right: 10px;
+	margin-bottom: 10px;
+	float: right;
+}
+#scrollDiv{
+	width:100%;
+	height:100%;
+	overflow: auto;
+}

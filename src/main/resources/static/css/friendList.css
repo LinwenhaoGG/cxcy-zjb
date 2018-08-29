@@ -1,0 +1,12 @@
+.outsideDiv{
+	width: 100%;
+}
+.innerspan{
+	float: left;
+	width: 33.3%;
+	diaplay: block;
+}
+.imgClass{
+	width: 100px;
+	height: 100px;
+}
