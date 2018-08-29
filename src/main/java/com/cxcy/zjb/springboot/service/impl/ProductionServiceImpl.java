@@ -14,7 +14,6 @@ import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.repository.ProductionRepository;
 import com.cxcy.zjb.springboot.service.ProductionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,21 +36,22 @@ public class ProductionServiceImpl implements ProductionService {
     private ProductionRepository productionRepository;
 
     @Override
-    public Page<Production> findProductionsByCategoryId(Long categoryId,Pageable pageable) {
-     //   Page<Production> productions =productionRepository.findByCatagorysAndPCheck(categoryId,0,pageable);
-        Page<Production> page = productionRepository.findByPCheck(0,pageable);
-        return page;
+    public List<Production> findProductionsByCategoryId(Long categoryId) {
+       List<Production> productions =productionRepository.findByCatagorysAndPCheck(categoryId,0);
+       // Page<Production> list = productionRepository.findByPCheck(0);
+        return productions;
     }
 
     @Override
-    public Page<Production> findAll(Pageable pageable) {
-        return productionRepository.findByPCheck(0,pageable);
+    public List<Production> findAll(Sort sort) {
+        return productionRepository.findTop10ByPCheck(0,sort);
     }
 
     @Override
-    public Page<Production> findOrderByTimeDesc(Pageable pageable) {
-        return productionRepository.findByPCheckOrderByPuploadTimeDesc(0,pageable);
+    public List<Production> findTop10orderByTimeDesc() {
+        return productionRepository.findTop10ByPCheckOrderByPuploadTimeDesc(0);
     }
+
 
     @Override
     public List<Production> findOrderByTimeDesc() {

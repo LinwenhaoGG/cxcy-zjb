@@ -16,4 +16,13 @@ public class ProductionVo {
     //作品
     private Production production;
 
+    @Override
+    public String toString() {
+        return "ProductionVo{" +
+                "direction='" + direction + '\'' +
+                ", catagorys='" + catagorys + '\'' +
+                ", userName='" + userName + '\'' +
+                ", production=" + production +
+                '}';
+    }
 }

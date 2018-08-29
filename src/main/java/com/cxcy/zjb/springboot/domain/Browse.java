@@ -15,7 +15,7 @@ public class Browse {
 
     @Id //主键
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
-    private Long bId;//比赛项目的唯一标识
+    private Long bId;//浏览记录的唯一标识
 
     @Column(name="user_id", nullable = false,unique = true)
     private Long user;                  //浏览者
@@ -25,5 +25,5 @@ public class Browse {
 
     @Column(name = "b_browse_time", nullable = false) // 映射为字段，值不能为空
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
-    private Timestamp browseTime;     //作品上传时间
+    private Timestamp browseTime;     //浏览时间
 }

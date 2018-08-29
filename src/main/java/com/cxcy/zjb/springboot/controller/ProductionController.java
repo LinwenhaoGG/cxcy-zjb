@@ -4,7 +4,6 @@ import com.cxcy.zjb.springboot.Vo.ProductionVo;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.Catagorys;
 import com.cxcy.zjb.springboot.domain.Production;
-import com.cxcy.zjb.springboot.enums.ResultEnum;
 import com.cxcy.zjb.springboot.service.CatagoryService;
 import com.cxcy.zjb.springboot.service.DirectionService;
 import com.cxcy.zjb.springboot.service.ProductionService;
@@ -13,10 +12,7 @@ import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -35,6 +32,7 @@ import java.util.List;
  * Created by LINWENHAO on 2018/8/20.
  */
 @Controller
+@RequestMapping("/production")
 public class ProductionController {
     @Value("${video.VideoPath}")
     private String VideoPath;
@@ -49,10 +47,10 @@ public class ProductionController {
     private DirectionService directionService;
 
     //跳转到上传视频的页面
-    @GetMapping("/toUpFile")
+    @GetMapping("/cxcyHtml")
     public ModelAndView toUpFile(Model model){
 
-        return new ModelAndView("production/uploadVideo", "videa", model);
+        return new ModelAndView("amateurPro", "videa", model);
     }
     //得到上传的视频，并转存
     @PostMapping("/uploadVideo")
@@ -72,13 +70,17 @@ public class ProductionController {
      * @return
      */
     @GetMapping("/nav/cata{catagory}")
-    public @ResponseBody Object displayPro(@PathVariable("catagory") Long catagory,Integer pageIndex,Integer pageSize){
-        //设置分页
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
-        Page<Production> productions = productionService.findProductionsByCategoryId(catagory,pageable);
-        ResultVO resultVO;//存放返回的数据
-        if(productions == null){//找不到作品的情况
-            resultVO = ResultUtils.error(ResultEnum.NO_PRODUCTION.getCode(),ResultEnum.NO_PRODUCTION.getMessage());
+    public ModelAndView displayPro( @PathVariable("catagory") Long catagory,
+                                     @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                     @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                    Map map){
+        List<Production> productions = productionService.findProductionsByCategoryId(catagory);
+        String url = "/production/nav/cata"+catagory;
+        map.put("url",url);
+        map.put("catagory","cata"+catagory);
+        System.out.println(productions);
+        if(productions.size()==0){//找不到作品的情况
+            map.put("productionPage", null);
         }else {
             Catagorys catagorys = catagoryService.findByCatagorysId(catagory);//得到类别的对象
             String caName =catagorys.getCaName();//得到类别的名字
@@ -95,9 +97,22 @@ public class ProductionController {
 
                 productionVoList.add(productionVo);
             }
-            resultVO = ResultUtils.success(productionVoList);
+            List<ProductionVo> list;
+            if(pageIndex * pageSize>productionVoList.size()){
+               list =  productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
+            }else {
+                list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
+            }
+            map.put("productionPage", list);
+            int totalSize = (int)((productionVoList.size()+pageSize-1)/pageSize);
+
+            map.put("totalSize",totalSize);
         }
-        return resultVO;
+
+
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        return new ModelAndView("amateurPro",map);
     }
 
     /**
@@ -108,18 +123,21 @@ public class ProductionController {
      * @return
      */
     @GetMapping("/nav/{nh}")
-    public @ResponseBody Object displayProASNewHot(@PathVariable("nh") String nh,Integer pageIndex,Integer pageSize){
-        ResultVO<Production> resultVO = null;
-        Page<Production> productions = null;
+    public ModelAndView displayProASNewHot(@PathVariable("nh") String nh,
+                                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                                   @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                                   Map map){
+        String url = "/production/nav/"+nh;
+        map.put("catagory",nh);
+        map.put("url",url);
+        List<Production> productions = null;
         if (nh.equals("hot")) { // 最热查询
             Sort sort = new Sort(Sort.Direction.DESC,"eVoteSize","commentSize","readSize");
-
-            Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-            productions = productionService.findAll(pageable);
+            productions = productionService.findAll(sort);
         }
         if (nh.equals("new")) { // 最新查询
             Pageable pageable = new PageRequest(pageIndex, pageSize);
-            productions = productionService.findOrderByTimeDesc(pageable);
+            productions = productionService.findTop10orderByTimeDesc();
         }
 
         List<ProductionVo> productionVoList = new ArrayList<>();//将查到的数据封装到list中
@@ -131,13 +149,25 @@ public class ProductionController {
             productionVo.setCatagorys(catagorys.getCaName());
             //查出作者的昵称
             productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
-
+            //加入作品信息
             productionVo.setProduction(production);
-
+            //存储在list里面
             productionVoList.add(productionVo);
         }
-        resultVO = ResultUtils.success(productionVoList);
-        return resultVO;
+        List<ProductionVo> list;
+        if(pageIndex * pageSize>productionVoList.size()){
+            list =  productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
+        }else {
+            list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
+        }
+        map.put("productionPage", list);
+
+        int totalSize = (int)((productionVoList.size()+pageSize-1)/pageSize);
+        map.put("totalSize",totalSize);
+
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        return new ModelAndView("amateurPro",map);
     }
 
     /**

@@ -32,21 +32,20 @@ public interface ProductionService {
      * @param categoryId
      * @return
      */
-    public Page<Production> findProductionsByCategoryId(Long categoryId,Pageable pageable);
+    public List<Production> findProductionsByCategoryId(Long categoryId);
 
     /**
      * 查询已审核通过的作品
-     * @param pageable
+     * @param sort
      * @return
      */
-    public Page<Production> findAll(Pageable pageable);
+    public List<Production> findAll(Sort sort);
 
     /**
-     * 按时间降序分页查找已审核通过的作品
-     * @param pageable
+     * 按时间降序查找前10条已审核通过的作品
      * @return
      */
-    public Page<Production> findOrderByTimeDesc(Pageable pageable);
+    public List<Production> findTop10orderByTimeDesc();
 
     /**
      * 按时间降序查找已审核通过的作品

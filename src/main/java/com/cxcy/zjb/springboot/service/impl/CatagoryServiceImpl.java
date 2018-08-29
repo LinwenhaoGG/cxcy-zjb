@@ -16,6 +16,8 @@ import com.cxcy.zjb.springboot.service.CatagoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -33,5 +35,10 @@ public class CatagoryServiceImpl implements CatagoryService {
     public Catagorys findByCatagorysId(Long catagorysId) {
         Catagorys catagorys = catagoryRepository.getOne(catagorysId);
         return catagorys;
+    }
+
+    @Override
+    public List<Catagorys> findAll() {
+        return catagoryRepository.findAll();
     }
 }

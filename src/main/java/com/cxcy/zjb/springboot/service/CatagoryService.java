@@ -12,6 +12,8 @@ package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.Catagorys;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -28,4 +30,10 @@ public interface CatagoryService {
      * @return
      */
     public Catagorys findByCatagorysId(Long catagorysId);
+
+    /**
+     * 查找所有分类
+     * @return
+     */
+    public List<Catagorys> findAll();
 }

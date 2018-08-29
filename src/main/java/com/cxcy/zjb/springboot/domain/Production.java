@@ -1,9 +1,11 @@
 package com.cxcy.zjb.springboot.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -26,29 +28,23 @@ public class Production implements Serializable {
     @Column(nullable = false, length = 50) // 映射为字段，值不能为空
     private String pTitle;             //作品标题
 
-    @Lob  // 大对象，映射 MySQL 的 Long Text 类型
-    @Basic(fetch=FetchType.LAZY) // 懒加载
-    @NotEmpty(message = "内容不能为空")
-    @Size(min=2)
-    @Column(nullable = false) // 映射为字段，值不能为空
-    private String pContent;           //作品内容
+    @NotEmpty(message = "作品概要不能为空")
+    @Column(nullable = false,length = 100)
+    private String pSummary;            //作品简介
 
-    @Lob  // 大对象，映射 MySQL 的 Long Text 类型
-    @Basic(fetch=FetchType.LAZY) // 懒加载
     @NotEmpty(message = "内容不能为空")
-    @Size(min=2)
     @Column(nullable = false) // 映射为字段，值不能为空
-    private String htmlContent; // 将 md 转为 html
+    private String pContent;           //作品内容文件链接
 
     @Column(length = 100)
     private String pVideo;             //作品视频存储路径
 
-    @NotEmpty(message = "作品类别不能为空")
+    @NotNull(message = "作品类别不能为空")
     @Column(name = "p_sort", nullable = false, columnDefinition = "tinyint(2)")
     private Integer pSort=1;             //作品类别，0代表创意类，1代表实践类
 
-    @Column(name = "p_upload_time", nullable = false) // 映射为字段，值不能为空
-    @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
+    @Column(name = "p_upload_time",nullable = false) // 映射为字段，值不能为空
+    @CreationTimestamp  // 由数据库自动创建时间
     private Timestamp puploadTime;     //作品上传时间
 
     @Column(name = "p_check", nullable = false, columnDefinition = "tinyint(2)")
@@ -76,8 +72,20 @@ public class Production implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "vote_id", referencedColumnName = "vId"))
     private List<Vote> votes;
 
-    @Column(name="u_id")
+    @Column(name="uId")
     private Long user;
+
+//    添加评论的同时要顺便修改
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+        this.commentSize = this.comments.size();
+    }
+
+//    添加点赞的同时要修改数量
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+        this.eVoteSize = this.votes.size();
+    }
 
     /**
      * 添加评论
@@ -107,22 +115,9 @@ public class Production implements Serializable {
      * @param vote
      * @return
      */
-    public boolean addVote(Vote vote) {
-        boolean isExist = false;
-        // 判断重复
-        for (int index=0; index < this.votes.size(); index ++ ) {
-            if (this.votes.get(index).getUser().equals(vote.getUser()) ) {
-                isExist = true;
-                break;
-            }
-        }
-
-        if (!isExist) {
+    public void addVote(Vote vote) {
             this.votes.add(vote);
-            this.eVoteSize= this.votes.size();
-        }
-
-        return isExist;
+            this.eVoteSize = this.votes.size();
     }
     /**
      * 取消点赞
@@ -136,26 +131,5 @@ public class Production implements Serializable {
             }
         }
         this.eVoteSize = this.votes.size();
-    }
-
-    @Override
-    public String toString() {
-        return "Production{" +
-                "pId=" + pId +
-                ", pTitle='" + pTitle + '\'' +
-                ", pContent='" + pContent + '\'' +
-                ", htmlContent='" + htmlContent + '\'' +
-                ", pVideo='" + pVideo + '\'' +
-                ", pSort=" + pSort +
-                ", pUploadTime=" + puploadTime +
-                ", pCheck=" + pCheck +
-                ", eVoteSize=" + eVoteSize +
-                ", commentSize=" + commentSize +
-                ", readSize=" + readSize +
-                ", catagorys=" + catagorys +
-                ", comments=" + comments +
-                ", votes=" + votes +
-                ", user=" + user +
-                '}';
     }
 }

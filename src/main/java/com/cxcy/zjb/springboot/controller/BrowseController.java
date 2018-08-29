@@ -1,29 +1,26 @@
 package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ProductionVo;
-import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.Catagorys;
 import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.service.*;
-import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 个性化推荐控制层
  */
 @Controller
+@RequestMapping("/browse")
 public class BrowseController {
 
     @Autowired
@@ -44,33 +41,38 @@ public class BrowseController {
      * @return
      */
     @GetMapping("/recommend")
-    public @ResponseBody
-    Object recommend(HttpServletRequest request){
-        //Long userId = (Long)request.getSession().getAttribute("user");
+    public @ResponseBody Object recommend(HttpServletRequest request,
+                                          @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                          @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                          Map map) {
+        String url = "/browse/recommend";
+        map.put("url", url);
+        map.put("catagory", "recommend");
+        //Long userId = (Long)request.getSession().getAttribute("user").getId;
         Long userId = 1L;//模拟数据，具体应该是从session取出登录的id
         Long catagory = browseService.findCatagoryByUserId(userId).getCatagory();//查询到该用户最后一条浏览记录的分类
         //按点赞数、评论量、阅读量排序
-        Sort sort = new Sort(Sort.Direction.DESC,"eVoteSize","commentSize","readSize");
+        Sort sort = new Sort(Sort.Direction.DESC, "eVoteSize", "commentSize", "readSize");
         //通过分类查询7条作品记录
-        List<Production> productions = productionService.findFirst7ByCatagorysAndPCheck(catagory,sort);
+        List<Production> productions = productionService.findFirst7ByCatagorysAndPCheck(catagory, sort);
         Set<Production> set = new HashSet<>();//将查到的数据存储在set中，再去加上最新推荐，凑到10条
-        for (Production production : productions){
+        for (Production production : productions) {
             System.out.println(production);
             set.add(production);
         }
         List<Production> orderByTimeDesc = productionService.findOrderByTimeDesc();
-        for (int i = 0;i<orderByTimeDesc.size() && set.size()<10;i++){//共10条数据或数据库没有10条数据时停止
+        for (int i = 0; i < orderByTimeDesc.size() && set.size() < 10; i++) {//共10条数据或数据库没有10条数据时停止
             System.out.println(orderByTimeDesc.get(i));
             set.add(orderByTimeDesc.get(i));
         }
         System.out.println(set.size());
         List<ProductionVo> productionVoList = new ArrayList<>();//将查到的数据封装到list中
-        for(Production p : set){
+        for (Production p : set) {
             ProductionVo productionVo = new ProductionVo();
             //按类别id查出类别的名称和方向id，由方向id查出方向的名称
             Catagorys catagorys = catagoryService.findByCatagorysId(p.getCatagorys());
-            productionVo.setDirection(directionService.findById(catagorys.getDirection()).getDName());
             productionVo.setCatagorys(catagorys.getCaName());
+            productionVo.setDirection(directionService.findById(catagorys.getDirection()).getDName());
             //查出作者的昵称
             productionVo.setUserName(userService.findUserById(p.getUser()).getUsername());
 
@@ -78,10 +80,19 @@ public class BrowseController {
 
             productionVoList.add(productionVo);
         }
+        List<ProductionVo> list;
+        if (pageIndex * pageSize > productionVoList.size()) {
+            list = productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
+        } else {
+            list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
+        }
+        map.put("productionPage", list);
+        int totalSize = (int) ((productionVoList.size() + pageSize - 1) / pageSize);
 
-        //将查到的数据加在json格式中
-        ResultVO resultVO = ResultUtils.success(productionVoList);
-        return resultVO;
+        map.put("totalSize", totalSize);
 
+        map.put("page", pageIndex);
+        map.put("size", pageSize);
+        return new ModelAndView("amateurPro", map);
     }
 }
