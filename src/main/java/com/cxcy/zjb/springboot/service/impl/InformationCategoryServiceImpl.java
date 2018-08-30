@@ -10,8 +10,15 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.InformationCategory;
+import com.cxcy.zjb.springboot.domain.User;
+import com.cxcy.zjb.springboot.repository.InformationCategoryRepository;
+import com.cxcy.zjb.springboot.service.InformationCategoryService;
 import com.cxcy.zjb.springboot.service.InformationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -22,6 +29,54 @@ import org.springframework.stereotype.Service;
  * @since 1.0.0
  */
 @Service
-public class InformationCategoryServiceImpl implements InformationService {
+public class InformationCategoryServiceImpl implements InformationCategoryService {
+
+    @Autowired
+    private InformationCategoryRepository informationCategoryRepository;
+
+    /**
+     * 查找出分类列表
+     * @return
+     */
+    @Override
+    public List<InformationCategory> listInformationCategory() {
+        List<InformationCategory> informationCategories = informationCategoryRepository.findAll();
+        return informationCategories;
+    }
+
+    /**
+     * 根据id删除列表
+     * @param id
+     */
+    @Override
+    public void removeInformationCategory(Long id) {
+        informationCategoryRepository.delete(id);
+    }
+
+    /**
+     * 保存分类
+     * @param informationCategory
+     * @return
+     */
+    @Override
+    public InformationCategory saveInformationCategory(InformationCategory informationCategory) {
+        //判断分类是否重复
+        List<InformationCategory> list = informationCategoryRepository.findByName(informationCategory.getName());
+        if ( list != null && list.size()>0 ){
+            throw new IllegalArgumentException("该分类已经存在！");
+        }
+        return informationCategoryRepository.save(informationCategory);
+    }
+
+    /**
+     * 根据id查找分类
+     * @param id
+     * @return
+     */
+    @Override
+    public InformationCategory getInformationCategoryById(Long id) {
+        return informationCategoryRepository.findOne(id);
+    }
+
 
 }
