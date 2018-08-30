@@ -20,6 +20,7 @@ public class Catagorys implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)  //自增长策略
     private Long cId;     //作品分类的唯一标识
 
+
     @Column(name="direction_id")
     private Long direction;     //作品方向的主键id为作品分类的外键，它们为一对一的关系
 
@@ -28,8 +29,15 @@ public class Catagorys implements Serializable{
     @Column(nullable = false)      //映射为字段，值不能为空
     private String caName;
 
+    @Column(name="direction_count")
+    private Long count;            //映射为字段，记录点击的次数
+
     protected Catagorys(){
 
     }
 
+    public Catagorys(Long direction, Long count) {
+        this.direction = direction;
+        this.count = count;
+    }
 }

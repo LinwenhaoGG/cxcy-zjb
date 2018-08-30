@@ -14,6 +14,8 @@ import com.cxcy.zjb.springboot.domain.Catagorys;
 
 import java.util.List;
 
+import com.cxcy.zjb.springboot.domain.Catagorys;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -23,6 +25,12 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface CatagoryService {
+
+    List<Catagorys> findByDid(Long direction);
+
+
+
+    void readingIncrease(Long cId);
 
     /**
      * 通过类别id查找

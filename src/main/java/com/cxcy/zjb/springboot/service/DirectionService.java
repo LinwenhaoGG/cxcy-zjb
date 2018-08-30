@@ -12,6 +12,9 @@ package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.Direction;
 
+import java.util.List;
+
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -21,6 +24,9 @@ import com.cxcy.zjb.springboot.domain.Direction;
  * @since 1.0.0
  */
 public interface DirectionService {
+
+    List<Direction> findAll();
+
 
     /**
      * 通过方向id查找

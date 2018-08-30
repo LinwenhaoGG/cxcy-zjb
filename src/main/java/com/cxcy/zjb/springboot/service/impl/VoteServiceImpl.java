@@ -10,8 +10,13 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Vote;
+import com.cxcy.zjb.springboot.repository.VoteRepository;
 import com.cxcy.zjb.springboot.service.VoteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -24,4 +29,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class VoteServiceImpl implements VoteService {
 
+    @Autowired
+    private VoteRepository voteRepository;
+
+    @Override
+    public Vote findById(Long id) {
+        return voteRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public void removeByVId(Long id) {
+        voteRepository.delete(id);
+    }
+
+    @Override
+    public Vote findByUser(Long uId) {
+        return voteRepository.findByUser(uId);
+    }
 }

@@ -21,6 +21,12 @@ import com.cxcy.zjb.springboot.domain.User;
  * @since 1.0.0
  */
 public interface UserService {
+    /**
+     * 根据用户的名字查找用户
+     * @param username
+     * @return
+     */
+    User findByUsername(String username) ;
 
     /**
      * 通过userId查找

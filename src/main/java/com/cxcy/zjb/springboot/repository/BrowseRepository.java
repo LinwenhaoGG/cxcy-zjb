@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BrowseRepository extends JpaRepository<Browse,Long> {
     //通过用户id查找记录
     Browse findByUser(Long userId);
+
+
 }

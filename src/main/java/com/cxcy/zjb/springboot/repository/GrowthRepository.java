@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by LINWENHAO on 2018/8/6.
  */
 public interface GrowthRepository extends JpaRepository<Growth,Long> {
+    Growth findByUser(Long user);
 }

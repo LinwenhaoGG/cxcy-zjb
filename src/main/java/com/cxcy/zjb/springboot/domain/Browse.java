@@ -1,6 +1,7 @@
 package com.cxcy.zjb.springboot.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -24,6 +25,7 @@ public class Browse {
     private Long catagory;          //浏览类型，即作品类型
 
     @Column(name = "b_browse_time", nullable = false) // 映射为字段，值不能为空
-    @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
-    private Timestamp browseTime;     //浏览时间
+    private String browseTime;     //最后浏览时间
+
+
 }

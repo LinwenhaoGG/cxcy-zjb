@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>上传作品</title>
+    <meta http-equiv="Content-Type" content="multipart/form-data;charset=utf-8" />
+    <script src="../../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}">
+    </script>
+    <script type="text/javascript" src="../../static/js/jquery.form.js" th:src="@{/js/jquery.form.js}"></script>
+</head>
+<body>
+<form enctype="multipart/form-data" th:action="@{/zpr/saveProduction}"  method="post" id="itemForm">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="hidden" name="username" th:value="*{username}" id="username">zpr<br/>
+    <input type="hidden" name="pId" th:value="*{pId}" id="pId"><br/>
+    <input  type="text" placeholder="请填写作品标题"  id="pTitle" name="pTitle"  th:value="*{pTitle}"><br/>
+    <input  type="text" placeholder="类别（0、1）"  id="pSort" name="pSort"  th:value="*{pSort}"><br/>
+    <input  type="text" placeholder="分类"  id="Catagorys" name="Catagorys"  th:value="*{Catagorys}"><br/>
+    相关文件：<br/>
+    <input type="file"  name="pContent" id="pContent" onchange="submitFileUpload()">
+    <hr>
+    相关视频：<br/>
+    <input type="text"  name="pVideo" id="pVideo">
+    <hr>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>

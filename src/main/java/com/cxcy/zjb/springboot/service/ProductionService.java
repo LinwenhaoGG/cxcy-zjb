@@ -10,6 +10,11 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Comment;
+import com.cxcy.zjb.springboot.domain.Production;
+
+import java.util.List;
+
 import com.cxcy.zjb.springboot.domain.Production;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,14 +23,72 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 /**
- * 〈一句话功能简述〉<br> 
- * 〈〉
+ * 学生业余作品的相关操作
+ *
  *
  * @author KOLO
  * @create 2018/8/20
  * @since 1.0.0
  */
 public interface ProductionService {
+    /**
+     * 保存作品
+     * @param production
+     * @return
+     */
+    Production save(Production production);
+
+    /**
+     * 根据id查找对应的作品
+     * @param pId
+     * @return
+     */
+    Production findByPId(Long pId);
+
+    /**
+     * 根据pId删除作品
+     * @param pId
+     */
+    void deleteByPId(Long pId);
+
+    /**
+     * 根据pId，每次点击浏览量就增加一次
+     * @param pId
+     * @return
+     */
+    int readingIncrease(Long pId);
+
+    /**
+     * 根据uId查找到所有的作品
+     * @param user
+     * @param pageable
+     * @return
+     */
+    Page<Production> findByUserAndPCheck(Long user,Pageable pageable);
+
+
+    /**
+     * 创建评论
+     * @param pId
+     * @param pComment
+     * @return
+     */
+    Production createComment(Long pId,String pComment,String username);
+
+
+    /**
+     * 删除评论
+     * @param cId
+     */
+    void removeComment(Long pId,Long cId);
+
+    /**
+     * 取消或者点赞
+     * @param pId
+     * @param username
+     */
+    void createVoteOrRemoveVote(Long pId,String username);
+
 
     /**
      * 通过类型分页查找已审核通过的作品
@@ -59,4 +122,10 @@ public interface ProductionService {
      * @return
      */
     public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort);
+
+    /**
+     * 查询所有未通过审核的作品
+     * @return
+     */
+    List<Production> findByPCheck(int i);
 }

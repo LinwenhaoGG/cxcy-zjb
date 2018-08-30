@@ -16,4 +16,9 @@ public class BrowseServiceImpl implements BrowseService {
     public Browse findCatagoryByUserId(Long userId) {
         return browseRepository.findByUser(userId);
     }
+
+    @Override
+    public Browse saveLastBrowse(Browse browse) {
+        return browseRepository.save(browse);
+    }
 }

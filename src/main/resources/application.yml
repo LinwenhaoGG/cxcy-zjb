@@ -2,9 +2,10 @@ spring:
   #配置DataSource
   datasource:
     username: root
-    password: root
+    password: 123456
     url: jdbc:mysql://localhost:3306/cxcy?characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
+
   thymeleaf:
     #热部署静态文件
     cache: false
@@ -12,6 +13,9 @@ spring:
     encoding: utf-8
     #配置标准,不强制要求/结尾
     mode: LEGACYHTML5
+    prefix: classpath:/templates/
+
+    #配置标准
 
 
     content-type: text/html
@@ -30,6 +34,15 @@ spring:
  # data:
     #elasticsearch:
       #cluster-nodes: localhost:9300
+server:
+  port: 8080
+
+file:
+  FilePath: E:/Workspace/Temp/file/
+
+
+
+
 
 video:
   VideoPath: file:/E:/temp/

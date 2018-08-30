@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 分类控制层
@@ -33,5 +39,12 @@ public class CatagoryController {
         List<Catagorys> catagorys = catagoryService.findAll();
         ResultVO resultVO = ResultUtils.success(catagorys);
         return resultVO;
+    }
+
+    @GetMapping("/findCatagorysByDid")
+    public @ResponseBody
+    ResultVO findCatagorysByDid(@RequestParam("direction") long direction){
+        List<Catagorys> list = catagoryService.findByDid(direction);
+        return ResultUtils.success(list);
     }
 }

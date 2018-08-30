@@ -1,8 +1,6 @@
 package com.cxcy.zjb.springboot.utils;
 
-import com.cxcy.zjb.springboot.Vo.ResultVO;
 import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
