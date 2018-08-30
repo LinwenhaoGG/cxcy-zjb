@@ -2,7 +2,7 @@
  * Copyright (C), 2015-2018, XXX有限公司
  * FileName: CompanyServiceImpl
  * Author:   KOLO
- * Date:     2018/8/20 10:34
+ * Date:     2018/8/27 19:51
  * Description:
  * History:
  * <author>          <time>          <version>          <desc>
@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Company;
+import com.cxcy.zjb.springboot.repository.CompanyRepository;
 import com.cxcy.zjb.springboot.service.CompanyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +21,16 @@ import org.springframework.stereotype.Service;
  * 〈〉
  *
  * @author KOLO
- * @create 2018/8/20
+ * @create 2018/8/27
  * @since 1.0.0
  */
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
+    @Autowired
+    private CompanyRepository repository;
+    @Override
+    public Company saveCompany(Company company) {
+        return repository.save(company);
+    }
 }

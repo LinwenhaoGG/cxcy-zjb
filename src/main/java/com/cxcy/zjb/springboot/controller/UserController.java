@@ -11,6 +11,7 @@
 package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.*;
+import com.cxcy.zjb.springboot.converter.UserDto;
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.ResultUtil;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
  */
 @Controller
 @Slf4j
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -59,7 +61,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping("user/person")
+    @RequestMapping("/person")
     @ResponseBody
     public User getUserId(HttpSession session){
         User user = (User)session.getAttribute("user");
@@ -72,7 +74,7 @@ public class UserController {
      * @param userId
      * @return
      */
-    @RequestMapping("user/message")
+    @RequestMapping("/message")
     @ResponseBody
     public Result findUserMessage(@RequestParam(value = "userId",required = true) Integer userId){
         //根据用户ID查询未读信息数
@@ -90,7 +92,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping("user/saveStudent")
+    @RequestMapping("/saveStudent")
     @ResponseBody
     public Result userSaveStudent(@Valid StudentVo studentVo, BindingResult bindingResult, HttpSession session){
         if (bindingResult.hasErrors()){
@@ -124,7 +126,7 @@ public class UserController {
      * 认证中，重新提交材料
      * @return
      */
-    @RequestMapping("user/submitAgain")
+    @RequestMapping("/submitAgain")
     @ResponseBody
     public Result submitAgain(HttpSession session){
         User userInfo = null;
@@ -147,7 +149,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping("user/saveTeacher")
+    @RequestMapping("/saveTeacher")
     @ResponseBody
     public Result userSaveTeacher(@Valid TeacherVo teacherVo, BindingResult bindingResult, HttpSession session){
         if (bindingResult.hasErrors()){
@@ -184,7 +186,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping("user/saveCompany")
+    @RequestMapping("/saveCompany")
     @ResponseBody
     public Result userSaveCommany(@Valid CompanyVo companyVo, BindingResult bindingResult, HttpSession session){
         if (bindingResult.hasErrors()){
@@ -216,7 +218,7 @@ public class UserController {
         return ResultUtil.success();
     }
 
-    @PostMapping(value = "user/imageUpload")
+    @PostMapping(value = "/imageUpload")
     @ResponseBody
     public Result imageUpload(@RequestParam("file") MultipartFile file, HttpSession session){
         //定义图片大小
@@ -250,7 +252,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping("user/saveAdmin")
+    @RequestMapping("/saveAdmin")
     @ResponseBody
     public Result userSaveAdmin(@RequestParam("name") String name, HttpSession session){
 
@@ -277,7 +279,7 @@ public class UserController {
      * @param id
      * @return
      */
-    @RequestMapping("/user/pass")
+    @RequestMapping("/pass")
     @ResponseBody
     public Result passUserIdentification(@RequestParam("id") String  id){
         if (id.trim()==""){
@@ -302,7 +304,61 @@ public class UserController {
         return ResultUtil.success();
     }
 
+    /**
+     * 聊天系统登录账号
+     * @param userName
+     * @param userPwd
+     * @param session
+     * @return
+     */
+    @PostMapping("/login")
+    public String userLogin(@RequestParam(value = "userName",required = true) String userName, @RequestParam(value = "userPwd",required = true) String userPwd,
+                            HttpSession session){
+        //1,根据用户名和密码查询用户
+        User user = new User();
+        user.setUsername(userName);
+        user.setPassword(userPwd);
 
+        User user1 = userService.findUser(user);
+        if (user1 == null){
+            return "redirect:/html/error.html";
+        }else {
+            session.setAttribute("user",user1);
+            return "redirect:/html/friendList.html";
+        }
+    }
+
+
+    @RequestMapping("/login2")
+    @ResponseBody
+    public Result userLogin2(@RequestParam(value = "userName",required = true) String uName, @RequestParam(value = "userPwd",required = true) String uPassword, HttpSession session){
+
+        User userInfo = userService.findUserInfoByNameAndPwd(uName, uPassword);
+        if (userInfo != null){
+            session.setAttribute("user",userInfo);
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userInfo,userDto);
+            return ResultUtil.success(userDto);
+        }else {
+            return ResultUtil.error("账号或者密码错误！");
+        }
+    }
+
+    /**
+     * 查询用户个人信息
+     * @return
+     */
+    @RequestMapping("/personMessage")
+    @ResponseBody
+    public Result userPersonMessage(HttpSession session){
+        try {
+            User userInfo =(User)session.getAttribute("user");
+            return ResultUtil.success(userInfo.getUsername());
+        }catch (Exception e){
+            System.err.println("【出错了】userPersonMessage -> 用户不在sesession中");
+        }
+        return ResultUtil.error();
+    }
 
 }
 
