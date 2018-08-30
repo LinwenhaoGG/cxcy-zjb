@@ -2,12 +2,8 @@ package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.*;
-import com.cxcy.zjb.springboot.domain.es.EsProduction;
-import com.cxcy.zjb.springboot.service.*;
-import com.cxcy.zjb.springboot.service.es.EsProductionService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,9 +16,6 @@ import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +24,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,24 +51,8 @@ public class ProductionController {
     @Autowired
     private DirectionService directionService;
 
-    //跳转到上传视频的页面
-    @GetMapping("/toUpFile")
-    public ModelAndView toUpFile(Model model){
-
-        return new ModelAndView("production/uploadVideo", "videa", model);
-    }
-    //得到上传的视频，并转存
-    @PostMapping("/uploadVideo")
-    public @ResponseBody Object uploadVideo(HttpServletRequest request,@RequestParam("videoFile") MultipartFile videoFile){
-        ResultVO resultVO = new ResultVO();
-        String video = saveVideo(request,videoFile,"video");
-        resultVO.setData(video);
-        return resultVO;
-    }
-
     /**
      * 作品分类展示,通过地址获取类别id，通过id查找出此id的作品
-     * 只是显示作品列表，因此没有查点赞的人和评论的人
      * @param catagory
      * @param pageIndex
      * @param pageSize
