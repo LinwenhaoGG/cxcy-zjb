@@ -17,7 +17,6 @@ import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -26,9 +25,6 @@ import java.util.*;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
