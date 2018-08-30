@@ -15,17 +15,20 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h3>比赛列表</h3>
-            <ul class="thumbnails" th:each="matchs : ${matchsPage.content}">
+            <h2 align="center" style="color: palevioletred">比赛列表</h2>
+            <p align="right">
+            <a  th:href="'/match/edit'"><button type="button"  class="btn btn-default btn-primary">发布比赛</button></a>
+            </p>
+                <ul class="thumbnails" th:each="matchs : ${matchsPage.content}">
                 <li class="span4">
                     <div class="thumbnail">
                         <div class="caption">
-                            <h3 th:text="${matchs.name}"></h3>
-                            <p th:text="'比赛开始报名时间为:'+${matchs.startTime}">
-                                也称普林斯顿结构，是一种将程序指令存储器和数据存储器合并在一起的存储器结构。程序指令存储地址和数据存储地址指向同一个存储器的不同物理位置。
-                            </p>
+                            <h3 th:text="${matchs.name}" style="color:steelblue"></h3>
+                            <p th:text="'比赛开始报名时间为:'+${matchs.startTime}"></p>
+                            <p th:text="'比赛截止报名时间为:'+${matchs.lastsigntime}"></p>
+                            <p th:text="'比赛正式结束时间为:'+${matchs.overTime}"></p>
                             <p>
-                                <a class="btn btn-primary" th:href="'/match/edit/'+ ${matchs.id}" href="#">编辑</a>
+                                <a  th:href="'/match/edit/'+ ${matchs.id}"><button type="button" class="btn btn-default btn-warning">编辑</button></a>
                                 <a class="btn btn-info"  href="#">功能开发中</a>
                             </p>
                         </div>

@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.converter.MatchGroup2EventSignUp;
-import com.cxcy.zjb.springboot.domain.Event;
-import com.cxcy.zjb.springboot.domain.GroupMember;
-import com.cxcy.zjb.springboot.domain.MatchGroup;
-import com.cxcy.zjb.springboot.domain.Matchs;
+import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.dto.EventSignUp;
 import com.cxcy.zjb.springboot.service.EventService;
 import com.cxcy.zjb.springboot.service.MatchGroupService;
@@ -20,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -49,6 +48,7 @@ public class MatchGroupController {
      * @return
      */
     @RequestMapping("/signUp/{mid}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView signUp(@PathVariable("mid") Long mid,Map map) {
         Matchs matchs = matchService.getMatchById(mid);
 
@@ -57,10 +57,6 @@ public class MatchGroupController {
         return new ModelAndView("matchs/matchGroup/EventsignUp", map);
     }
 
-    @GetMapping("/submit/{mgid}")
-    public ModelAndView submit(@PathVariable("id") Long id,Map map) {
-        return new ModelAndView("matchs/matchGroup/eventEdit", map);
-    }
 
     /**
      * 保存对比赛的报名信息
@@ -125,11 +121,14 @@ public class MatchGroupController {
      * @return
      */
     @GetMapping("/list")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView listSignUp(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
                                    @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
                                    Map map) {
-        //用户的id
-        Long uid = 1L;
+        //获取当前登录的老师账号
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long uid = loginUser.getId();
         //根据开始时间排序
         Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"Signtime");
         PageRequest request = new PageRequest(page - 1, size,sort);

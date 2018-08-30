@@ -52,7 +52,7 @@ public class User implements Serializable,UserDetails {  //
     private String avatar; // 头像图片地址
 
     @Column(name = "state", nullable = false, columnDefinition = "tinyint(2)")
-    private Integer state=0;  //账号状态，0为未激活
+    private Integer state=0;  //账号状态，0为未认证，1为已认证，2为审核中，3为认证失败
 
     @Column(name = "style", nullable = false, columnDefinition = "tinyint(2)")
     private Integer style=0;  //账号类型，0为未认证，1为学生，2为老师，3为企业，4为管理员

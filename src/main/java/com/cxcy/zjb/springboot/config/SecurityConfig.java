@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/css/**","/editormd/**", "/js/**", "/fonts/**", "/scss/**","/index").permitAll() // 都可以访问
+        http.authorizeRequests().antMatchers("/css/**","/editormd/**", "/bootstrap/**", "/js/**", "/fonts/**", "/scss/**","/index").permitAll() // 都可以访问
                 .antMatchers("/admins/**").hasRole("ADMIN") // 需要相应的角色才能访问
                 .and()
                 .headers().frameOptions().sameOrigin()

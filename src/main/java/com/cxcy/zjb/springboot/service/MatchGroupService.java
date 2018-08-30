@@ -14,6 +14,8 @@ import com.cxcy.zjb.springboot.domain.MatchGroup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  *  比赛队伍service层
  * 〈〉
@@ -37,4 +39,11 @@ public interface MatchGroupService {
      * @return
      */
     public Page<MatchGroup> getMatchGroupByUid(Long uid, Pageable pageable);
+
+    /**
+     * 根据项目id查询参赛的所有队伍，按成绩排名
+     * @param eid
+     * @return
+     */
+    public List<MatchGroup> getMatchGroupByEventOrderByAchievement(Long eid);
 }

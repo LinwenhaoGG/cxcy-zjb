@@ -34,7 +34,7 @@ public class Teacher implements Serializable {
     private String specially; //负责哪个专业的导师
 
     @Column(name="number")
-    private Integer number;  // 教师工号
+    private Long number;  // 教师工号
 
     @NotEmpty(message = "民族信息不能为空")
     @Column(nullable = false) // 映射为字段，值不能为空

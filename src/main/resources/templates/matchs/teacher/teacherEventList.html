@@ -16,10 +16,10 @@
     <div class="row-fluid">
         <div class="span12">
             <ul class="thumbnails">
+                <h1 style="color: orangered" align="center">负责的比赛项目</h1>
                 <li class="span4">
-                    <div class="thumbnail">
-                        <h3>负责的比赛项目</h3>
-                        <div class="caption" th:each="teacherEvent : ${teacherEventList}">
+                    <div class="thumbnail" th:each="teacherEvent : ${teacherEventList}">
+                        <div class="caption">
                             <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
                             <h2 th:text="'比赛名称：'+${teacherEvent.mName}"></h2></a>
                             <a th:href="'/match/preview/'+ ${teacherEvent.mId}">

@@ -19,8 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -53,11 +54,14 @@ public class EventController {
      * @return
      */
     @RequestMapping("/teacherEvent")
+    @PreAuthorize("hasAnyAuthority('ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView addMatchs( @RequestParam(value = "page", defaultValue = "1") Integer page, //页数
                                   @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
                                   Map map) {
+        //获取当前登录的老师账号
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Long uid = 1L;
+        Long uid = loginUser.getId();
         //分页类
         PageRequest pageRequest = new PageRequest(page-1, size);
 
@@ -108,6 +112,7 @@ public class EventController {
      * @return
      */
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
     public ResponseEntity<ResultVO> deleteEvent(@PathVariable("id") Long id, Long matchsId) {
         try {
             matchService.deleteEvent(matchsId,id);
@@ -121,18 +126,18 @@ public class EventController {
         return ResponseEntity.ok().body(ResultUtils.success());
     }
 
-    /**
-     * 获取比赛项目列表
-     * @param matchsId
-     * @param model
-     * @return
-     */
-    @GetMapping("/list")
-    @ResponseBody
-    public ResultVO listEvents(@RequestParam(value="matchsId",required=true) Long matchsId, Model model) {
-        Matchs matchs = matchService.getMatchById(matchsId);
-        List<Event> events = matchs.getEventList();
-
+//    /**
+//     * 获取比赛项目列表
+//     * @param matchsId
+//     * @param model
+//     * @return
+//     */
+//    @GetMapping("/list")
+//    @ResponseBody
+//    public ResultVO listEvents(@RequestParam(value="matchsId",required=true) Long matchsId, Model model) {
+//        Matchs matchs = matchService.getMatchById(matchsId);
+//        List<Event> events = matchs.getEventList();
+//
 //        // 判断操作用户是否是评论的所有者
 //        String commentOwner = "";
 //        if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
@@ -142,10 +147,9 @@ public class EventController {
 //                commentOwner = principal.getUsername();
 //            }
 //        }
-
-        model.addAttribute("events", events);
-        return ResultUtils.success(events);
-    }
+//        model.addAttribute("events", events);
+//        return ResultUtils.success(events);
+//    }
 
     /**
      * 保存比赛的项目
@@ -154,6 +158,7 @@ public class EventController {
      */
     @RequestMapping(method = RequestMethod.POST,consumes = "application/json")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ROLE_TEACHER','ROLE_ADMIN')")  // 指定角色权限才能操作方法
     //Matchs matchs, @RequestBody EventJson[] itemList
     public ResultVO saveEvents(@RequestBody JSONObject object) {
         String data=object.toJSONString();

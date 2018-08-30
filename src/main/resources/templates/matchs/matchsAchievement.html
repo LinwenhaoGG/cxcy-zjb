@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>比赛成绩</title>
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <h3 class="text-center" th:text="${matchsName}" >
+                第一届IT文化节<br />
+            </h3>
+            <table class="table table-condensed table-bordered" th:each="achievementList : ${eventAchievementList}">
+                <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>比赛项目名称</th>
+                    <th>小组名称</th>
+                    <th>队长名称</th>
+                    <th>比赛成绩</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="success" th:each="achievement : ${achievementList}">
+                    <td th:text="${achievement.ranking}">1</td>
+                    <td th:text="${achievement.eventName}">微电影大赛</td>
+                    <td th:text="${achievement.groupName}">嘻哈战队</td>
+                    <td th:text="${achievement.captainName}">林文浩</td>
+                    <td th:text="${achievement.achievement}">99.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

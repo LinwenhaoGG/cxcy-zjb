@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  *MatchGroup 仓库
  *
@@ -18,4 +20,11 @@ public interface MatchGroupRepository extends JpaRepository<MatchGroup,Long> {
      * @return
      */
     Page<MatchGroup> findByUser(Long uid, Pageable pageable);
+
+    /**
+     * 根据比赛项目id查找出队伍，并按成绩排名
+     * @param eid
+     * @return
+     */
+    List<MatchGroup> findByEventOrderByAchievementDesc(Long eid);
 }

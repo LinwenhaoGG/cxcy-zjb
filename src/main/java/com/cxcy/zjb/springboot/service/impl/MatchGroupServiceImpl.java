@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -39,5 +41,10 @@ public class MatchGroupServiceImpl implements MatchGroupService {
     @Override
     public MatchGroup saveMatchGroup(MatchGroup matchGroup) {
         return matchGroupRepository.save(matchGroup);
+    }
+
+    @Override
+    public List<MatchGroup> getMatchGroupByEventOrderByAchievement(Long eid) {
+        return matchGroupRepository.findByEventOrderByAchievementDesc(eid);
     }
 }

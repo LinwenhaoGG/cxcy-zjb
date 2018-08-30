@@ -1,8 +1,13 @@
 package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
+import com.cxcy.zjb.springboot.converter.EventMatchGroup2EventAchievement;
+import com.cxcy.zjb.springboot.domain.Event;
+import com.cxcy.zjb.springboot.domain.MatchGroup;
 import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.domain.User;
+import com.cxcy.zjb.springboot.dto.EventAchievement;
+import com.cxcy.zjb.springboot.service.MatchGroupService;
 import com.cxcy.zjb.springboot.service.MatchService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
@@ -11,10 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +43,8 @@ public class MatchController {
     @Autowired
     private MatchService matchService;
 
+    @Autowired
+    private MatchGroupService matchGroupService;
 
     /**
      * 保存比赛
@@ -42,10 +53,14 @@ public class MatchController {
      */
     @RequestMapping
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ResultVO saveMatchs(Matchs matchs) {
         log.info(matchs.toString());
         Matchs re; //数据库保存后返回的值
-        Long uid = 1L;//发布人
+        //获取当前登录的账号
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long uid = loginUser.getId();//发布人id
         if (matchs.getId() != null) {//判断是增加还是修改
             //如果是修改
             Matchs orignalMatchs = matchService.getMatchById(matchs.getId());
@@ -65,7 +80,8 @@ public class MatchController {
      * @param map
      * @return
      */
-    @RequestMapping("/edit")
+    @GetMapping("/edit")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView addMatchs(Map map) {
         Matchs matchs = new Matchs();
         matchs.setOverTime(new Date());
@@ -87,6 +103,7 @@ public class MatchController {
      * @return
      */
     @GetMapping("/edit/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView edit(@PathVariable(value = "id") long id, Map map) {
 
         Matchs matchs = matchService.getMatchById(id);
@@ -136,17 +153,19 @@ public class MatchController {
     }
 
     /**
-     * 查看全部比赛信息
+     * 老师查看查看自己发布的比赛信息
      * @param map
      * @return
      */
     @GetMapping("/teacherList")
+    @PreAuthorize("hasAnyAuthority('ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView listMatchsTeacher(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
                                    @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
                                    Map map) {
-
+        //获取当前登录的老师账号
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         //获取当前老师id
-        Long uid = 1L;
+        Long uid = loginUser.getId();
         //根据开始时间排序
         Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
         PageRequest request = new PageRequest(page - 1, size);
@@ -165,6 +184,7 @@ public class MatchController {
      * @return
      */
     @GetMapping("/adminslist")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
     public ModelAndView listMatchsAdmin(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
                                         @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
                                          Map map) {
@@ -186,6 +206,7 @@ public class MatchController {
      * @return
      */
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public ModelAndView deletematchs(@PathVariable(value = "id") long id) {
 
         matchService.deleteMatchById(id);
@@ -193,4 +214,24 @@ public class MatchController {
         return new ModelAndView("matchs/success");
     }
 
+    /**
+     * 查看比赛成绩
+     * @return
+     */
+    @GetMapping("/matchAchievement/{mid}")
+    public ModelAndView machsAchievement(@PathVariable(value = "mid") Long mid, Model model) {
+        //获取该比赛的成绩
+        Matchs matchs = matchService.getMatchById(mid);
+        List<List<EventAchievement>> eventAchievementList = new ArrayList<>();
+
+        for (Event event : matchs.getEventList()) {
+            List<MatchGroup> matchGroups = matchGroupService.getMatchGroupByEventOrderByAchievement(event.getId());
+            List<EventAchievement> achievementList = EventMatchGroup2EventAchievement.conver(matchGroups, event);
+            eventAchievementList.add(achievementList);
+        }
+
+        model.addAttribute("eventAchievementList",eventAchievementList);
+        model.addAttribute("matchsName",matchs.getName());
+        return new ModelAndView("matchs/matchsAchievement","model",model);
+    }
 }
