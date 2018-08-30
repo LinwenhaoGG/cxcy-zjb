@@ -137,10 +137,8 @@
 			</plugin>
 		</plugins>
 	</build>
-<<<<<<< HEAD
 
-=======
->>>>>>> linwenhao
+
 	<!--&lt;!&ndash; 前端一些css的放行 &ndash;&gt;-->
 	<!--<resources>-->
 		<!--<resource>-->
