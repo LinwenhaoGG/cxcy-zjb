@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Event;
 import com.cxcy.zjb.springboot.domain.Matchs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -30,4 +33,29 @@ public interface MatchService {
     通过id查找
      */
     Matchs getMatchById(Long id);
+
+    /*
+    查询所有比赛
+     */
+    Page<Matchs> findAll(Pageable pageable);
+
+    /**
+     * 删除比赛
+     */
+    void deleteMatchById(Long id);
+
+    /**
+     * 添加项目
+     */
+    Matchs createEvent(Long matchsId, Event event);
+
+    /**
+     * 删除项目
+     */
+    void deleteEvent(Long matchsId, Long eventId);
+
+    /*
+    查询老师编写的比赛
+     */
+    Page<Matchs> findAllByUser(Long user,Pageable pageable);
 }

@@ -10,8 +10,14 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.MatchGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
 /**
- * 〈一句话功能简述〉<br> 
+ *  比赛队伍service层
  * 〈〉
  *
  * @author KOLO
@@ -19,4 +25,25 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface MatchGroupService {
+
+    /**
+     * 保存信息
+     * @param matchGroup
+     * @return
+     */
+    public MatchGroup saveMatchGroup(MatchGroup matchGroup);
+
+    /**
+     *根据用户id查询报名的比赛
+     * @param uid
+     * @return
+     */
+    public Page<MatchGroup> getMatchGroupByUid(Long uid, Pageable pageable);
+
+    /**
+     * 根据项目id查询参赛的所有队伍，按成绩排名
+     * @param eid
+     * @return
+     */
+    public List<MatchGroup> getMatchGroupByEventOrderByAchievement(Long eid);
 }

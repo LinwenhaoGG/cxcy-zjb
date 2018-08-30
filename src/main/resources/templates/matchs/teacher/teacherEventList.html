@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查看</title>
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        ul{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="thumbnails">
+                <h1 style="color: orangered" align="center">负责的比赛项目</h1>
+                <li class="span4">
+                    <div class="thumbnail" th:each="teacherEvent : ${teacherEventList}">
+                        <div class="caption">
+                            <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
+                            <h2 th:text="'比赛名称：'+${teacherEvent.mName}"></h2></a>
+                            <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
+                            <h3 th:text="'项目名称：'+${teacherEvent.eName}"></h3></a>
+                            <p th:text="'比赛开始报名时间为:'+${teacherEvent.startTime}"></p>
+                            <p th:text="'比赛开始评审时间为:'+${teacherEvent.lastsubmittime}"></p>
+                            <p th:text="'比赛正式结束时间为:'+${teacherEvent.overTime}"></p>
+                            <p>
+                                <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd hh:mm:ss')}
+                                and ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} lt ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd hh:mm:ss')} "
+                                   class="btn btn-info"  href="#">作品评审</a>
+                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd hh:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>
+                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd hh:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>
+                                <a class="btn btn-default btn-success" th:href="'/match/preview/'+ ${teacherEvent.mId}" href="#">查看比赛</a>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 column">
+    <ul class="pagination pull-right">
+        <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${totalPage}+' 页'"></a></li>
+        <li class="disabled" th:if="${page} eq '1'" ><a>首页</a></li>
+        <li th:if="${page} ne '1'"><a th:href="'/event/teacherEvent?page=1'+'&&size='+${size}">首页</a></li>
+        <li class="disabled" th:if="${page} le '1'"><a>上一页</a></li>
+        <li th:if="${page} gt '1'"><a th:href="'/event/teacherEvent?page='+${page-1}+'&&size='+${size}">上一页</a></li>
+        <li th:each="pageNo : ${#numbers.sequence(1, totalPage)}">
+            <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+            <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/event/teacherEvent?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
+        </li>
+        <li th:if="${page} lt ${totalPage}"><a th:href="'/event/teacherEvent?page='+${page+1}+'&&size='+${size}">下一页</a></li>
+        <li class="disabled" th:if="${page} ge ${totalPage}"><a>下一页</a></li>
+        <li class="disabled" th:if="${page} eq ${totalPage}"><a>尾页</a></li>
+        <li th:if="${page} ne ${totalPage}"><a th:href="'/event/teacherEvent?page='+${totalPage}+'&&size='+${size}">尾页</a></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Edit</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"href="/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <script th:src="@{/editormd/js/editormd.js}" src="/editormd/js/editormd.js"></script>
+    <script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
+    <style>
+        .btnBox{
+            margin:10px;
+        }
+        .teacher-box{
+            overflow:auto;
+            overflow-x:hidden;
+            height: 150px;
+        }
+        .teacher-box label{
+            display: block;
+        }
+        .subprojects-btn{
+            position: relative;
+            margin: 5px;
+            box-sizing:border-box;
+            -moz-box-sizing:border-box; /* Firefox */
+            -webkit-box-sizing:border-box; /* Safari */
+            background-color: #f3f3f3;
+        }
+        .subprojects-btn label{
+            margin-right: 5px;
+        }
+        .subprojects{
+            padding:10px;
+        }
+        .close-btn{
+            position: absolute;
+            top:0;
+            right:0;
+            padding-right: 10px;
+        }
+        .group_number{
+            margin-top:10px;
+        }
+        /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+        ::-webkit-scrollbar
+        {
+            width: 10px;  /*滚动条宽度*/
+            height: 16px;  /*滚动条高度*/
+        }
+
+        /*定义滚动条轨道 内阴影+圆角*/
+        ::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;  /*滚动条的背景区域的圆角*/
+            background-color:#f1f1f1;/*滚动条的背景颜色*/
+        }
+
+        /*定义滑块 内阴影+圆角*/
+        ::-webkit-scrollbar-thumb
+        {
+            border-radius: 10px;  /*滚动条的圆角*/
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color:#c1c1c1;  /*滚动条的背景颜色*/
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+
+            <!-- 比赛id与比赛名称 -->
+            <input type="hidden" name="id" th:value="*{matchs.id}" id="matchsId">
+            <div align="left">比赛名称:</div>
+            <input class="form-control" placeholder="请填写比赛名称" name="title" th:value="*{matchs.name}" id="title" type="text" />
+            <p align="left">比赛开始时间</p>
+            <input class="form-control" name="startTime" th:field="*{matchs.startTime}" id="startTime" type="date" />
+            <p align="left">比赛结束时间</p>
+            <input class="form-control" name="overTime" th:field="*{matchs.overTime}" id="overTime" type="date" />
+            <p align="left">截止报名时间</p>
+            <input class="form-control" name="lastsigntime" th:field="*{matchs.lastsigntime}" id="lastsigntime" type="date" />
+            <p align="left"
+            >截止提交时间</p>
+            <input class="form-control" name="lastsubmittime" th:field="*{matchs.lastsubmittime}" id="lastsubmittime" type="date" />
+            <!-- markdown代码 -->
+            <div class="editormd" id="test-editormd">
+            <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="content" th:text="*{matchs.content}""></textarea>
+            <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+            <textarea class="editormd-html-textarea" name="text" id="htmlContent" th:text="*{matchs.htmlContent}"></textarea>
+                <!-- 添加子项目模块 -->
+                </div>
+                <div class="btnBox" th:if=" ${#lists.isEmpty(matchs.id)}">
+                    <!-- 触发模态框 -->
+                    <button  class="btn btn-default btn-success" data-toggle="modal" data-target="#myModal">添加子项目</button>
+                </div>
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" th:align="left">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">	&times;</button>
+                                <span style="font-size:18px">添加子项目</span>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <!-- 填写项目名称 -->
+                                    <div class="input-group">
+                                        <span class="input-group-addon">比赛的子项目名称</span>
+                                        <input type="text" placeholder="请输入子项目名称" class="form-control" id="project_name">
+                                    </div>
+                                    <!-- 填写项目名称 -->
+                                    <div class="input-group group_number">
+                                        <span class="input-group-addon">参赛小组人数限制</span>
+                                        <input class="form-control" id="eventnumber" placeholder="参赛人数最少为1" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+                                    </div>
+
+                                    <!-- 选择负责老师 -->
+                                    <h5>选择负责老师</h5>
+                                    <div class="teacher-box">
+                                        <div class="form-check">
+                                            <label class="form-check-label" th:each="user : ${userList}">
+                                                <input type="checkbox" class="form-check-input" th:value="${user.id}">
+                                                <span class="teacher" th:text="${user.name}" >老师1</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"  class="btn btn-primary "  id="teacher-btn">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="subprojects">
+            <!-- 发布按钮 -->
+            </div>
+            <button type="button" id="submitBtn" class="btn btn-default btn-primary" >
+                <div th:if=" ${#lists.isEmpty(matchs.id)}">发布</div>
+                <div th:if="not ${#lists.isEmpty(matchs.id)}">保存</div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        editormd("test-editormd", {
+            width   : "90%",
+            height  : 640,
+            syncScrolling : "single",
+            //你的lib目录的路径，我这边用JSP做测试的
+            tocm : true, // Using [TOCM]
+            tex : true, // 开启科学公式TeX语言支持，默认关闭
+            flowChart : true, // 开启流程图支持，默认关闭
+            path    : "/editormd/lib/",
+            //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+            saveHTMLToTextarea : true,
+            imageUpload : true,
+            imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp", "webp" ],
+            imageUploadURL : "/file/uploadimg",
+            onload: function () {
+                //console.log('onload', this);
+                //this.fullscreen();
+                //this.unwatch();
+                //this.watch().fullscreen();
+                this.width("100%");
+                this.height(480);
+                //this.resize("100%", 640);
+            }
+
+
+        });
+        // 生成子项目标签
+        $("#teacher-btn").click(function(){
+            var name = $("#project_name").val();
+            var eventnumber = $("#eventnumber").val();
+            // 判断子项目名称是否为空
+            if(name==""){
+                // 为空则提示
+                $("#project_name").attr('placeholder','子项目名不能为空');
+                $("#myModal").modal('show');
+            }else{
+                $("#myModal").modal('hide');
+                var tlist = "";
+                var dom = "";
+
+                // 找到所有选中的老师
+                $(".teacher-box").find(":checkbox:checked").each(function(){
+                    var val = $(this).next().text();
+                    var teacherId = $(this).val();
+                    tlist=tlist+'<label value="'+teacherId+'">'+val+'</label>';
+                    // 清空下一次选中状态
+                    this.checked = false;
+                });
+
+                dom = '<div class="subprojects-btn btn">'+'<span class="nameclass">'+name+'</span>'+'<i class="close-btn">&times;</i>'+'<div class="choose-teacher">'+tlist+'</div>'+'<span class="numberclass" value="'+eventnumber+'">'+eventnumber+'人</span>'+'</div>';
+                var newEle = $(dom);
+                // 添加子项目标签
+                $(".subprojects").append(dom);
+                // 清空下一次项目名称
+                $("#project_name").val("");
+                $("#eventnumber").val("");
+            }
+        })
+
+        // 删除已生成的子项目标签
+        $(".close-btn").click(function(){
+            $(this).parent().remove();
+        });
+        $(document).on("click",".close-btn",function(){
+            $(this).parent().remove();
+        })
+
+        $("#submitBtn").click(
+            function () {
+                submitblog();
+            }
+        )
+
+        function submitblog() {
+            var  Id = $("#matchsId").val();
+            var  name = $("#title").val();
+            var content = $("#content").val();
+            var htmlContent = $("#htmlContent").val();
+            var startTime = $("#startTime").val();
+            var overTime = $("#overTime").val();
+            var lastsigntime = $("#lastsigntime").val();
+            var lastsubmittime = $("#lastsubmittime").val();
+            // 获取所有子项目数据，封装成数组
+
+            var itemList=[];  //存储所有子项目对象
+
+            // 遍历每个子项目
+            var item = $(".subprojects").children('.subprojects-btn').each(function(){
+                var item_object={};
+                // 获取子项目名称
+                var item_name = $(this).children('.nameclass').text();
+                var event_number = $(this).children('.numberclass').attr("value");
+
+                //获取所有子项目的负责老师
+                var teacher_list=[];
+                $(this).children('.choose-teacher').children('label').each(function(){
+                    teacher_list.push($(this).attr("value"));
+                });
+                // 把子项目名称和负责老师转变为一个对象
+                item_object["item_name"] = item_name;
+                item_object["teacher_list"] = teacher_list;
+                item_object["event_number"] = event_number;
+                // 把子项目放进数组中
+                itemList.push(item_object);
+
+            });
+
+            $.ajax({
+                url: "/match",
+                data: {id:Id,name: name, content:content,htmlContent:htmlContent,startTime:startTime,
+                    overTime:overTime,lastsigntime:lastsigntime,lastsubmittime:lastsubmittime},
+                success:function (result1) {
+                    alert("发布比赛成功");
+                    console.log(result1);
+                    //var mid = result1.data
+                    $.ajax({
+                        url: "/event",
+                        type:'POST',
+                        dataType:"json",
+                        contentType:"application/json;charsetset=UTF-8",
+                        data: JSON.stringify({eventList:itemList,mid:result1.data}),
+                        success:function () {
+                            alert("发布比赛项目成功");
+                            window.location.href="/match/list";
+                        },
+                        error:function () {
+                            alert("发布失败");
+                        }
+                    })
+                },
+                error:function () {
+                    alert("发布失败");
+                }
+            })
+        }
+
+    });
+
+
+</script>
+
+</body>
+</html>

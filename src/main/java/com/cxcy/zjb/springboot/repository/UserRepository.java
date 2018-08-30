@@ -36,4 +36,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return
      */
     List<User> findByusernameIn(Collection<String> usernames);
+
+    /**
+     * 根据类型查询用户列表
+     * @param style 用户类型
+     * @return
+     */
+    List<User> findByStyle(Integer style);
 }

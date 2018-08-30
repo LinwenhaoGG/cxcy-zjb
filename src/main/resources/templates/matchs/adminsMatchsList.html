@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查看</title>
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        ul{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <h3>比赛列表</h3>
+            <ul class="thumbnails" th:each="matchs : ${matchsPage.content}">
+                <li class="span4">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <h3 th:text="${matchs.name}"></h3>
+                            <p th:text="'比赛开始报名时间为:'+${matchs.startTime}">
+                                也称普林斯顿结构，是一种将程序指令存储器和数据存储器合并在一起的存储器结构。程序指令存储地址和数据存储地址指向同一个存储器的不同物理位置。
+                            </p>
+                            <p>
+                                <a class="btn btn-primary" th:href="'/match/edit/'+ ${matchs.id}" href="#">编辑</a>
+                                <a class="btn btn-info"  href="#">功能开发中</a>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 column">
+    <ul class="pagination pull-right">
+        <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${matchsPage.getTotalPages()}+' 页'"></a></li>
+        <li class="disabled" th:if="${page} eq '1'" ><a >首页</a></li>
+        <li th:if="${page} ne '1'"><a th:href="'/match/adminslist?page=1'+'&&size='+${size}">首页</a></li>
+        <li class="disabled" th:if="${page} le '1'"><a >上一页</a></li>
+        <li th:if="${page} gt '1'"><a th:href="'/match/adminslist?page='+${page-1}+'&&size='+${size}">上一页</a></li>
+        <li th:each="pageNo : ${#numbers.sequence(1, matchsPage.getTotalPages())}">
+        <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+        <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/match/adminslist?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
+        </li>
+        <li th:if="${page} lt ${matchsPage.getTotalPages()}"><a th:href="'/match/adminslist?page='+${page+1}+'&&size='+${size}">下一页</a></li>
+        <li class="disabled" th:if="${page} ge ${matchsPage.getTotalPages()}"><a >下一页</a></li>
+        <li class="disabled" th:if="${page} eq ${matchsPage.getTotalPages()}"><a >尾页</a></li>
+        <li th:if="${page} ne ${matchsPage.getTotalPages()}"><a th:href="'/match/adminslist?page='+${matchsPage.getTotalPages()}+'&&size='+${size}">尾页</a></li>
+    </ul>
+</div>
+</body>
+</html>

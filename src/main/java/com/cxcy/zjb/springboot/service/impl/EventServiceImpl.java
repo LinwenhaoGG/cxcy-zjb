@@ -10,8 +10,14 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Event;
+import com.cxcy.zjb.springboot.repository.EventRepository;
 import com.cxcy.zjb.springboot.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -23,5 +29,26 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EventServiceImpl implements EventService {
+    @Autowired
+    private EventRepository eventRepository;
 
+    @Override
+    public Event getEventById(Long id) {
+        return eventRepository.getOne(id);
+    }
+
+    @Override
+    public void removeEvent(Long id) {
+        eventRepository.delete(id);
+    }
+
+    @Override
+    public List<Event> getEventByUser(Long uid, Pageable pageable) {
+        return eventRepository.getEventByUid(uid,pageable.getPageNumber()*pageable.getPageSize(),pageable.getPageSize());
+    }
+
+    @Override
+    public Integer getEventCountByUid(Long uid) {
+        return eventRepository.getEventCountByUid(uid);
+    }
 }

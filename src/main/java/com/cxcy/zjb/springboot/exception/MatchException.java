@@ -1,6 +1,6 @@
 package com.cxcy.zjb.springboot.exception;
 
-import com.cxcy.zjb.springboot.enums.ResultEnum;
+import com.cxcy.zjb.springboot.Vo.ResultVO;
 
 /**
  * 比赛系统异常异常
@@ -11,7 +11,7 @@ public class MatchException extends RuntimeException {
 
     private Integer code;
 
-    public MatchException(ResultEnum resultEnum) {
+    public MatchException(ResultVO resultEnum) {
         super(resultEnum.getMessage());
 
         this.code = resultEnum.getCode();

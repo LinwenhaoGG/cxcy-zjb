@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>看什么看</title>
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"></head>
+    <link rel="stylesheet" th:href="@{/css/layui.css}" href="//res.layui.com/layui/dist/css/layui.css"  media="all">
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
+<body >
+<!--<div class="container">-->
+    <!--<div class="row clearfix">-->
+        <!--<div class="col-md-12 column">-->
+            <!--<div class="page-header">-->
+                <!--<h1 th:text="${matchs.name}">-->
+                <!--</h1>-->
+            <!--</div>-->
+            <!--<div th:utext="${matchs.htmlContent}"></div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-header" th:align="center" th:text="'比赛名称'+${matchs.name}">标题</div>
+        <div class="layui-card-header" th:align="center" th:text="'比赛开始报名时间为：'+${matchs.startTime}">开始报名时间</div>
+        <div class="layui-card-header" th:align="center" th:text="'比赛最终结束时间为：'+${matchs.overTime}">最终结束时间</div>
+        <div class="layui-card-header" th:align="center" th:text="'比赛截止报名时间为：'+${matchs.lastsigntime}">截止报名时间</div>
+        <div class="layui-card-header" th:align="center" th:text="'比赛截止提交时间为：'+${matchs.lastsubmittime}">截止提交时间</div>
+        <div class="layui-card-body" th:align="center" th:utext="${matchs.htmlContent}">
+            内容
+        </div>
+    </div>
+</div>
+<div class="col-md-12 column" th:align="right">
+    <a th:href="'/group/signUp/'+*{matchs.id}" href="matchGroup/EventsignUp.html"
+       th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} le ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd hh:mm:ss')} ">
+        <button type="button" class="btn btn-default btn-primary">报名</button></a>
+    <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} ge ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd hh:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛报名结束</button>
+</div>
+</body>
+</html>
