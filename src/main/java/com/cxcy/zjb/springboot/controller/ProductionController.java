@@ -178,13 +178,18 @@ public class ProductionController {
      * @return
      */
     public String saveVideo(HttpServletRequest request,MultipartFile file,String url){
-        String video="123.mp4";
+        String video = null;
         if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            String suffix = fileName.substring(fileName.indexOf(".")+1);
+            if(!suffix.equals("mp4")){
+                return null;
+            }
             try {
                 String path = VideoPath.substring(VideoPath.indexOf("/")+1);
                 String filePath = path + url +"/"+ file.getOriginalFilename();
                 System.out.println(filePath);
-                video="temp/"+url+"/"+file.getOriginalFilename();
+                video=url+"/"+file.getOriginalFilename();
                 // 转存文件
                 file.transferTo(new File(filePath));
                 System.out.println(video);
