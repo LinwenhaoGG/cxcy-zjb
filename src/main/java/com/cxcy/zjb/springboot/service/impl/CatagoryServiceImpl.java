@@ -31,6 +31,13 @@ public class CatagoryServiceImpl implements CatagoryService {
 
     @Autowired
     private CatagoryRepository catagoryRepository;
+
+
+    @Override
+    public List<Catagorys> findByDid(Long direction) {
+        return catagoryRepository.findByDirection(direction);
+    }
+
     @Override
     public Catagorys findByCatagorysId(Long catagorysId) {
         Catagorys catagorys = catagoryRepository.getOne(catagorysId);
@@ -40,5 +47,11 @@ public class CatagoryServiceImpl implements CatagoryService {
     @Override
     public List<Catagorys> findAll() {
         return catagoryRepository.findAll();
+    }
+    @Override
+    public void readingIncrease(Long cId) {
+        Catagorys catagory = catagoryRepository.findOne(cId);
+        catagory.setCount(catagory.getCount()+1);
+        catagoryRepository.save(catagory);
     }
 }
