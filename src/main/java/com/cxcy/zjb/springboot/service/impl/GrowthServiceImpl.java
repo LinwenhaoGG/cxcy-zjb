@@ -10,7 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Growth;
+import com.cxcy.zjb.springboot.repository.GrowthRepository;
 import com.cxcy.zjb.springboot.service.GrowthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,5 +26,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GrowthServiceImpl implements GrowthService {
+    @Autowired
+    public GrowthRepository growthRepository;
 
+    @Override
+    public Growth saveGrowth(Growth growth) {
+        return growthRepository.save(growth);
+    }
 }

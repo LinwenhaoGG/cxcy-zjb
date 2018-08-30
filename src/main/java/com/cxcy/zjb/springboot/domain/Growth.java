@@ -34,7 +34,8 @@ public class Growth implements Serializable{
     @Column(name="g_rank")
     private Integer gRank = 0;                 //排名数
 
-    protected Growth(){
+    //需要手动创建growth
+    public Growth(){
 
     }
 }

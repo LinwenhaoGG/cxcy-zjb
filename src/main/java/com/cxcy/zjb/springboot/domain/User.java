@@ -2,6 +2,7 @@ package com.cxcy.zjb.springboot.domain;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,16 +28,21 @@ public class User implements Serializable,UserDetails {  //
     @GeneratedValue(strategy= GenerationType.IDENTITY) // 自增长策略
     private Long id;
 
-    @NotEmpty(message = "姓名不能为空")
+    //注册页面中，姓名暂时可为空，在认证页面再填写
     @Size(min=2, max=20)
     @Column(nullable = false, length = 20) // 映射为字段，值不能为空
     private String name;  //用户真实姓名
 
-    @NotEmpty(message = "邮箱不能为空")
+    //邮箱可为空
     @Size(max=50)
     @Email(message= "邮箱格式不对" )
     @Column(nullable = false, length = 50, unique = true)
     private String email;   //用户邮箱
+
+    //手机
+    @NotEmpty(message = "手机号码不能为空")
+    @Length(min = 11,max = 11,message = "手机号码长度是11位的")
+    private String telephone;
 
     @NotEmpty(message = "账号不能为空")
     @Size(min=3, max=20)
@@ -49,13 +55,13 @@ public class User implements Serializable,UserDetails {  //
     private String password; // 登录时密码
 
     @Column(length = 200)
-    private String avatar; // 头像图片地址
+    private String avatar = "611.jpg"; // 默认头像图片地址
 
     @Column(name = "state", nullable = false, columnDefinition = "tinyint(2)")
     private Integer state=0;  //账号状态，0为未认证，1为已认证，2为审核中，3为认证失败
 
     @Column(name = "style", nullable = false, columnDefinition = "tinyint(2)")
-    private Integer style=0;  //账号类型，0为未认证，1为学生，2为老师，3为企业，4为管理员
+    private Integer style=0;  //账号类型，0为未确定身份，1为学生，2为老师，3为企业，4为管理员
 
     @Column(name="s_id")
     private Long student;   //认证的学生
@@ -71,7 +77,8 @@ public class User implements Serializable,UserDetails {  //
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;  //用户的角色表
 
-    protected User() { // JPA 的规范要求无参构造函数；设为 protected 防止直接使用
+    //该构造方法public，需要直接使用该方法区接受前端传来的数据
+    public User() { // JPA 的规范要求无参构造函数；设为 protected 防止直接使用
     }
 
     @Override

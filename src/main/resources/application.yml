@@ -27,20 +27,21 @@ spring:
   jackson:
     time-zone: GMT+8
 
+
   #配置搜索引擎
  # data:
     #elasticsearch:
       #cluster-nodes: localhost:9300
 server:
   port: 8080
-  #文件上传限制
-
 
 
 img:
   location: D:/upload/
   imagesPath: file:/D:/upload/
 
+#出错回来
+  context-path: /
 
 
 
