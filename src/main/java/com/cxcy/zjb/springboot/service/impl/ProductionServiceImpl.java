@@ -71,7 +71,7 @@ public class ProductionServiceImpl implements ProductionService {
         //获取一个用户id
         Long uId = production.getUser();
         //根据uid获取sid
-        User user = userService.findByUId(uId);
+        User user = userService.findUserById(uId);
         Long sId = user.getStudent();
         //根据用户id查找对应的growth
         Growth growth = growthService.findByUser(sId);
@@ -146,7 +146,7 @@ public class ProductionServiceImpl implements ProductionService {
         List<Vote> votes = originalProduction.getVotes();
         Vote currentVote = null; // 当前用户的点赞情况
         for (Vote vote : votes) {
-            Long uId = userService.findByUId(vote.getUser()).getId();
+            Long uId = userService.findUserById(vote.getUser()).getId();
             if(uId.equals(userService.findByUsername(username).getId())) {
                 currentVote = vote;
                 break;
@@ -193,5 +193,10 @@ public class ProductionServiceImpl implements ProductionService {
     @Override
     public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort) {
         return productionRepository.findFirst7ByCatagorysAndPCheck(catagoryId,0,sort);
+    }
+
+    @Override
+    public List<Production> findByPCheck(int i) {
+        return productionRepository.findByPCheck(0);
     }
 }

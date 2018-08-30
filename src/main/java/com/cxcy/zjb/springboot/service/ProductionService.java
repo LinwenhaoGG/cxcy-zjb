@@ -123,4 +123,10 @@ public interface ProductionService {
      * @return
      */
     public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort);
+
+    /**
+     * 查询所有未通过审核的作品
+     * @return
+     */
+    List<Production> findByPCheck(int i);
 }

@@ -21,6 +21,8 @@ import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +46,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/production")
+@EnableScheduling       //开启定时任务
 public class ProductionController {
 
     @Autowired
@@ -65,6 +68,26 @@ public class ProductionController {
     @Value("${video.VideoPath}")
     private String VideoPath;
 
+    /**
+     * 定时审核作品
+     */
+    @Scheduled(cron = "* * 3 * * ?")
+    public void checkWord() {
+        //1.获取所有的未审核作品：0：未审核
+        List<Production> list = productionService.findByPCheck(0);
+        //2.遍历所有作品，对作品进行文字过滤
+        for (Production production:list) {
+            String fileName = production.getPContent();
+            ResultVO resultVO = checkWord(fileName);
+            if(resultVO.getCode()==0){
+                production.setPCheck(1);
+            }else{
+                production.setPCheck(2);
+            }
+            productionService.save(production);
+        }
+    }
+
 
     //    跳转测试页面
     @RequestMapping(value = "/totest")
@@ -81,7 +104,7 @@ public class ProductionController {
      * @param model
      * @return
      */
-    @GetMapping("listAll")
+    @GetMapping("/listAll")
     public @ResponseBody ResultVO listEsProductions(
             @RequestParam(value="order",required=false,defaultValue="hot") String order,//查询时默认按最热
             @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
@@ -247,22 +270,6 @@ public class ProductionController {
     }
 
 
-    //跳转到上传视频的页面
-    @GetMapping("/toUpFile")
-    public ModelAndView toUpFile(Model model){
-
-        return new ModelAndView("production/uploadVideo", "videa", model);
-    }
-
-
-    //得到上传的视频，并转存
-    @PostMapping("/uploadVideo")
-    public @ResponseBody Object uploadVideo(HttpServletRequest request,@RequestParam("videoFile") MultipartFile videoFile){
-        ResultVO resultVO = new ResultVO();
-        String video = saveVideo(request,videoFile,"video");
-        resultVO.setData(video);
-        return resultVO;
-    }
 
     /**
      * 作品分类展示,通过地址获取类别id，通过id查找出此id的作品
@@ -343,19 +350,23 @@ public class ProductionController {
 
     /**
      * 转存视频文件
-     * @param request
      * @param file
      * @param url
      * @return
      */
-    public String saveVideo(HttpServletRequest request,MultipartFile file,String url){
-        String video="123.mp4";
+    public String saveVideo(MultipartFile file,String url){
+        String video = null;
         if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            String suffix = fileName.substring(fileName.indexOf(".")+1);
+            if(!suffix.equals("mp4")){
+                return null;
+            }
             try {
                 String path = VideoPath.substring(VideoPath.indexOf("/")+1);
                 String filePath = path + url +"/"+ file.getOriginalFilename();
                 System.out.println(filePath);
-                video="temp/"+url+"/"+file.getOriginalFilename();
+                video=url+"/"+file.getOriginalFilename();
                 // 转存文件
                 file.transferTo(new File(filePath));
                 System.out.println(video);
@@ -372,7 +383,7 @@ public class ProductionController {
      * @return
      */
     @GetMapping("/checkWord")
-    public @ResponseBody Object checkWord(String fileName){
+    public @ResponseBody ResultVO checkWord(String fileName){
         String suffix = fileName.substring(fileName.indexOf(".")+1);
         CheckWordUtil checkWordUtil = new CheckWordUtil();
         String msg = "";
@@ -398,16 +409,16 @@ public class ProductionController {
     }
 
 
-
     /**
      * 新建或者修改作品，成功则返回对应的作品路径
      * @param username
      * @param pId
      * @param pTitle
+     * @param pSummary
      * @param pSort
      * @param Catagorys
      * @param pContent
-     * @param pVideo
+     * @param videoFile
      * @return
      */
     @RequestMapping(value="/{username}/saveProduction",method=RequestMethod.POST)
@@ -416,7 +427,7 @@ public class ProductionController {
                             @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
                             @RequestParam(value="pSummary") String pSummary,
                             @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
-                            @RequestParam("pContent") MultipartFile pContent, @RequestParam(value = "pVideo", required = false) String pVideo) {
+                            @RequestParam("pContent") MultipartFile pContent, @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
         try {
             Production production;
             // 判断是修改还是新增
@@ -426,7 +437,7 @@ public class ProductionController {
 //                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题,作品的简介
                 orignalProduction.setPTitle(pTitle);
                 orignalProduction.setPSort(pSort);
-                orignalProduction.setPVideo(pVideo);
+//                orignalProduction.setPVideo(pVideo);
                 orignalProduction.setPSummary(pSummary);
                 production = orignalProduction;
             }else {
@@ -438,7 +449,7 @@ public class ProductionController {
                 newproduction.setPTitle(pTitle);
                 newproduction.setPSort(pSort);
                 newproduction.setCatagorys(Catagorys);
-                newproduction.setPVideo(pVideo);
+
                 newproduction.setPSummary(pSummary);
                 production = newproduction;
 
@@ -470,6 +481,13 @@ public class ProductionController {
             }
             else{
                 return ResultUtils.error(2,"文件上传格式不符合要求，请重新上传");
+            }
+            if(videoFile!=null){
+                String video = saveVideo(videoFile,"video");
+                if(video==null){
+                    return ResultUtils.error(2,"视频格式错误");
+                }
+                production.setPVideo(video);
             }
             production.setPContent(filePath);
             productionService.save(production);

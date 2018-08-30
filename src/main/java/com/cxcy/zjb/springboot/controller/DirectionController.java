@@ -1,14 +1,14 @@
 package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
+import com.cxcy.zjb.springboot.domain.Catagorys;
 import com.cxcy.zjb.springboot.domain.Direction;
+import com.cxcy.zjb.springboot.service.CatagoryService;
 import com.cxcy.zjb.springboot.service.DirectionService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,12 +25,21 @@ public class DirectionController {
     @Autowired
     private DirectionService directionService;
 
+    @Autowired
+    private CatagoryService catagoryService;
+
+    /**f
+     * 查找所有的方向和第一个方向对应的分类
+     * @return
+     */
     @GetMapping("/findAllDirection")
     public @ResponseBody
-    ResultVO findAllDirection(Integer pageIndex,Integer pageSize){
-        //设置分页
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
-        Page<Direction> list = directionService.findAll(pageable);
-        return ResultUtils.success(list);
+    ResultVO findAllDirection(Model model){
+        List<Direction> list = directionService.findAll();
+        Direction direction = list.get(0);
+        List<Catagorys> list1 = catagoryService.findByDid(direction.getDId());
+        model.addAttribute("list",list);
+        model.addAttribute("list1",list1);
+        return ResultUtils.success(model);
     }
 }

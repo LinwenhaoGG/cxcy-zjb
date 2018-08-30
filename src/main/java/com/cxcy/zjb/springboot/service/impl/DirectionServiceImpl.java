@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -34,8 +36,8 @@ public class DirectionServiceImpl implements DirectionService {
     private DirectionRepository directionRepository;
 
     @Override
-    public Page<Direction> findAll(Pageable pageable) {
-        return directionRepository.findAll(pageable);
+    public List<Direction> findAll() {
+        return directionRepository.findAll();
     }
 
     @Override

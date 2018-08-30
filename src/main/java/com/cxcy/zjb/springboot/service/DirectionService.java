@@ -14,9 +14,6 @@ import com.cxcy.zjb.springboot.domain.Direction;
 
 import java.util.List;
 
-import com.cxcy.zjb.springboot.domain.Direction;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -28,7 +25,7 @@ import org.springframework.data.domain.Pageable;
  */
 public interface DirectionService {
 
-    Page<Direction> findAll(Pageable pageable);
+    List<Direction> findAll();
 
 
     /**
