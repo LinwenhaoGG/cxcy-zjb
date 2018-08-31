@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -61,9 +62,15 @@ public class Information implements Serializable {
     @JoinColumn(name = "catalog_id")
     private InformationCategory informationCategory; //资讯所属分类
 
+
     public Information(String title,String content,String author){
         this.title = title;
         this.content = content;
         this.author = author;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+        this.htmlContent = content;
     }
 }

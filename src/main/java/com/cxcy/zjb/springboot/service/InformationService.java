@@ -10,6 +10,15 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Information;
+import com.cxcy.zjb.springboot.domain.InformationCategory;
+import com.cxcy.zjb.springboot.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
+
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +28,68 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface InformationService {
+
+    /**
+     * 根据id获取资讯
+     *
+     * @param id
+     * @return
+     */
+    Information getInformationById(Long id);
+
+    /**
+     * 保存资讯
+     *
+     * @param information
+     */
+    void saveInformation(Information information);
+
+    /**
+     * 阅读量递增
+     *
+     * @param id
+     */
+    void readingIncrease(Long id);
+
+    /**
+     * 删除资讯
+     *
+     * @param id
+     */
+    void removeInformation(Long id);
+
+    /**
+     * 按分类分页查询
+     * @param informationCategory
+     * @param pageable
+     * @return
+     */
+    Page<Information> listInformationByCategory(InformationCategory informationCategory, Pageable pageable);
+
+    /**
+     * 根据用户与标题模糊分类查询（最热）
+     * @param user
+     * @param title
+     * @param pageable
+     * @return
+     */
+    Page<Information> listInformationByTitleVoteAndSort(User user, String title, Pageable pageable);
+
+    /**
+     * 根据用户与标题模糊查询（最新）
+     * @param user
+     * @param title
+     * @param pageable
+     * @return
+     */
+    Page<Information> listInformationByTitleVote(User user, String title, Pageable pageable);
+
+    /**
+     *
+      * @param pageable
+     * @return
+     */
+    Page<Information> listInformationOrderByCreateTimeDesc(InformationCategory informationCategory,Pageable pageable);
+
+
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/js/toastr.min.js}"></script>
+    <script>
+        //发布资讯
+        $(function() {
+            $("#submitInformation").click(function () {
+
+                $.ajax({
+                    url: '/information/x/edit',
+                    type: 'POST',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({
+                        "id": $('#informationId').val(),
+                        "title": $('#title').val(),
+                        "author": $('#author').val(),
+                        "content": $('#content').val(),
+                        "informationCategory": {"id": $('#informationCategory').val()},
+                    }),
+                    success: function(data){
+                        if (data.success) {
+                            // 成功后，重定向
+                            window.location = data.body;
+                        } else {
+                            toastr.error("error!"+data.message);
+                        }
+
+                    },
+                    error : function() {
+                        toastr.error("error!");
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="informationContent">
+
+        <div th:object="${informationModel.information}">
+            <input type="hidden" name="id" th:value="*{id}" id="informationId">
+            <input id="title" name="title" placeholder="请输入标题" type="text" th:value="*{title}" maxlength="50">
+            <input id="author" name="author" placeholder="请输入作者" type="text" th:value="*{author}" maxlength="50">
+            <textarea id="content" name="content" th:text="*{content}"></textarea>
+        </div>
+        <div id="img">
+
+        </div>
+        <div>
+            分类：<select id="informationCategory" th:placeholder="请选择">
+            <option th:value="*{id}" th:text="*{name}" th:each="informationCategory : ${informationModel.categories}" th:object="${informationCategory}"
+                    th:selected="${informationCategory eq informationModel.information.informationCategory}">java</option>
+        </select>
+        </div>
+        <div>
+            <button id="submitInformation" >发布</button>
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+

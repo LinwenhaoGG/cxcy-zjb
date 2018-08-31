@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/js/toastr.min.js}"></script>
+    <script th:inline="javascript">
+        var informationId = [[${informationModel.id}]];
+        var informationUrl = '/information/' + [[${informationModel.user.username}]] + '/'+ [[${informationModel.id}]] ;
+    </script>
+    <script>
+
+        //删除资讯
+        $(function () {
+            $(".information-container").on("click",".information-delete",function () {
+                $.ajax({
+                    url: informationUrl,
+                    type: 'DELETE',
+                    success: function(data){
+                        if (data.success) {
+                            // 成功后，重定向
+                            window.location = data.body;
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    },
+                    error : function() {
+                        toastr.error("error!");
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="information-container">
+
+        <div>
+            <div>
+                <h2>
+                <a th:href="'/information/'+ ${informationModel.user.username} + '/' + ${informationModel.id} "
+                th:title="${informationModel.user.username}" th:text="${informationModel.title}">
+
+                </a>
+                </h2>
+
+                <div>
+                    <a th:href="'/information/' + ${informationModel.user.username}" class="card-link" th:text="${informationModel.user.username}" >x</a> 发表于: <i th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}"></i>
+                    阅读量: <i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}"></i>
+                    <a th:if="${isInformationOwner}" th:href="'/information/' + ${informationModel.user.username}+ '/edit/'+ ${informationModel.id}" >编辑</a>
+                    <a href="javascript:void(0)" th:if="${isInformationOwner}" class="information-delete">删除</a>
+                </div>
+                <hr>
+                <article th:utext="${informationModel.htmlContent}">
+
+                </article>
+                <hr>
+            </div>
+            <div>
+                <h5>分类：<a href="#" th:text="${informationModel.informationCategory.name}">
+
+                </a></h5>
+
+                <h5 >作者：
+                    <span th:text="${informationModel.author}"></span>
+                </h5>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

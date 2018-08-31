@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       lang="en"
+       xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h3>Hello</h3>
+    <div>
+        <ul>
+            <li th:each="informationCategory:${informationCategories}">
+                编号：<span th:text="${informationCategory.id}"></span>
+                名称：<span th:text="${informationCategory.name}"></span>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.cxcy.zjb.springboot.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * 主页控制层
@@ -9,4 +10,9 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class MainController {
+
+    @GetMapping("/")
+    public String getMain(){
+        return "index";
+    }
 }
