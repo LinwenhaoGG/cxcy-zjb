@@ -128,4 +128,11 @@ public interface ProductionService {
      * @return
      */
     List<Production> findByPCheck(int i);
+
+    /**
+     * 用户查询自己所有的作品，包括未审核和审核不通过的
+     * @param userId
+     * @return
+     */
+    Page<Production> findAllByUserId(Long userId,Pageable pageable);
 }

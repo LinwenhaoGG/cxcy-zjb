@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>创新创业平台</title>
+</head>
+<body style="padding-left: 130px;padding-right: 130px">
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <h2>创新创业平台</h2>
+            <div class="navbar navbar-inverse">
+
+                <div class="navbar-inner">
+
+                    <div class="container-fluid">
+                        <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar">
+						<span class="icon-bar"></span
+                        ><span class="icon-bar"></span>
+                            <span class="icon-bar"></span></a>
+
+                        <div class="nav-collapse">
+
+                            <ul class="nav">
+                                <li>
+                                    <a href="#">创新创业资讯</a>
+                                </li>
+                                <li>
+                                    <a href="#">比赛项目</a>
+                                </li>
+                                <li>
+                                    <a href="/browse/recommend">业余作品</a>
+                                </li>
+                                <li class="dropdown">
+
+
+                                </li>
+                            </ul>
+                            <ul class="nav pull-right" id="userul">
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+       find2();
+    });
+    function find2() {
+        $.ajax({
+            type:"get",
+            url:"/user/person",
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data:{},
+            success:function(datas){
+                $("#userul").html("");
+                if(datas == ""){
+                    var li1 = $("<li><a href='#'>登录</a></li>");
+                    var li2 = $("<li><a href='#'>注册</a></li>");
+                }else{
+                    var li1 = $("<li><a>你好，"+datas.username+"</a></li><li class=\"divider-vertical\"></li>");
+                    var li2 = $("<li class=\"dropdown\">" +
+                        "<a class=\" dropdown-toggle btn_button\" id=\"dropdownMenu1\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">" +
+                        "<span class=\"typeselect\">个人中心</span>" +
+                        "<span class=\"caret\"></span></a></li>"
+                        );
+                    var li6 = $("<ul class=\"dropdown-menu\" aria-labelledby=\"dropdownMenu1\"></ul>");
+                    if (datas.style == '1') {//如果是学生，就有作品中心和比赛中心
+                        var li3 = $( "<li><a href='/production/center/user"+datas.id+"'>作品中心</a></li>");
+                        var li4 = $("<li><a href='#'>比赛中心</a></li>");
+
+                    }else if(datas.style == '2'){//如果是老师，就有资讯中心和比赛中心
+                        var li3 = $("<li><a href='#'>资讯中心</a></li>");
+                        var li4 = $("<li><a href='#'>比赛中心</a></li>");
+
+                    }else if(datas.style == '3'){//如果是企业家，就都没有
+                        var li3 = $("");
+                        var li4 = $("");
+                    }
+                    var li5 = $("<li><a href='#'>消息</a></li>" +
+                                "<li><a href='#'>设置</a></li>" +
+                                "<li><a href='#'>退出</a></li>");
+                    $(li6).append.call($(li6),li3,li4,li5);
+                    $(li2).append.call($(li2),li6);
+                }
+                $("#userul").append.call($("#userul"),li1,li2);
+            },
+            error : function(result) {
+                $("#userul").html("");
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

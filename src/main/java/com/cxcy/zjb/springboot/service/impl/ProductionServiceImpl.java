@@ -199,4 +199,9 @@ public class ProductionServiceImpl implements ProductionService {
     public List<Production> findByPCheck(int i) {
         return productionRepository.findByPCheck(0);
     }
+
+    @Override
+    public Page<Production> findAllByUserId(Long userId,Pageable pageable) {
+        return productionRepository.findByUser(userId,pageable);
+    }
 }

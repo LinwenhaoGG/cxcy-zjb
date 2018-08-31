@@ -28,6 +28,8 @@ import java.util.*;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +130,35 @@ public class ProductionController {
         return ResultUtils.success(model);
     }
 
+    /**
+     * 用户查询自己所有的作品，包括未审核和审核不通过的
+     * @param session
+     * @param userId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/center/user{userId}")
+    public ModelAndView centerShowProduction(HttpSession session,
+                                              @PathVariable("userId") Long userId,
+                                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                              @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                              Map map){
 
+        //设置分页
+        Pageable pageable = new PageRequest(pageIndex-1, pageSize);
+        Page<Production> productions = productionService.findAllByUserId(userId,pageable);
+        if(productions.getTotalPages()==0){
+            map.put("productionPage",null);
+        }else{
+            map.put("productionPage",productions);
+        }
+        String url = "/production/center/user"+userId;
+        map.put("url",url);
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        return new ModelAndView("production/productionCenter",map);
+    }
 
     // 分页显示用户的所有作品信息
     @GetMapping("/{username}/production")
