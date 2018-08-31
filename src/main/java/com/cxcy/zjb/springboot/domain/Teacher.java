@@ -54,4 +54,6 @@ public class Teacher implements Serializable {
     @Size(min=2)
     @Column(nullable = false) // 映射为字段，值不能为空
     private String credential;           //目前研究方向和指导学生要求
+
+
 }

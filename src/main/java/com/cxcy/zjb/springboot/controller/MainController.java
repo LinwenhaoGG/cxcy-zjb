@@ -35,7 +35,7 @@ public class MainController {
         return "register";
     }
 
-    @GetMapping("/")
+    @GetMapping("/loginsuccess")
     public String define(Model model) {
         //判断是否已经登录
         if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
@@ -53,5 +53,9 @@ public class MainController {
         }
         //未登录则跳转登录页面
         return "login";
+    }
+    @GetMapping("/")
+    public String getMain(){
+        return "index";
     }
 }

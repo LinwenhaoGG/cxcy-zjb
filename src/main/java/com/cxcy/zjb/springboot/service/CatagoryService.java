@@ -19,4 +19,6 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface CatagoryService {
+
+
 }
