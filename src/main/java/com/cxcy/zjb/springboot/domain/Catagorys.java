@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class Catagorys implements Serializable{
 
     private static final long serialVersionUID = 1L;
@@ -29,15 +31,8 @@ public class Catagorys implements Serializable{
     @Column(nullable = false)      //映射为字段，值不能为空
     private String caName;
 
-    @Column(name="direction_count")
-    private Long count;            //映射为字段，记录点击的次数
 
     protected Catagorys(){
 
-    }
-
-    public Catagorys(Long direction, Long count) {
-        this.direction = direction;
-        this.count = count;
     }
 }
