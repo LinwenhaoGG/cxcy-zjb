@@ -56,7 +56,7 @@ function adminSubmit() {
             type: "post",
             success: function (data) {
                 if (data.code == 1) {
-                    window.location.href = "/html/waitTip.html";
+                    window.location.href = "/login-success";
                 }
             }
         })
@@ -91,7 +91,7 @@ function companyTeacher() {
             type: "post",
             success: function (data) {
                 if (data.code == 1) {
-                    window.location.href = "/html/waitTip.html";
+                    window.location.href = "/login-success";
                 }
             }
         })
@@ -127,7 +127,7 @@ function teacherSubmit() {
             type: "post",
             success: function (data) {
                 if (data.code == 1) {
-                    window.location.href = "/html/waitTip.html";
+                    window.location.href = "/login-success";
                 }
             }
         })
@@ -161,7 +161,7 @@ function studentSubmit() {
             type: "post",
             success: function (data) {
                 if (data.code == 1) {
-                    window.location.href = "/html/waitTip.html";
+                    window.location.href = "/login-success";
                 }
             }
         })
@@ -171,9 +171,7 @@ function studentSubmit() {
 
 //显示需要填写的信息框
 function displayDiv() {
-    var location = window.location.href;
-    var index = location.indexOf("=");
-    var uStyle = location.substring(index + 1, location.length);
+    var uStyle = $("#uStyle").val();
     if (uStyle == 1) {
         $("#student").css("display", "block");
     } else if (uStyle == 2) {

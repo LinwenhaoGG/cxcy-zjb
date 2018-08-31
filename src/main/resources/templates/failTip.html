@@ -1,11 +1,13 @@
-<html lang="en">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	   lang="en"
+	   xmlns:th="http://www.thymeleaf.org">
 
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="../css/layui.css" />
-		<script src="../js/jquery-1.11.0.min.js"></script>
-		<script type="text/javascript" src="../js/layui.js"></script>
-        <script src="../js/failTip.js"></script>
+		<link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
+		<script src="../js/jquery-1.11.0.min.js" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+		<script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
+        <script src="../js/failTip.js"  th:src="@{/js/failTip.js}"></script>
 		<title>验证身份</title>
 	</head>
 

@@ -1,11 +1,13 @@
-<html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	   lang="en"
+	   xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" href="../css/layui.css" />
-		<link rel="stylesheet" type="text/css" href="../css/information.css"/>
-		<script type="text/javascript" src="../js/layui.js" ></script>
-		<script type="text/javascript" src="../js/jquery-1.11.0.min.js" ></script>
-		<script src="../js/information.js"></script>
+		<link rel="stylesheet" href="../css/layui.css"  th:href="@{/css/layui.css}"/>
+		<link rel="stylesheet" type="text/css" href="../css/information.css" th:href="@{/css/information.css}"/>
+		<script src="../js/jquery-1.11.0.min.js" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+		<script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
+		<script src="../js/information.js" th:src="@{/js/information.js}"></script>
 		<title>创新创业平台</title> 
 	</head>
 	<body>

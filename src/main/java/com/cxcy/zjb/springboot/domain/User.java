@@ -30,13 +30,13 @@ public class User implements Serializable,UserDetails {  //
 
     //注册页面中，姓名暂时可为空，在认证页面再填写
     @Size(min=2, max=20)
-    @Column(nullable = false, length = 20) // 映射为字段，值不能为空
+    @Column(nullable = true, length = 20) // 映射为字段，值不能为空
     private String name;  //用户真实姓名
 
     //邮箱可为空
     @Size(max=50)
     @Email(message= "邮箱格式不对" )
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = true, length = 50, unique = true)
     private String email;   //用户邮箱
 
     //手机

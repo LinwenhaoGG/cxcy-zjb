@@ -1,16 +1,18 @@
-<html lang="en">
-
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	   lang="en"
+	   xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="../css/layui.css" />
-		<script src="../js/jquery-1.11.0.min.js"></script>
-		<script type="text/javascript" src="../js/layui.js"></script>
-		<script type="text/javascript" src="../js/validate.js"></script>
-		<link rel="stylesheet" href="../css/validate.css" />
+		<link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
+		<link rel="stylesheet" href="../css/validate.css" th:href="@{/css/validate.css}"/>
+		<script src="../js/jquery-1.11.0.min.js" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+		<script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
+		<script type="text/javascript" src="../js/validate.js" th:src="@{/js/validate.js}"></script>
 		<title>验证身份</title>
 	</head>
 
 	<body>
+	<input type="hidden" th:value="${model.uStyle}" id="uStyle">
 		<div class="layui-container">
 			<!--标题栏-->
 			<div class="layui-row">
@@ -44,7 +46,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">真实姓名</label>
                         <div class="layui-input-block">
-                            <input type="text" id="name" name="name" required lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+                            <input type="text" id="name" name="name" required 0lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                         </div>
                     </div>
 					<div class="layui-form-item">

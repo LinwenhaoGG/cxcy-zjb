@@ -13,7 +13,7 @@ function submitAgain() {
         success:function (data) {
             if (data.code == 1 ){
                 var uStyle = data.object;
-                window.location.href="/html/validate.html?uStyle="+uStyle;
+                window.location.href="/login-success";
             }
         }
         

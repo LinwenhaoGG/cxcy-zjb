@@ -82,10 +82,7 @@ function showContent(data) {
 //获取用户信息
 function getUserMessage(){
     //获取路径上的用户id
-    var loc = location.href;
-    var n1 = loc.length;
-    var n2 = loc.indexOf("=");
-    var id = decodeURI(loc.substr(n2+1, n1-n2));
+    var id = $("#userId").val();
     //利用ajax去请求该用户的信息
     $.ajax({
         //请求方式
