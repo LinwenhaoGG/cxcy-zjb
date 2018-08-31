@@ -84,10 +84,12 @@ public class ProductionController {
     }
 
 
-    //    跳转测试页面
-    @RequestMapping(value = "/totest")
-    public String totest() {
-        return "file/index";
+    //    跳转到编辑页面
+    @RequestMapping(value = "/toUploadProduction")
+    public  ModelAndView toUploadProduction(String username,Long pId,Map map) {
+        map.put("userName",username);
+        map.put("pId",pId);
+        return new ModelAndView("production/uploadProduction",map);
     }
 
     /**
@@ -132,15 +134,13 @@ public class ProductionController {
 
     /**
      * 用户查询自己所有的作品，包括未审核和审核不通过的
-     * @param session
      * @param userId
      * @param pageIndex
      * @param pageSize
      * @return
      */
     @GetMapping("/center/user{userId}")
-    public ModelAndView centerShowProduction(HttpSession session,
-                                              @PathVariable("userId") Long userId,
+    public ModelAndView centerShowProduction(@PathVariable("userId") Long userId,
                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
                                               @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
                                               Map map){
@@ -154,29 +154,42 @@ public class ProductionController {
             map.put("productionPage",productions);
         }
         String url = "/production/center/user"+userId;
+        User user = userService.findUserById(userId);
         map.put("url",url);
+        map.put("userName",user.getUsername());
         map.put("page",pageIndex);
         map.put("size",pageSize);
         return new ModelAndView("production/productionCenter",map);
     }
 
     // 分页显示用户的所有作品信息
-    @GetMapping("/{username}/production")
+    @GetMapping("/{username}/productionCenter")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
-    public @ResponseBody ResultVO showAllProduction(@PathVariable("username") String username ,Integer pageIndex,Integer pageSize){
+    public ModelAndView showAllProduction(@PathVariable("username") String username ,
+                                                    @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                                    @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                                    Map map){
         //设置分页
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Pageable pageable = new PageRequest(pageIndex-1, pageSize);
 //        根据用户名查找用户
         Page<Production> productions;
-        try {
-            User user = userService.findByUsername(username);
-            Long uId = user.getId();
-//        根据用户ID查找所有的作品
-            productions = productionService.findByUserAndPCheck(uId,pageable);
-        }catch(Exception e) {
-            return ResultUtils.error(1, "显示异常");
+        User user = userService.findByUsername(username);
+        Long uId = user.getId();
+//      根据用户ID查找所有的作品
+        productions = productionService.findByUserAndPCheck(uId,pageable);
+        System.out.println(uId);
+        System.out.println(productions.getTotalPages());
+        if(productions.getTotalPages()==0){
+            map.put("productionPage",null);
+        }else{
+            map.put("productionPage",productions);
         }
-        return ResultUtils.success(productions);
+        String url = "/production/"+username+"/productionCenter";
+        map.put("user",username);
+        map.put("url",url);
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        return new ModelAndView("production/productionOtherCenter",map);
     }
 
     //    删除对应的作品:需要先判断作品是否作者的，好像不用判断，当显示作品详情的时 候已经对作品的作者进行判断了才会显示删除接口
@@ -220,7 +233,7 @@ public class ProductionController {
      * @param pId
      * @return
      */
-    @GetMapping("/{username}/production/{pId}")
+    @GetMapping("/{username}/productions/{pId}")
     public @ResponseBody ResultVO getProductionByPId(@PathVariable("username") String username,@PathVariable("pId") Long pId,Model model) {
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);

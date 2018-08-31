@@ -88,7 +88,7 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public Page<Production> findByUserAndPCheck(Long user,Pageable pageable) {
-        return productionRepository.findByUserAndPCheck(user,1,pageable);
+        return productionRepository.findByUserAndPCheck(user,0,pageable);
     }
 
     @Override

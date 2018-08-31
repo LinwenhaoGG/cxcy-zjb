@@ -58,7 +58,7 @@
 			</span>
 				</div>
 
-				<span th:text="${p.userName}  "></span>
+				<a th:text="${p.userName}" th:href="'/production/'+${p.userName}+'/productionCenter'"></a>
 				<a th:text="${p.direction}  "></a>
 				<a th:text="${p.catagorys}"></a>
 

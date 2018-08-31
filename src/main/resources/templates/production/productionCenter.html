@@ -42,6 +42,9 @@
                     <th style="text-align:center">
                         操作
                     </th>
+                    <th style="text-align:center">
+                        操作
+                    </th>
                 </tr>
                 </thead>
                 <tbody th:each="p : ${productionPage}">
@@ -64,7 +67,10 @@
                         <button class="btn btn-link" type="button">查看</button>
                     </td>
                     <td style="text-align:center" >
-                        <button class="btn btn-link" type="button">删除</button>
+                        <a th:href="@{'/production/toUploadProduction?username='+${userName}+'&pId='+${p.pId}}">编辑</a>
+                    </td>
+                    <td style="text-align:center" >
+                        <button class="btn btn-link" type="button" onclick="">删除</button>
                     </td>
                 </tr>
 

@@ -2,7 +2,7 @@ spring:
   #配置DataSource
   datasource:
     username: root
-    password: 123456
+    password: root
     url: jdbc:mysql://localhost:3306/cxcy?characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
 
@@ -16,7 +16,6 @@ spring:
     prefix: classpath:/templates/
 
     #配置标准
-
 
     content-type: text/html
   http:
@@ -34,14 +33,8 @@ spring:
  # data:
     #elasticsearch:
       #cluster-nodes: localhost:9300
-server:
-  port: 8080
-
 file:
   FilePath: E:/Workspace/Temp/file/
-
-
-
 
 
 video:

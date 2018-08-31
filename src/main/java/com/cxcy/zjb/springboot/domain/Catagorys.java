@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class Catagorys implements Serializable{
 
     private static final long serialVersionUID = 1L;
