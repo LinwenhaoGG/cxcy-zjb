@@ -191,13 +191,11 @@
             var pId = $('#pId').val();
 
             var url = "/production/"+username+"/productions/"+pId;
-            alert(url);
             $.ajax({
                 url:url,
                 success:function(res){
                     var data0 = res.data[0];
                     var data1=res.data[1];
-                    alert("123"+data1.pvideo);
 
                     var psort=data1.psort;
 

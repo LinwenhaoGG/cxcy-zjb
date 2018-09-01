@@ -36,7 +36,7 @@
                 <tr>
                     <td style="text-align:center" th:text="${p.pTitle}">
                     </td>
-                    <td style="text-align:center" th:text="${p.puploadTime}">
+                    <td style="text-align:center" th:text="${#dates.format(p.puploadTime,'yyyy-MM-dd')}">
                     </td>
                     <td style="text-align:center" >
                         <button class="btn btn-link" type="button">查看</button>

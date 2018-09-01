@@ -48,10 +48,5 @@ public class CatagoryServiceImpl implements CatagoryService {
     public List<Catagorys> findAll() {
         return catagoryRepository.findAll();
     }
-    @Override
-    public void readingIncrease(Long cId) {
-        Catagorys catagory = catagoryRepository.findOne(cId);
-        catagory.setCount(catagory.getCount()+1);
-        catagoryRepository.save(catagory);
-    }
+
 }

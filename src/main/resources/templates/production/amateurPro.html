@@ -45,22 +45,22 @@
 
 			<div  style="margin-bottom: 30px;border: 10px solid #cccc;padding: 5px;padding-left: 20px;padding-right: 20px">
 
-			<h4 th:text="${p.production.pTitle}"></h4>
-				<p th:text="${p.production.pSummary}">
-				</p>
-				<div>
+				<h4 th:text="${p.production.pTitle}"></h4>
+				<p th:text="${p.production.pSummary}"></p>
 
-			<span style="float:right;margin-right: 10px">
-				<p>
-					<span class="badge" th:text="'点赞数：'+${p.production.eVoteSize}"></span>
-					<span class="badge" th:text="'阅读量：'+${p.production.readSize}"></span>
+				<div>
+					<span style="float:right;margin-right: 10px">
+					<p>
+						<span class="badge" th:text="'点赞数：'+${p.production.eVoteSize}"></span>
+						<span class="badge" th:text="'阅读量：'+${p.production.readSize}"></span>
 				</p>
-			</span>
+					</span>
 				</div>
 
-				<a th:text="${p.userName}" th:href="'/production/'+${p.userName}+'/productionCenter'"></a>
-				<a th:text="${p.direction}  "></a>
-				<a th:text="${p.catagorys}"></a>
+				<a th:text="${p.userName}" th:href="'/production/'+${p.userName}+'/productionCenter'"></a>&nbsp;&nbsp;&nbsp;
+				<a th:text="${p.direction}  "></a>&nbsp;&nbsp;
+				<a th:text="${p.catagorys}"></a>&nbsp;&nbsp;&nbsp;
+				<span th:text="${#dates.format(p.production.puploadTime,'yyyy-MM-dd')}"></span>
 
 		</div>
 

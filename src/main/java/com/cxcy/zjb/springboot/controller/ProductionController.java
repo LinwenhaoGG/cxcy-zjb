@@ -197,14 +197,6 @@ public class ProductionController {
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
     public @ResponseBody ResultVO deleteProduction(@PathVariable("username") String username,@PathVariable("pId") Long pId) {
         boolean isProductionOwner = false;
-        // 判断操作用户是否是作品的所有者
-        /*if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-            User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal !=null && username.equals(principal.getUsername())) {
-                isProductionOwner = true;//作品是作者的，可以显示编辑删除等功能
-            }
-        }*/
         Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
         User user = userService.findUserById(uId);
@@ -219,8 +211,8 @@ public class ProductionController {
                 return ResultUtils.error(1, "删除失败");
             }
             //      删除成功会跳转到用户的个人作品显示页面
-            String redirectUrl = username + "/producition";
-            return ResultUtils.success(redirectUrl);
+            //String redirectUrl = username + "/producition";
+            return ResultUtils.success();
         }
         else{
             return ResultUtils.error(2,"无权删除");
@@ -292,8 +284,6 @@ public class ProductionController {
         browse.setBrowseTime(dateString);
         browseService.saveLastBrowse(browse);
 
-        //设置这个分类浏览数量加1
-        catagoryService.readingIncrease(cId);
 
         model.addAttribute("direction",direction);
         model.addAttribute("catagory",catagory);

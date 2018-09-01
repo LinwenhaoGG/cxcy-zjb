@@ -32,7 +32,7 @@ public class Catagorys implements Serializable{
     private String caName;
 
 
-    protected Catagorys(){
 
+    protected Catagorys(){
     }
 }
