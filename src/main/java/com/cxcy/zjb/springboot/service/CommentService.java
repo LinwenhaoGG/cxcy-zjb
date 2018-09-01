@@ -43,4 +43,6 @@ public interface CommentService {
      * @return
      */
     Long findUserByCId(Long cId);
+
+    Comment saveComment(Comment comment);
 }

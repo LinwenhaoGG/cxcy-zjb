@@ -30,7 +30,6 @@ public interface CatagoryService {
 
 
 
-    void readingIncrease(Long cId);
 
     /**
      * 通过类别id查找

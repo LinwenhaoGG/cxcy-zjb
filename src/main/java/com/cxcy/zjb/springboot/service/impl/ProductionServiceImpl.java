@@ -12,12 +12,9 @@ package com.cxcy.zjb.springboot.service.impl;
 
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.repository.ProductionRepository;
-import com.cxcy.zjb.springboot.service.GrowthService;
+import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.repository.ProductionRepository;
-import com.cxcy.zjb.springboot.service.ProductionService;
-import com.cxcy.zjb.springboot.service.UserService;
-import com.cxcy.zjb.springboot.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -47,6 +44,8 @@ public class ProductionServiceImpl implements ProductionService {
     private VoteService voteService;
     @Autowired
     private GrowthService growthService;
+    @Autowired
+    private CommentService commentService;
 
     @Override
     public Production save(Production production) {
@@ -93,16 +92,17 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
-    public Production createComment(Long pId, String pContent,String username) {
+    public Production createComment(Long pId, String content,User user) {
         Production originalProduction = productionRepository.findOne(pId);
 //        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        根据账号名获取用户id
-        User user = userService.findByUsername(username);
+//        根据账号获取用户id
         Long uId = user.getId();
-        Comment comment = new Comment(uId, pContent);//先创建一个评论
+        Long sId = user.getStudent();
+        Comment comment = new Comment(uId, content);//先创建一个评论
+        commentService.saveComment(comment);
 
         //根据用户id查找对应的growth
-        Growth growth = growthService.findByUser(uId);
+        Growth growth = growthService.findByUser(sId);
 
         //添加相应的gid的评论量+1
         growth.setGReadSize(growth.getGComment()+1);
@@ -118,8 +118,10 @@ public class ProductionServiceImpl implements ProductionService {
         Production originalProduction = productionRepository.findOne(pId);
         //获取一个用户id
         Long uId = originalProduction.getUser();
+        User user = userService.findUserById(uId);
+        Long sId = user.getStudent();
         //根据用户id查找对应的growth
-        Growth growth = growthService.findByUser(uId);
+        Growth growth = growthService.findByUser(sId);
 
         //减少相应的gid的评论量-1
         growth.setGReadSize(growth.getGComment()-1);
@@ -133,29 +135,29 @@ public class ProductionServiceImpl implements ProductionService {
     /**
      * 点赞或者取消赞
      * @param pId
-     * @param username
+     * @param user
      */
     @Override
-    public void createVoteOrRemoveVote(Long pId,String username) {
+    public void createVoteOrRemoveVote(Long pId,User user) {
         Production originalProduction = productionRepository.findOne(pId);
         //获取一个用户id
         Long puId = originalProduction.getUser();
+        //获取当前登录用户id
+        Long uId = user.getId();
         //根据用户id查找对应的growth
-        Growth growth = growthService.findByUser(puId);
+        Growth growth = growthService.findByUser(userService.findUserById(puId).getStudent());
 //        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Vote> votes = originalProduction.getVotes();
         Vote currentVote = null; // 当前用户的点赞情况
         for (Vote vote : votes) {
-            Long uId = userService.findUserById(vote.getUser()).getId();
-            if(uId.equals(userService.findByUsername(username).getId())) {
+            if(uId.equals(vote.getUser())) {
                 currentVote = vote;
                 break;
             }
         }
         if(currentVote==null){
-            User user = userService.findByUsername(username);
-            Long uId = user.getId();
             currentVote = new Vote(uId);
+            currentVote = voteService.saveVote(currentVote);
             originalProduction.addVote(currentVote);
             growth.setGVote(growth.getGVote()+1);
         }else {
