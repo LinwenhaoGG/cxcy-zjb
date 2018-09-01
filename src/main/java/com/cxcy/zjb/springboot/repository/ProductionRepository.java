@@ -44,10 +44,26 @@ public interface ProductionRepository extends JpaRepository<Production,Long> {
     public List<Production> findFirst7ByCatagorysAndPCheck(Long categoryId, Integer pCheck, Sort sort);
     //按用户名分页查询所有作品
     public Page<Production> findByUser(Long userId,Pageable pageable);
+    //按分类查找作品
+    public List<Production> findByCatagorys(Long catagory);
     /**
      * 根据审核类型查找作品
      * @param i
      * @return
      */
     List<Production> findByPCheck(int i);
+
+    /**
+     * 通过作品标题模糊查询
+     * @param ptitle
+     * @return
+     */
+    Page<Production> findByPtitleLike(String ptitle,Pageable pageable);
+
+    /**
+     * 通过用户id标题模糊查询
+     * @param userId
+     * @return
+     */
+    Page<Production> findByUserLike(Long userId,Pageable pageable);
 }

@@ -31,8 +31,8 @@ public class Catagorys implements Serializable{
     @Column(nullable = false)      //映射为字段，值不能为空
     private String caName;
 
-
-
-    protected Catagorys(){
+    public Catagorys(Long direction, String caName) {
+        this.direction = direction;
+        this.caName = caName;
     }
 }

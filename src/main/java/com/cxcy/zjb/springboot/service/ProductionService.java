@@ -136,4 +136,26 @@ public interface ProductionService {
      * @return
      */
     Page<Production> findAllByUserId(Long userId,Pageable pageable);
+
+    /**
+     * 查看分类下的作品
+     * @param Cid
+     * @return
+     */
+    List<Production> findByCid(Long Cid);
+
+
+    /**
+     * 通过标题模糊查询
+     * @param ptitle
+     * @return
+     */
+    Page<Production> findByPtitleLike(String ptitle,Pageable pageable);
+
+    /**
+     * 通过用户id模糊查询
+     * @param ptitle
+     * @return
+     */
+    Page<Production> findByUserIdLike(Long userId,Pageable pageable);
 }

@@ -45,6 +45,10 @@ public class DirectionServiceImpl implements DirectionService {
         return directionRepository.getOne(directionId);
     }
 
+    @Override
+    public void deleteDir(Long dId) {
+        directionRepository.delete(dId);
+    }
 
 
 }

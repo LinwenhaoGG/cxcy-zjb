@@ -43,4 +43,24 @@ public interface CatagoryService {
      * @return
      */
     public List<Catagorys> findAll();
+
+    /**
+     * 删除分类
+     * @param Cid
+     */
+    public void deleteCataByCid(Long Cid);
+
+    /**
+     * 通过主键查找分类
+     * @param cId
+     * @return
+     */
+    public Catagorys findById(Long cId);
+
+    /**
+     * 添加或修改分类
+     * @param catagorys
+     * @return
+     */
+    public Catagorys save(Catagorys catagorys);
 }

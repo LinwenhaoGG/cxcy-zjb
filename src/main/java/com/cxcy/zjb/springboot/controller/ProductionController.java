@@ -76,14 +76,14 @@ public class ProductionController {
      */
     @Scheduled(cron = "* * 1 * * ?")
     public void checkWord() {
-        //1.获取所有的未审核作品：0：未审核
-        List<Production> list = productionService.findByPCheck(0);
+        //1.获取所有的未审核作品：1：未审核
+        List<Production> list = productionService.findByPCheck(1);
         //2.遍历所有作品，对作品进行文字过滤
         for (Production production:list) {
             String fileName = production.getPContent();
             ResultVO resultVO = checkWord(fileName);
             if(resultVO.getCode()==0){
-                production.setPCheck(1);
+                production.setPCheck(0);
             }else{
                 production.setPCheck(2);
             }
@@ -601,7 +601,7 @@ public class ProductionController {
 //                根据已有ID查找对应的作品
                 Production orignalProduction = productionService.findByPId(pId);
 //                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题,作品的简介
-                orignalProduction.setPTitle(pTitle);
+                orignalProduction.setPtitle(pTitle);
                 orignalProduction.setPSort(pSort);
 //                orignalProduction.setPVideo(pVideo);
                 orignalProduction.setPSummary(pSummary);
@@ -611,7 +611,7 @@ public class ProductionController {
                 Long uid = user.getId();
                 Production newproduction = new Production();//新建一个作品
                 newproduction.setUser(uid);
-                newproduction.setPTitle(pTitle);
+                newproduction.setPtitle(pTitle);
                 newproduction.setPSort(pSort);
                 newproduction.setCatagorys(Catagorys);
                 newproduction.setPSummary(pSummary);
@@ -664,7 +664,64 @@ public class ProductionController {
         model.addAttribute("commentSize",commentSize);
         return ResultUtils.success(model);
     }
+//----------------管理员端-------------------------------------
 
+    /**
+     * 管理员端通过或不通过作品
+     * @param pId
+     * @param pCheck
+     * @return
+     */
+    @GetMapping("/updatePcheck/{pId}")
+    public @ResponseBody ResultVO updatePcheck(@PathVariable("pId") Long pId,
+                                               @RequestParam("pCheck") Integer pCheck) {
+        Production production = productionService.findByPId(pId);
+        if(pCheck == 0) {//如果是已审核0的状态，则改为审核不通过2
+            production.setPCheck(2);
+        }else if(pCheck == 2){//如果是审核不通过2的状态，则改为审核通过0
+            production.setPCheck(0);
+        }
+        productionService.save(production);
+        return ResultUtils.success();
+    }
+
+    /**
+     * 通过作品标题模糊查询作品
+     * @param ptitle
+     * @param pageIndex
+     * @param pageSize
+     * @param map
+     * @return
+     */
+    @GetMapping("/selectByUserId/{ptitle}")
+    public ModelAndView selectByPtitle(@PathVariable("ptitle") String ptitle,
+                                                 @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                                 @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                                 Map map) {
+        Pageable pageable = new PageRequest(pageIndex,pageSize);
+        Page<Production> production = productionService.findByPtitleLike(ptitle,pageable);
+        map.put("production",production);
+
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        //返回地址要修改
+        return new ModelAndView("production/amateurPro",map);
+    }
+    @GetMapping("/selectByUserId/{userId}")
+    public ModelAndView selectByUserId(@PathVariable("userId") Long userId,
+                                       @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                       @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                       Map map) {
+        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Page<Production> production = productionService.findByUserIdLike(userId, pageable);
+        map.put("production", production);
+
+        map.put("page", pageIndex);
+        map.put("size", pageSize);
+        //返回地址要修改
+        return new ModelAndView("production/amateurPro", map);
+
+    }
 }
 
 

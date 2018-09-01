@@ -49,6 +49,21 @@ public class CatagoryServiceImpl implements CatagoryService {
         return catagoryRepository.findAll();
     }
 
+    @Override
+    public void deleteCataByCid(Long Cid) {
+        catagoryRepository.delete(Cid);
+    }
+
+    @Override
+    public Catagorys findById(Long cId) {
+        return catagoryRepository.getOne(cId);
+    }
+
+    @Override
+    public Catagorys save(Catagorys catagorys) {
+
+        return catagoryRepository.save(catagorys);
+    }
 
 
 }

@@ -34,4 +34,10 @@ public interface DirectionService {
      * @return
      */
     public Direction findById(Long directionId);
+
+    /**
+     * 删除方向
+     * @param dId
+     */
+    public void deleteDir(Long dId);
 }

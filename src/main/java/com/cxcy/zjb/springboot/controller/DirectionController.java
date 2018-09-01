@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.Vo.DirectionVo;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.Catagorys;
 import com.cxcy.zjb.springboot.domain.Direction;
@@ -11,8 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 方向控制层
@@ -42,4 +47,35 @@ public class DirectionController {
         model.addAttribute("list1",list1);
         return ResultUtils.success(model);
     }
+
+    /**f
+     * 查找所有的方向和底下分类的数量
+     * @return
+     */
+    @GetMapping("/findAllDirectionAndNum")
+    public @ResponseBody
+    ResultVO findAllDirectionAndNum(){
+        List<Direction> list = directionService.findAll();
+        List<DirectionVo> directionVos = new ArrayList<>();
+       for (Direction direction:list){
+           DirectionVo vo = new DirectionVo(direction,catagoryService.findByDid(direction.getDId()));
+           directionVos.add(vo);
+       }
+
+        return ResultUtils.success(directionVos);
+    }
+
+    @GetMapping("/deleteDirection")
+    public @ResponseBody
+    ResultVO deleteDirection(@RequestParam(value="dId") Long dId){
+        Catagorys catagorys = catagoryService.findByCatagorysId(dId);
+        if (catagorys != null) {
+            return ResultUtils.error(1,"此方向下有分类，无法删除");
+        }else{
+            directionService.deleteDir(dId);
+            return ResultUtils.success();
+        }
+
+    }
+
 }

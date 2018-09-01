@@ -206,4 +206,19 @@ public class ProductionServiceImpl implements ProductionService {
     public Page<Production> findAllByUserId(Long userId,Pageable pageable) {
         return productionRepository.findByUser(userId,pageable);
     }
+
+    @Override
+    public List<Production> findByCid(Long Cid) {
+        return productionRepository.findByCatagorys(Cid);
+    }
+
+    @Override
+    public Page<Production> findByPtitleLike(String ptitle,Pageable pageable) {
+        return productionRepository.findByPtitleLike(ptitle,pageable);
+    }
+
+    @Override
+    public Page<Production> findByUserIdLike(Long userId, Pageable pageable) {
+        return productionRepository.findByUserLike(userId,pageable);
+    }
 }

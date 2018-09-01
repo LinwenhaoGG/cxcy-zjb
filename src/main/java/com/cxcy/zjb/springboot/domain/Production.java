@@ -27,8 +27,8 @@ public class Production implements Serializable {
     private Long pId;                  //作品主键
 
     @NotEmpty(message = "作品标题不能为空")
-    @Column(nullable = false, length = 50) // 映射为字段，值不能为空
-    private String pTitle;             //作品标题
+    @Column(name="p_title",nullable = false, length = 50) // 映射为字段，值不能为空
+    private String ptitle;             //作品标题
 
     @NotEmpty(message = "作品概要不能为空")
     @Column(nullable = false,length = 100)
@@ -144,7 +144,7 @@ public class Production implements Serializable {
     public String toString() {
         return "Production{" +
                 "pId=" + pId +
-                ", pTitle='" + pTitle + '\'' +
+                ", pTitle='" + ptitle + '\'' +
                 ", pContent='" + pContent + '\'' +
                 ", pVideo='" + pVideo + '\'' +
                 ", pSort=" + pSort +

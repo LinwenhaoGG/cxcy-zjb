@@ -20,4 +20,6 @@ public interface CatagoryRepository extends JpaRepository<Catagorys, Long> {
     List<Catagorys> findByDirection(Long direction);
 
 
+
+
 }
