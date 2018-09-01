@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" type="text/css" href="../../static/css/style.css" th:href="@{/css/style.css}" />
+	<script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+	<script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	<script src="../../static/js/show.js" th:src="@{/js/show.js}"></script>
+	<style>
+		body{
+			background-color:#f5f6f7;
+		}
+		.showPage{
+			background-color: #fff;
+			margin-left: 100px;
+			margin-right: 100px;
+			border-radius: 5px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			padding:10px 20px;
+			box-shadow: 0 0 10px #ccc;
+			position: relative;
+		}
+		.work_title{
+			border-bottom: 1px solid #eee;
+		}
+		.title_content{
+			font-size: 24px;
+			font-weight: bold;
+			color: #333;
+		}
+		.work_data{
+			font-size: 14px;
+			color: #858585;
+		}
+		.work_data .data{
+			margin-right: 20px;
+		}
+		.data_type{
+			text-decoration: none;
+			border: 1px solid #ccc;
+			height: 24px;
+			line-height: 24px;
+			min-width: 24px;
+			text-align: center;
+			border-radius: 100px;
+			font-size: 12px;
+			padding:0 8px;
+			color: #666;
+		}
+		.desc_content{
+			padding-left: 20px;
+			padding-right:20px;
+			color: #666;
+		}
+		.preview{
+			margin-left: 20px;
+		}
+		.desc,.previewBox,.videoDesc{
+			margin-top: 20px;
+		}
+		.videoDesc{
+			height: 440px;
+			border-bottom: 2px solid #eee;
+		}
+		.descVideo{
+			display: block;
+			margin: 0 auto;
+			width:700px;
+			height:393px;
+			box-shadow: 0 0 30px skyblue;
+		}
+		.post_comment{
+			margin-top: 60px;
+			height: 200px;
+			position: relative;
+
+		}
+		.comment_box{
+			display: block;
+			margin: 10px auto;
+			position: relative;
+			resize:none;
+			padding:10px;
+			border-color: #f2f5fb;
+			border-radius: 5px;
+			background-color: #f2f5fb;
+			outline: none;
+		}
+		.comment_summit{
+			position: absolute;
+			right: 70px;
+			bottom:0px;
+		}
+		.comment_label{
+			border-left: 4px solid #5079b7;
+			padding-left:10px;
+			color: #999;
+		}
+		.comments_list{
+			list-style: none;
+		}
+		.comments_list li{
+			margin-top: 10px;
+			padding-bottom:5px;
+			border-bottom:1px solid #ccc;
+		}
+		.comments_list li:last-child{
+			border-bottom:none;
+		}
+		.comments_list li p{
+			color: #999;
+		}
+		.comments_list li .u_name{
+			color: #666;
+			font-weight: bold;
+			margin-left: 10px;
+		}
+		.details_comment{
+			margin-top: 10px;
+		}
+		.comment_time{
+			margin-top: 20px;
+			position: relative;
+		}
+		.delete-btn{
+			position: absolute;
+			right:0;
+			bottom:0;
+
+		}
+		.post_comment{
+			position: relative;
+			margin-top: 10px;
+		}
+		.htmleaf-container{
+			position: absolute;
+			right: 60px;
+			top: -60px;
+		}
+
+	</style>
+
+
+</head>
+<body>
+<div class="showPage">
+	<div class="work_title">
+		<!-- 标题 -->
+		<span class="title_content">作品的标题：<span th:text="${productionModel[1].pTitle}"></span></span>
+		<p class="work_data" th:value="*{productionModel[1].pId}">
+			<!-- 上传时间 -->
+			<span class="data data_time"><span th:text="${#dates.format(productionModel[1].puploadTime, 'yyyy-MM-dd HH:mm:ss')}"></span></span>
+			<!-- 浏览量 -->
+			<span class="data data_read">
+				浏览量：<span th:text="${productionModel[1].readSize}"></span>
+				</span>
+			<!-- 点赞数 -->
+			<span class="data data_praise">
+				获赞量：<span th:text="${productionModel[1].eVoteSize}" id="voteSize"></span>
+				</span>
+			<!-- 评论量 -->
+			<span class="data data_comments">
+				评论量：<span th:text="${productionModel[1].commentSize}" id="commentSize"></span>
+				</span>
+
+			<!-- 分类 -->
+			<span>
+					标签：
+					<a href="#" class="data_type"><span th:text="${productionModel[0].catagory.caName}"></span></a>
+				</span>
+
+		</p>
+	</div>
+	<!-- 作品简介 -->
+	<div class="desc">
+		<p style="font-size:20px;font-weight:bold;color:#333;">作品简介：</p>
+		<div class="desc_content">
+			<span th:text="${productionModel[1].pSummary}"></span>
+		</div>
+	</div>
+
+	<!-- 作品详情 -->
+	<div class="previewBox">
+		<span style="font-size:20px;font-weight:bold;color:#333;">作品详情：</span>
+
+		<a th:href="@{'https://view.officeapps.live.com/op/view.aspx?src=http://v5bngj.natappfree.cc/'+${productionModel[1].pContent}}" class="btn btn-info preview" target="_blank">	详情预览</a>
+
+
+	</div>
+
+	<!-- 视频介绍 -->
+	<div class="videoDesc" th:if="${productionModel[1].pVideo} != null">
+		<p style="font-size:20px;font-weight:bold;color:#333;">视频介绍：</p>
+		<video  controls class="descVideo">
+			<!--http这一段是视频服务器路径+视频映射路径-->
+			<source th:src="@{'http://v5bngj.natappfree.cc/temp/'+${productionModel[1].pVideo}}" type="video/mp4"></source>
+		</video>
+	</div>
+
+
+
+	<!-- 发布评论 -->
+	<div class="post_comment">
+		<!-- 点赞 -->
+		<article class="htmleaf-container">
+			<div id="praise_container">
+				<div class="feed" id="feed1" style="display:inline-block" >
+					<div class="heart" id="like"   th:if="${productionModel[0].currentVote} == null" rel="like"></div>
+					<div class="heart heartAnimation" id="like"  th:if="${productionModel[0].currentVote} != null" rel="unlike"></div>
+				</div>
+			</div>
+		</article>
+		<span class="comment_label">评论</span>
+		<textarea  cols="140" rows="5" placeholder="分享你的想法......" class="comment_box"></textarea>
+		<button class="btn btn-danger comment_summit">发表评论</button>
+	</div>
+
+	<!-- 评论区 -->
+	<div class="comments">
+		<ul class="comments_list">
+		</ul>
+	</div>
+</div>
+</body>
+</html>
