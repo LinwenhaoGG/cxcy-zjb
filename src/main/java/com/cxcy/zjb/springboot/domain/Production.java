@@ -27,7 +27,6 @@ public class Production implements Serializable {
     private Long pId;                  //作品主键
 
     @NotEmpty(message = "作品标题不能为空")
-    @Size(min=2, max=50)
     @Column(nullable = false, length = 50) // 映射为字段，值不能为空
     private String pTitle;             //作品标题
 

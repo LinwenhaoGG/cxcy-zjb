@@ -93,11 +93,11 @@ public class ProductionController {
 
 
     //    跳转到编辑页面
-    @RequestMapping(value = "/toUploadProduction")
-    public  ModelAndView toUploadProduction(String username,Long pId,Map map) {
+    @RequestMapping(value = "/toEditProduction")
+    public  ModelAndView toEditProduction(String username,Long pId,Map map) {
         map.put("userName",username);
         map.put("pId",pId);
-        return new ModelAndView("production/uploadProduction",map);
+        return new ModelAndView("production/editProduction",map);
     }
 
     /**
@@ -223,6 +223,17 @@ public class ProductionController {
         }
     }
 
+    //    跳转测试页面
+    @RequestMapping(value = "/totest")
+    public String totest(HttpSession session) {
+        User user = userService.findByUsername("zpr");
+//        User user = userService.findUserById(1224L);
+        session.setAttribute("user",user);
+//      return "/production/showProduction";
+//        return user;
+        return "/production/uploadProduction";
+    }
+
     /**
      * 查看作品
      * @param request
@@ -248,9 +259,69 @@ public class ProductionController {
         }*/
 
         Production production = productionService.findByPId(pId);
+        //根据production的分类id查找出对应的内容和方向内容
+        Long cId = production.getCatagorys();
+        Catagorys catagory = catagoryService.findByCatagorysId(cId);
+        Long dId = catagory.getDirection();
+        Direction direction = directionService.findById(dId);
+        Vote currentVote = null; // 当前用户的点赞情况
+        //根据pid查找对应的作品
+        List list = new ArrayList();
+        if(user != null){
+            Long uId = production.getUser();
+            Long id = user.getId();
+            if(uId.equals(id)){
+                isProductionOwner = true;
+            }
+            // 判断操作用户的点赞情况
+            List<Vote> votes = production.getVotes();
+            for (Vote vote : votes) {
+                if(vote.getUser().equals(id)) {
+                    currentVote = vote;
+                    break;
+                }
+            }
+            //修改用户的最后浏览记录
+            Browse browse = browseService.findCatagoryByUserId(id);
+            if(browse==null){
+                browse = new Browse();
+                browse.setUser(id);
+            }
+            browse.setCatagory(cId);
+            Date currentTime = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateString = formatter.format(currentTime);
+            browse.setBrowseTime(dateString);
+            browseService.saveLastBrowse(browse);
+        }
+        model.addAttribute("direction",direction);
+        model.addAttribute("catagory",catagory);
+        model.addAttribute("currentVote",currentVote);
+        model.addAttribute("isProductionOwner",isProductionOwner);
+        list.add(model);
+        list.add(production);
+        return new ModelAndView("/production/showProduction", "productionModel", list);
+//        return ResultUtils.success(list);
+    }
+    /**
+     * 编辑作品回显数据
+     * @param username
+     * @param pId
+     * @return
+     */
+    @GetMapping("/{username}/productions/{pId}")
+    public @ResponseBody ResultVO refreshing(@PathVariable("username") String username,@PathVariable("pId") Long pId,Model model) {
+        // 每次读取，简单的可以认为阅读量增加1次
+        productionService.readingIncrease(pId);
+
+//      查看作品的是否作者本身，初始化否
+        boolean isProductionOwner = false;
+
+        Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
-        Long id = user.getId();
-        if(uId.equals(id)){
+        User user = userService.findUserById(uId);
+        String username1 = user.getUsername();
+        if(username.equals(username1)){
             isProductionOwner = true;
         }
 
@@ -263,7 +334,7 @@ public class ProductionController {
         Vote currentVote = null; // 当前用户的点赞情况
 
         for (Vote vote : votes) {
-            if(vote.getUser().equals(id)) {
+            if(vote.getUser().equals(userService.findByUsername(username).getId())) {
                 currentVote = vote;
                 break;
             }
@@ -275,11 +346,12 @@ public class ProductionController {
         Long dId = catagory.getDirection();
         Direction direction = directionService.findById(dId);
 
+
         //修改用户的最后浏览记录
-        Browse browse = browseService.findCatagoryByUserId(id);
+        Browse browse = browseService.findCatagoryByUserId(uId);
         if(browse==null){
             browse = new Browse();
-            browse.setUser(id);
+            browse.setUser(uId);
         }
         browse.setCatagory(cId);
         Date currentTime = new Date();
@@ -291,12 +363,12 @@ public class ProductionController {
 
         model.addAttribute("direction",direction);
         model.addAttribute("catagory",catagory);
+
         model.addAttribute("currentVote",currentVote);
         model.addAttribute("isProductionOwner",isProductionOwner);
         list.add(model);
         list.add(production);
-        return new ModelAndView("/production/showProduction", "productionModel", list);
-//        return ResultUtils.success(list);
+        return ResultUtils.success(list);
     }
     /**
      * 作品分类展示,通过地址获取类别id，通过id查找出此id的作品

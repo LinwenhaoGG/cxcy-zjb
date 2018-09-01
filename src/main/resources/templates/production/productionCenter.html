@@ -10,13 +10,13 @@
 <body>
 <div th:replace="top::html" ></div>
 <div class="span10 " th:if="${productionPage} == null">还没有作品，请继续加油
-    <button class="btn btn-info" type="button" style="float:right;margin-top:20px;margin-right:20px">发表作品</button>
+    <button class="btn btn-info" type="button" style="float:right;margin-top:20px;margin-right:20px" th:onclick="'javascript:clickHandler()'">发表作品</button>
 </div>
 <div class="container-fluid" th:if="${productionPage} != null">
 
     <div class="row-fluid" >
         <div class="span12">
-            <button class="btn btn-info" type="button" style="float:right;margin-top:20px;margin-right:20px">发表作品</button>
+            <button class="btn btn-info" type="button" style="float:right;margin-top:20px;margin-right:20px" th:onclick="'javascript:clickHandler()'">发表作品</button>
 
         </div>
     </div>
@@ -64,10 +64,10 @@
                         审核不通过
                     </td>
                     <td style="text-align:center" >
-                        <button class="btn btn-link" type="button">查看</button>
+                        <a th:href="@{'/production/'+${p.pId}}">查看</a>
                     </td>
                     <td style="text-align:center" >
-                        <a th:href="@{'/production/toUploadProduction?username='+${userName}+'&pId='+${p.pId}}">编辑</a>
+                        <a th:href="@{'/production/toEditProduction?username='+${userName}+'&pId='+${p.pId}}">编辑</a>
                     </td>
                     <td style="text-align:center" >
                         <button class="btn btn-link" type="button" th:onclick="'deletePro('+${p.pId}+')'">删除</button>
@@ -127,6 +127,11 @@
             }
         });
 
+    }
+
+
+    function clickHandler() {
+        window.location.href='/production/totest';
     }
 </script>
 </body>

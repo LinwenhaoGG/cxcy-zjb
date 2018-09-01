@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="../../static/css/style.css" th:href="@{/css/style.css}" />
 	<script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 	<script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	<link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">
 	<script src="../../static/js/show.js" th:src="@{/js/show.js}"></script>
 	<style>
 		body{
@@ -19,7 +20,7 @@
 			margin-left: 100px;
 			margin-right: 100px;
 			border-radius: 5px;
-			margin-top: 10px;
+			margin-top: 20px;
 			margin-bottom: 10px;
 			padding:10px 20px;
 			box-shadow: 0 0 10px #ccc;
@@ -142,12 +143,20 @@
 			right: 60px;
 			top: -60px;
 		}
-
+		#returnBut{
+			position: fixed;
+			top: 8px;
+			right: 100px;
+			color: black;
+			font-size: 25px;
+			font-family: cursive;
+		}
 	</style>
 
 
 </head>
 <body>
+<button class="btn btn-link" type="button" id="returnBut" th:onclick="'returnHtml('+*{productionModel[1].user}+')'">返回作品中心</button><br>
 <div class="showPage">
 	<div class="work_title">
 		<!-- 标题 -->
@@ -226,5 +235,6 @@
 		</ul>
 	</div>
 </div>
+
 </body>
 </html>

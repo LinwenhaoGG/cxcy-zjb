@@ -179,3 +179,6 @@ function countVotesAndComments() {
 
     });
 }
+function returnHtml(url) {
+    window.location.href="/production/center/user"+url;
+}
