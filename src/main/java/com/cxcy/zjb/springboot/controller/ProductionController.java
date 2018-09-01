@@ -22,7 +22,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -30,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +51,6 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequestMapping("/production")
 @EnableScheduling       //开启定时任务
 public class ProductionController {
-    @Value("${video.VideoPath}")
-    private String VideoPath;
 
     @Autowired
     private EsProductionService esProductionService;
@@ -63,10 +68,13 @@ public class ProductionController {
     @Autowired
     private BrowseService browseService;
 
+    @Value("${video.VideoPath}")
+    private String VideoPath;
+
     /**
-     * 定时审核作品
+     * 定时审核作品:凌晨1点
      */
-    @Scheduled(cron = "* * 3 * * ?")
+    @Scheduled(cron = "* * 1 * * ?")
     public void checkWord() {
         //1.获取所有的未审核作品：0：未审核
         List<Production> list = productionService.findByPCheck(0);
@@ -94,7 +102,6 @@ public class ProductionController {
 
     /**
      * 进行全文搜索
-     * @param order
      * @param keyword
      * @param pageIndex
      * @param pageSize
@@ -103,7 +110,6 @@ public class ProductionController {
      */
     @GetMapping("/listAll")
     public @ResponseBody ResultVO listEsProductions(
-            @RequestParam(value="order",required=false,defaultValue="hot") String order,//查询时默认按最热
             @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
             @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
             @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
@@ -123,8 +129,6 @@ public class ProductionController {
         }
 
         list = page.getContent();	// 当前所在页面数据列表
-
-
         model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);
         model.addAttribute("productionList", list);
@@ -221,12 +225,14 @@ public class ProductionController {
 
     /**
      * 查看作品
-     * @param username
+     * @param request
      * @param pId
+     * @param model
      * @return
      */
-    @GetMapping("/{username}/productions/{pId}")
-    public @ResponseBody ResultVO getProductionByPId(@PathVariable("username") String username,@PathVariable("pId") Long pId,Model model) {
+    @RequestMapping(value="/{pId}")
+    public /*@ResponseBody ResultVO*/ModelAndView getProductionByPId(HttpServletRequest request, @PathVariable("pId") Long pId,Model model) {
+        User user = (User) request.getSession().getAttribute("user");
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);
 
@@ -243,9 +249,8 @@ public class ProductionController {
 
         Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
-        User user = userService.findUserById(uId);
-        String username1 = user.getUsername();
-        if(username.equals(username1)){
+        Long id = user.getId();
+        if(uId.equals(id)){
             isProductionOwner = true;
         }
 
@@ -258,7 +263,7 @@ public class ProductionController {
         Vote currentVote = null; // 当前用户的点赞情况
 
         for (Vote vote : votes) {
-            if(vote.getUser().equals(userService.findByUsername(username).getId())) {
+            if(vote.getUser().equals(id)) {
                 currentVote = vote;
                 break;
             }
@@ -270,12 +275,11 @@ public class ProductionController {
         Long dId = catagory.getDirection();
         Direction direction = directionService.findById(dId);
 
-
         //修改用户的最后浏览记录
-        Browse browse = browseService.findCatagoryByUserId(uId);
+        Browse browse = browseService.findCatagoryByUserId(id);
         if(browse==null){
             browse = new Browse();
-            browse.setUser(uId);
+            browse.setUser(id);
         }
         browse.setCatagory(cId);
         Date currentTime = new Date();
@@ -287,12 +291,12 @@ public class ProductionController {
 
         model.addAttribute("direction",direction);
         model.addAttribute("catagory",catagory);
-
         model.addAttribute("currentVote",currentVote);
         model.addAttribute("isProductionOwner",isProductionOwner);
         list.add(model);
         list.add(production);
-        return ResultUtils.success(list);
+        return new ModelAndView("/production/showProduction", "productionModel", list);
+//        return ResultUtils.success(list);
     }
     /**
      * 作品分类展示,通过地址获取类别id，通过id查找出此id的作品
@@ -410,7 +414,7 @@ public class ProductionController {
      */
     public String saveVideo(MultipartFile file,String url){
         String video = null;
-    if (!file.isEmpty()) {
+        if (!file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             String suffix = fileName.substring(fileName.indexOf(".")+1);
             if(!suffix.equals("mp4")){
@@ -462,10 +466,46 @@ public class ProductionController {
         return resultVO;
     }
 
+    /**
+     * 转存文件
+     * @param file
+     * @return
+     */
+    public String saveFile(MultipartFile file){
+        String filePath = "";
+        String parentFile = "E:\\Workspace\\Temp\\file\\";
+        filePath =  file.getOriginalFilename();
+        //文件名称在服务器有可能重复
+        String newFileName="";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        newFileName = sdf.format(new Date());
+        Random r = new Random();
+        for(int i =0 ;i<3;i++){
+            newFileName=newFileName+r.nextInt(10);
+        }
+        //获取文件扩展名
+        String suffix = filePath.substring(filePath.lastIndexOf("."));
+        // 判断扩展名为doc或者docx
+        filePath = parentFile + newFileName + suffix;
+        File in = new File(filePath);
+        File dest = in.getParentFile();
+        filePath = newFileName + suffix;
+        if (!dest.exists()) //如果这个文件不存在
+        {
+            dest.mkdirs(); //创建
+        }
+        try {
+            file.transferTo(in); // copy
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
 
     /**
      * 新建或者修改作品，成功则返回对应的作品路径
-     * @param username
+     * @param request
      * @param pId
      * @param pTitle
      * @param pSummary
@@ -475,13 +515,13 @@ public class ProductionController {
      * @param videoFile
      * @return
      */
-    @RequestMapping(value="/{username}/saveProduction",method=RequestMethod.POST)
-    public @ResponseBody
-    ResultVO saveProduction(@PathVariable("username") String username,
+    @RequestMapping(value="/saveProduction")
+    public @ResponseBody ResultVO saveProduction(HttpServletRequest request,
                             @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
                             @RequestParam(value="pSummary") String pSummary,
                             @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
                             @RequestParam("pContent") MultipartFile pContent, @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
+        User user = (User) request.getSession().getAttribute("user");
         try {
             Production production;
             // 判断是修改还是新增
@@ -495,79 +535,64 @@ public class ProductionController {
                 orignalProduction.setPSummary(pSummary);
                 production = orignalProduction;
             }else {
-                // 根据用户名查找到当前的用户
-                User user = userService.findByUsername(username);
+                // 查找到当前的用户
                 Long uid = user.getId();
                 Production newproduction = new Production();//新建一个作品
                 newproduction.setUser(uid);
                 newproduction.setPTitle(pTitle);
                 newproduction.setPSort(pSort);
                 newproduction.setCatagorys(Catagorys);
-
                 newproduction.setPSummary(pSummary);
                 production = newproduction;
-
             }
-            String filePath = "";
-            String parentFile = "E:\\Workspace\\Temp\\file\\";
-            filePath =  pContent.getOriginalFilename();
-            //文件名称在服务器有可能重复
-            String newFileName="";
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            newFileName = sdf.format(new Date());
-            Random r = new Random();
-            for(int i =0 ;i<3;i++){
-                newFileName=newFileName+r.nextInt(10);
-            }
-            //获取文件扩展名
-            String suffix = filePath.substring(filePath.lastIndexOf("."));
-//            判断扩展名为doc或者docx
-            if(suffix.equals(".doc")||suffix.equals(".docx")) {
-                filePath = parentFile + newFileName + suffix;
-                File in = new File(filePath);
-                File dest = in.getParentFile();
-                filePath = newFileName + suffix;
-                if (!dest.exists()) //如果这个文件不存在
-                {
-                    dest.mkdirs(); //创建
-                }
-                pContent.transferTo(in); // copy
-            }
-            else{
-                return ResultUtils.error(2,"文件上传格式不符合要求，请重新上传");
-            }
+            //保存文件
+            String filePath = saveFile(pContent);
+            //保存视频
             if(videoFile!=null){
                 String video = saveVideo(videoFile,"video");
-                if(video==null){
-                    return ResultUtils.error(2,"视频格式错误");
+                if(video!=null){
+                    production.setPVideo(video);
                 }
-                production.setPVideo(video);
             }
             production.setPContent(filePath);
-            productionService.save(production);
-            pId = production.getPId();//获取新的作品的id
+            Production newPro = productionService.save(production);
+            pId = newPro.getPId();//获取新的作品的id
         } catch (Exception e) {
-            return ResultUtils.error(1,"添加不成功");
+            e.printStackTrace();
         }
-       String redirectUrl = "/" + username + "/production/" + pId;
+        String redirectUrl = "/production/" + pId;
         return ResultUtils.success(redirectUrl);
     }
 
     /**
      * 取消或者点赞
-     * @param username
+     * @param request
      * @param pId
      * @return
      */
-    @GetMapping("/{username}/addOrRemoveVote/{pId}")
-    public @ResponseBody ResultVO getProductionByPId(@PathVariable("username") String username,@PathVariable("pId") Long pId) {
-       try{
-           productionService.createVoteOrRemoveVote(pId,username);
+    @GetMapping("/addOrRemoveVote/{pId}")
+    public @ResponseBody ResultVO addOrRemoveVote(HttpServletRequest request,@PathVariable("pId") Long pId) {
+       User user = (User)request.getSession().getAttribute("user");
+        try{
+           productionService.createVoteOrRemoveVote(pId,user);
        }catch (Exception e){
            return ResultUtils.error(1,"操作错误");
        }
         return ResultUtils.success();
     }
+
+
+    //获取当前的点赞数和评论数
+    @GetMapping("/countVoteAndComment/{pId}")
+    public @ResponseBody ResultVO countVoteAndComment(@PathVariable("pId") Long pId,Model model) {
+        Production production = productionService.findByPId(pId);
+        Integer voteSize = production.getEVoteSize();
+        Integer commentSize = production.getCommentSize();
+        model.addAttribute("voteSize",voteSize);
+        model.addAttribute("commentSize",commentSize);
+        return ResultUtils.success(model);
+    }
+
 }
 
 

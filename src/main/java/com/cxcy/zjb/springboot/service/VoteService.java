@@ -30,4 +30,7 @@ public interface VoteService {
 
 //    根据用户id查询是否有对应的vote
     Vote findByUser(Long uId);
+
+    //保存vote
+    Vote saveVote(Vote vote);
 }

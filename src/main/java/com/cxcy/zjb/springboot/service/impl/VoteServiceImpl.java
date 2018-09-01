@@ -47,4 +47,9 @@ public class VoteServiceImpl implements VoteService {
     public Vote findByUser(Long uId) {
         return voteRepository.findByUser(uId);
     }
+
+    @Override
+    public Vote saveVote(Vote vote) {
+        return voteRepository.save(vote);
+    }
 }

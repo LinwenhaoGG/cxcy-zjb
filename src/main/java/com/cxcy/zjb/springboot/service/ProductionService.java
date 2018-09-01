@@ -16,6 +16,7 @@ import com.cxcy.zjb.springboot.domain.Production;
 import java.util.List;
 
 import com.cxcy.zjb.springboot.domain.Production;
+import com.cxcy.zjb.springboot.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -73,7 +74,7 @@ public interface ProductionService {
      * @param pComment
      * @return
      */
-    Production createComment(Long pId,String pComment,String username);
+    Production createComment(Long pId,String pComment,User user);
 
 
     /**
@@ -85,9 +86,9 @@ public interface ProductionService {
     /**
      * 取消或者点赞
      * @param pId
-     * @param username
+     * @param user
      */
-    void createVoteOrRemoveVote(Long pId,String username);
+    void createVoteOrRemoveVote(Long pId,User user);
 
 
     /**

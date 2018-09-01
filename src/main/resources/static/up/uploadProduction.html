@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:th="http://www.thymeleaf.org"
-	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
-	<script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
-	<script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-	<script src="../../static/js/uploading.js" th:src="@{/js/uploading.js}"></script>
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<script src="jquery-3.3.1.min.js"></script>
+	<script src="bootstrap.min.js"></script>
+	<script src="uploading.js"></script>
 	<style>
 		body{
 			background-color: #f4f4f4;
@@ -69,7 +67,7 @@
 			width: 100px;
 			height: 100px;
 			border:2px solid #ccc;
-			background: url(../../up/add.png) no-repeat;
+			background: url(static/up/add.png) no-repeat;
 			display: inline-block;
 			float: left;
 		}
@@ -114,14 +112,6 @@
 			margin-left: 20px;	
 
 		}
-		.video_upload{
-			position: relative;
-		}
-		.video_upload .video-warning{
-			position: absolute;
-			bottom:130px;
-			left: 140px;
-		}
 	</style>
 
 	<script>
@@ -136,7 +126,7 @@
                     // 获取方向
                     var list = res.data.list;
                     $(".typeselect1").text(list[0].dname);
-
+                  
                     $(list).each(function() {
                         var key = Object.keys($(this))[0];
                         // console.log(key);
@@ -146,10 +136,7 @@
                     // 获取分类
                     var list1 = res.data.list1;
                     $(".typeselect2").text(list1[0].caName);
-                    $(".typeselect2").attr({
-                    	"value": list1[0].cid
-                    });
-
+                    $(".typeselect2 input").val(list1[0].cid);
                     $(list1).each(function(){
 
                         var key = Object.keys($(this))[0];
@@ -165,9 +152,6 @@
             $(".dropdown-menu1").on('click', '.lis', function() {
                 // 获取方向的id
                 var did = $(this).val();
-                var val = $(this).text();
-				$(".typeselect1").text(val);
-
                 $.ajax({
                     url:"/catagory/findCatagorysByDid",
                     method:"get",
@@ -182,9 +166,7 @@
                         // 添加新的分类
                        var typelist = res.data;
                        $(".typeselect2").text(typelist[0].caName);
-                       $(".typeselect2").attr({
-                       		"value":typelist[0].cid
-                       });
+                       $(".typeselect2 input").val(typelist[0].cid);
 
                        $(typelist).each(function(){
                            var key = Object.keys($(this))[0];
@@ -195,85 +177,41 @@
                     }
                 })
             });
-
-            var pId = $('#pId').val();
-
-            var url = "/production/"+pId;
-            $.ajax({
-                url:url,
-                success:function(res){
-                    var data0 = res.data[0];
-                    var data1=res.data[1];
-
-                    var psort=data1.psort;
-
-                    $(".typeselect1").text(data0.dname);
-                    $(".typeselect2").text(data0.catagory.caName);
-
-                    if(psort==1)
-                    {
-                        $(".typeselect3").text("创新");
-                    }else
-                    {
-                        $(".typeselect3").text("实践");
-                    }
-
-                    $("#note").text(data1.psummary);
-
-                    $(".selected").css("display","inline-block");
-
-                    $(".file_name").text(data1.pcontent);
-
-
-                    $(".videoBox").css("display","inline-block");
-
-                    $("video").attr("src","/temp/video/"+data1.pvideo);
-
-
-
-
-
-
-                }
-            });
         });
-
 
 
 
 	</script>
 </head>
 <body>
-<input type="hidden" id="pId" th:value="*{pId}">
 	<div class="headTitle">
 		发布作品
 	</div>
-
 	<div class="page">
-		<form id="myForm" enctype="multipart/form-data">
 		<!-- 分类 -->
+		<form action="/production/zpr/saveProduction" id="myForm" method="POST" enctype="multipart/form-data">
 		<div class="classify">
 			<!-- 方向 -->
 			<div class="dropdown dropdown1">
 				<span style="color:#999">方向</span>
-				<button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 
 				<span class="typeselect typeselect1">
 						Action
 				</span>
 				<span class="caret"></span>
-				</button>
+				</button>	
 				<ul class="dropdown-menu dropdown-menu1 " aria-labelledby="dropdownMenu1">
 
 				</ul>
 			</div>
-
+			
 			<!-- 分类 -->
 			<div class="dropdown dropdown2">
 				<span style="color:#999">分类</span>
-				<button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-					<span class="typeselect typeselect2" value="">Action</span>
+				<button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 
+					<span class="typeselect typeselect2"><input name="Catagorys" type="hidden"/>Action</span>
 				<span class="caret"></span>
-				</button>
+				</button>	
 				<ul class="dropdown-menu dropdown-menu2" aria-labelledby="dropdownMenu2">
 
 				</ul>
@@ -282,28 +220,28 @@
 			<!-- 类别 -->
 			<div class="dropdown dropdown3">
 				<span style="color:#999">类别</span>
-				<button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				<span class="typeselect typeselect3" value="0">创新</span>
+				<button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 
+				<span class="typeselect typeselect3"><input name="pSort" type="hidden" value="0" />创新</span>
 				<span class="caret"></span>
-				</button>
+				</button>	
 				<ul class="dropdown-menu3 dropdown-menu" aria-labelledby="dropdownMenu2">
-					<li class="lis" value="0"><a href="#">创新</a></li>
-					<li class="lis" value="1"><a href="#">实践</a></li>
+					<li class="lis" value="0"><span>创新</span></li>
+					<li class="lis" value="1"><span>实践</span></li>
 				</ul>
 			</div>
 		</div>
 		<!-- 标题 -->
 
-		<input type="text" placeholder="输入作品标题" class="word_title">
+		<input type="text" placeholder="输入作品标题" class="word_title" name="pTitle">
 
 		<!-- 作品简介 -->
 		<div class="desc">
 			<p><span style="color:red">* </span>作品简介</p>
-
+		
 			<textarea cols="60" rows="5" id="note"
-                   maxlength="100" value=""
+                    name="pSummary" maxlength="100" value=""
                     onkeyup="this.value=this.value.substring(0, 100)"
-                    onfocus="this.value=this.value.substring(0, 100)"
+                    onfocus="this.value=this.value.substring(0, 100)" 
                     placeholder="最多可输入100字"></textarea><span id="text-count">0</span>/100
             <div class="alert alert-warning desc-warning" style="display:none">
 				<a href="#" class="close close-desc-warning" >
@@ -323,11 +261,11 @@
 				请上传文件介绍(.doc/.docx)
 			</div>
 			<div class="file_choose">
-				<input type="file" accept=".docx,.doc" id="wordFile">
+				<input type="file" accept=".docx,.doc" name="pContent">
 			</div>
 			<div class="selected" style="display:none">
 				<div>
-					<img src="../../static/up/file.png" th:src="@{/up/file.png}" height="48" width="48" alt="">
+					<img src="file.png" height="48" width="48" alt="">
 				</div>
 				<p class="file_name">什么什么文件</p>
 			</div>
@@ -336,14 +274,8 @@
 		<!-- 上传视频 -->
 		<div class="video_upload">
 			<p>(可选)上传mp4视频介绍</p>
-			<div class="alert alert-warning video-warning" style="display:none">
-				<a href="#" class="close close-video-warning" >
-       				 &times;
-    			</a>
-				请上传mp4格式视频介绍
-			</div>
 			<div class="video_choose">
-				<input type="file" accept=".mp4" id="videoFile">
+				<input type="file" accept=".mp4" name="videoFile">
 			</div>
 
 			<!-- 视频预览 -->
@@ -354,8 +286,19 @@
 				</video>
 			</div>
 		</div>
-	</form>
 		<input type="submit" class="btn btn-primary summit_btn">
+		
+		</form>
 	</div>
+
+<script>
+    $(".summit_btn").on('click', function() {
+        console.info($(".word_title").val());
+        console.info($("#note").val());
+        console.info($(".typeselect").attr("value"));
+        console.info($(".typeselect2").attr("value"));
+    });
+
+</script>
 </body>
 </html>

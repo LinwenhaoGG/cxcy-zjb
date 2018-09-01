@@ -3,18 +3,21 @@ package com.cxcy.zjb.springboot.domain;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Production 作品实体
  */
 @Entity
+@Document(indexName = "production", type = "production")
 @Data
 public class Production implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -116,9 +119,14 @@ public class Production implements Serializable {
      * @return
      */
     public void addVote(Vote vote) {
-            this.votes.add(vote);
-            this.eVoteSize = this.votes.size();
+        if (this.votes == null) {
+            this.votes = new ArrayList<>();
+        }
+        this.votes.add(vote);
+        this.eVoteSize = this.votes.size();
     }
+
+
     /**
      * 取消点赞
      * @param voteId

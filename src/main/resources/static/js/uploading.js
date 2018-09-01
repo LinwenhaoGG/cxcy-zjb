@@ -2,7 +2,7 @@
 * @Author: Administrator
 * @Date:   2018-08-29 21:48:31
 * @Last Modified by:   Administrator
-* @Last Modified time: 2018-08-31 12:16:23
+* @Last Modified time: 2018-09-01 12:27:17
 */
 $(document).ready(function() {
 
@@ -38,7 +38,19 @@ $(document).ready(function() {
         }
 	}
 
+	// 判断上传文件的后缀名是否符合要求
+	function videoSuffix(fileName){
+		// 获取后缀
+		var suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        if(suffix=="mp4"){
+        	return true;
+        }else{
+        	return false;
+        }
+	}
 
+	// 判断是否选择了正确的文件
+	var vs = true;
 
 	// 限制简介字数
 	$("#note").keyup(function() {
@@ -95,24 +107,41 @@ $(document).ready(function() {
 			$(".file_name").text(file_url[file_url.length-1]);
 		}
 		else{
+			vs = false;
 			$(".details-warning").show();
 		}
 		
 	});
 
-    // 预览视频
-    $(".video_choose input").change(function(){
-        // 显示视频框
-        $(".videoBox").show();
-        // 给路径
-        var url = getFileURL(this.files[0]);
-        if(url){
-            $("video").attr({
-                "src": url
-            });
-        }
-        // selectVideo();
-    });
+   // 预览视频
+	$(".video_choose input").change(function(){
+		// 获取文件名并显示
+		var video_url = $(this).val().split("\\");
+		let s = videoSuffix(video_url[video_url.length-1]);
+		// 隐藏提示
+			$(".video-warning").hide();
+		if(s){
+
+			// 显示视频框
+			$(".videoBox").show();
+			// 给路径
+			var url = getFileURL(this.files[0]);
+			alert(url)
+			if(url){
+				$("video").attr({
+					"src": url
+				});
+			}
+			vs=true;
+		}
+		else{
+			$(".videoBox").hide();
+			$(".video-warning").show();
+			vs = false;
+		}
+
+		// selectVideo();
+	});
 
 	// 关闭提示
 	$(".desc").on('click', '.close-desc-warning', function(){
@@ -125,6 +154,11 @@ $(document).ready(function() {
 
 	$(".file_intro").on('click', '.close-details-warning', function() {
 		$(".details-warning").hide();
+	});
+
+	$(".video_upload").on('click', '.close-video-warning', function() {
+		$(".video-warning").hide();
+		vs = true;
 	});
 
 	//检查并提交
@@ -148,7 +182,17 @@ $(document).ready(function() {
 		var wf = document.getElementById("wordFile").files[0];
 
 		// 获取视频
-		var vf = document.getElementById("videoFile").files[0];
+		var video_url = $(".video_choose input").val().split("\\");
+		let s = videoSuffix(video_url[video_url.length-1]);
+		var vf = document.getElementById("videoFile").files.length;
+		if((vf == 0)||(!s)){
+			vf="";
+		/*	console.log(vf);*/
+		}else{
+			vf = document.getElementById("videoFile").files[0];
+			/*console.log(vf);*/
+		}
+
 
 		
 			let fd = new FormData($('#myForm')[0]);
@@ -158,7 +202,7 @@ $(document).ready(function() {
 			fd.append('pSummary',desc);
 			fd.append('pContent',wf);
 			fd.append('videoFile',vf);
-			console.log(fd);
+			//console.log(fd);
 	
 		// 判断标题是否为空
 		if(title==""){
@@ -199,28 +243,35 @@ $(document).ready(function() {
 			$(".details-warning").show();
 		}
 		else{
-			
 			$.ajax({
-				url:'/production/zpr/saveProduction',
+				url:'/production/saveProduction',
 				type:'post',
-				datatype:'json',
 				data:fd,
 				cache:false,
 				traditional:true,
 				contentType:false,
 				processData:false,
-				success:function(){
-					alert("上传成功")
+				success:function(res){
+					alert("上传成功");
+
+					console.info(res);
+					var url4 = res.data;
+                    window.location.href=url4;
+                    /*$.ajax({
+                        url:'url4',
+                        success:function(){
+                            console.info("成功");
+                        },
+                        error:function(err){
+                            console.log(err);
+                        }
+                    })*/
 				},
 				error:function(err){
-					console.log(err)
+					console.log(err);
+                    alert("上传失败")
 				}
-
 			})
-
 		}
-
 	});
-	
-
 });
