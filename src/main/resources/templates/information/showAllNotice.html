@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <script src="../js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script src="../js/toastr.min.js" th:src="@{/js/toastr.min.js}"></script>
+</head>
+<body>
+
+<div id="mainContainer">
+    <div id="mainContainerRepleace">
+        <div class="card mb-4" th:each="information : ${informationList}">
+            <div class="card-block">
+                <h2 class="card-title">
+                    <a href="/u/waylau/blogs/1" class="card-link" title="waylau"
+                       th:href="'/information/showOneInformation/' + ${information.id}"  th:title="${information.author}" th:text="${information.title}">
+                        OAuth 2.0 认证的原理与实践
+                    </a>
+                </h2>
+                <div class="card-text">
+                    发表于:<i th:text="${#dates.format(information.createTime, 'yyyy-MM-dd HH:mm')}"></i>
+                    阅读量：<i class="fa fa-eye" aria-hidden="true" th:text="${information.readSize}"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 column">
+            <ul class="pagination pull-right">
+                <li class="disabled" th:if="${pageIndex} eq '1'" ><a >首页</a></li>
+                <li th:if="${pageIndex} ne '1'"><a th:href="'/information/showAllNotice?pageIndex=1'+'&&pageSize='+${pageSize}">首页</a></li>
+                <li class="disabled" th:if="${pageIndex} le '1'"><a >上一页</a></li>
+                <li th:if="${pageIndex} gt '1'"><a th:href="'/information/showAllNotice?pageIndex='+${pageIndex-1}+'&&pageSize='+${pageSize}">上一页</a></li>
+                <li th:each="pageNo : ${#numbers.sequence(1, page.totalPages)}">
+                <a th:if="${pageNo} eq ${pageIndex}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+                <a th:if="${pageNo} ne ${pageIndex} and ${pageNo} le ${pageIndex+2} and ${pageNo} ge ${pageIndex-2}" th:href="'/information/showAllNotice?pageIndex='+${pageNo}+'&&pageSize='+${pageSize}" th:text="${pageNo}"></a>
+                </li>
+                <li th:if="${pageIndex} lt ${page.getTotalPages()}"><a th:href="'/information/showAllNotice?pageIndex='+${pageIndex+1}+'&&pageSize='+${pageSize}">下一页</a></li>
+                <li class="disabled" th:if="${pageIndex} ge ${page.getTotalPages()}"><a >下一页</a></li>
+                <li class="disabled" th:if="${pageIndex} eq ${page.getTotalPages()}"><a >尾页</a></li>
+                <li th:if="${pageIndex} ne ${page.getTotalPages()}"><a th:href="'/information/showAllNotice?pageIndex='+${page.getTotalPages()}+'&&pageSize='+${pageSize}">尾页</a></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

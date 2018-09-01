@@ -137,7 +137,7 @@ $(function(){
                     layer.alert('恭喜你，注册成功！', {icon: 1});
                     window.setTimeout(jumpMethod,2000);
                     function jumpMethod() {
-                        window.location.href="/html/index.html";
+                        window.location.href="/login";
                     }
                 }else{
                     var msg = data.msg;

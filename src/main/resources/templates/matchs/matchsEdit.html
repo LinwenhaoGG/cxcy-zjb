@@ -96,8 +96,8 @@
             <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="content" th:text="*{matchs.content}""></textarea>
             <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
             <textarea class="editormd-html-textarea" name="text" id="htmlContent" th:text="*{matchs.htmlContent}"></textarea>
-                <!-- 添加子项目模块 -->
-                </div>
+            </div>
+            <!-- 添加子项目模块 -->
                 <div class="btnBox" th:if=" ${#lists.isEmpty(matchs.id)}">
                     <!-- 触发模态框 -->
                     <button  class="btn btn-default btn-success" data-toggle="modal" data-target="#myModal">添加子项目</button>
@@ -112,6 +112,7 @@
                             <div class="modal-body">
                                 <form>
                                     <!-- 填写项目名称 -->
+
                                     <div class="input-group">
                                         <span class="input-group-addon">比赛的子项目名称</span>
                                         <input type="text" placeholder="请输入子项目名称" class="form-control" id="project_name">

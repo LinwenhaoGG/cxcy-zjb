@@ -36,7 +36,7 @@ public class Information implements Serializable {
 
     @Lob  // 大对象，映射 MySQL 的 Long Text 类型
     @Basic(fetch=FetchType.LAZY) // 懒加载
-    @NotEmpty(message = "内容不能为空")
+    @NotEmpty(message = "html内容不能为空")
     @Size(min=2)
     @Column(nullable = false) // 映射为字段，值不能为空
     private String htmlContent; // 将 md 转为 html
@@ -56,6 +56,15 @@ public class Information implements Serializable {
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
     private Timestamp createTime;
 
-    @Column(name = "catalog_id")
-    private Long informationCategory; //资讯所属分类
+    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
+    @JoinColumn(name = "catalog_id")
+    private InformationCategory informationCategory; //资讯所属分类
+
+
+    public Information(String title,String content,String author){
+        this.title = title;
+        this.content = content;
+        this.author = author;
+    }
+
 }

@@ -1,0 +1,69 @@
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	   lang="en"
+	   xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../css/chat.css" th:href="@{/css/chat.css}"/>
+		<script src="../jq/jquery-1.11.0.min.js" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+		<script src="/webjars/sockjs-client/sockjs.min.js" th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+		<script src="/webjars/stomp-websocket/stomp.min.js" th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+		<script src="../js/chat.js" th:src="@{/js/chat.js}"> </script>
+		<title>聊天</title>
+	</head>
+	<body>
+	<input type="hidden" th:value="${userId}" id="userId">
+		<!--背景div-->
+		<div id="backgroundDiv">
+			<!--聊天div-->
+			<div id="chatDiv">
+				<div style="width: 100%;height: 100%;">
+					<!--聊天头div-->
+					<div id="headerDiv" class="chatHtml">
+						<div id="imgDiv">
+							<ul style="text-align: center;list-style: none;">
+								<li>
+									<!--用户头像-->
+									<img src="../img/611.jpg" id="imgId"/>
+								</li>
+								<li>
+									<!--用户昵称-->
+									<b>kolo</b>
+								</li>
+							</ul> 
+						</div> 
+					</div>
+					<hr />
+					<!--聊天体div-->
+					<div id="bodyDiv" class="chatHtml">
+						<div>
+							<img src="" style="display: none;" id="senderImage">
+							<img src="" style="display: none;" id="receiverImage">
+						</div>
+						<div id="scrollDiv">
+							<table border="0" cellspacing="10" cellpadding="5" style="width:100%" id="tableId">
+
+							</table>
+						</div>
+					</div>
+					<hr />
+					<!--填写信息div-->
+					<div id="messageDiv" class="chatHtml">
+							<!--消息内容-->
+							<div id="inputDiv">
+								<input type="text" id="content" placeholder="请输入内容" autocomplete="off"/>
+							</div>
+							<!--发送者id-->
+							<input type="hidden" id="senderId" value="">
+							<!--接受者id-->
+							<input type="hidden" id="receiverId" value="">
+							<!--提交内容-->
+							<div >
+								<input type="submit" value="发送" id="submitComment">
+							</div>
+					</div>
+				</div>
+				 
+			</div> 
+		</div>
+	</body>
+</html>

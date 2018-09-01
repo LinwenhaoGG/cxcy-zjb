@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MatchServiceImpl implements MatchService {
+
     @Autowired
     private MatchRepository matchRepository;
 
@@ -69,7 +70,6 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Page<Matchs> findAll(Pageable pageable) {
-
         return matchRepository.findAll(pageable);
     }
 

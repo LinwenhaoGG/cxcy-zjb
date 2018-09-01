@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" >
+    <script src="../js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script src="../js/toastr.min.js" th:src="@{/js/toastr.min.js}"></script>
 </head>
 <body>
-<h1>哈喽，我是主页</h1>
+
+    <a href="/infCategory/1"><p>hello world</p></a>
+
+    <div id="informationShow">
+        <div class="card my-4" id="informationShowByCategory">
+            <a href="/information/showAllNotice" class="card-header">通知公告
+                <span>更多>></span>
+            </a>
+
+            <ul class="list-group" th:each="information : ${informationList}" th:object="${information}">
+                <div id="informationList" class="oneInformation">
+                    <a th:href="'/information/showOneInformation/'+*{id}"  class="showOneInformation">
+                        <span th:text="*{title}">"+arr.title+"</span>
+                        <span th:text="*{createTime}">"+time+"</span>
+                    </a>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+
 </body>
+<script>
+
+    $(function () {
+
+
+
+        function getTop8Information(){
+
+                $.ajax({
+                    url: '/information/showTop8',
+                    type: 'GET',
+                    // dataType:"json",
+                    success: function (data) {
+                        // for (var i = 0 ; i <= data.length ; i++){
+                        //     var arr = data[i];
+                        //     var value = arr.createTime;
+                        //     var time  = new Date(value).toLocaleString();
+                        //     $("#informationList").append("<a href='/information/showOneInformation/'  class=\"showOneInformation\">\n" +
+                        //          "                        <span th:text=\"*{title}\">"+arr.title+"</span>\n" +
+                        //          "                        <span th:text=\"*{createTime}\">"+time+"</span>\n" +
+                        //          "                    </a>");
+                        //
+                        //
+                        // }
+                        $("#informationShow").html(data);
+                    },
+                    error: function () {
+                        toastr.error("error");
+                    }
+                });
+        }
+
+        getTop8Information();
+
+    })
+
+</script>
 </html>
+

@@ -25,8 +25,12 @@ public class InformationCategory implements Serializable{
     @Column(nullable = false) // 映射为字段，值不能为空
     private String name;
 
-
     protected InformationCategory() {
+    }
+
+    public InformationCategory(Long id,String name){
+        this.id = id;
+        this.name = name;
     }
 
 }
