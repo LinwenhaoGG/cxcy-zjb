@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <!--<meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+    <title>title</title>
+    <link href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">
+    <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script src="../../static/js/bootstrap.min.js"  th:src="@{/js/bootstrap.min.js}"></script>
+    <style>
+        #search{
+            position: absolute;
+            right: 250px;
+            top: 125px;
+        }
+        #searchBut{
+            position: absolute;
+            right: 150px;
+            top: 125px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="top::html"></div>
+
+<!--搜索框-->
+<input type="search" placeholder="搜索作品" id="search" th:value="${keyword}">
+<a id="listAll"><button type="button" id="searchBut" class="btn btn一primary" th:onclick="'javascript:listAll()'">搜索</button></a><br><br>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <input id="catagory" type="hidden"  th:value="${catagory}">
+            <ul class="nav nav-list">
+
+                <li>
+                    <a href="/browse/recommend" id="recommend">推荐</a>
+                </li>
+                <li>
+                    <a href="/production/nav/hot"  id="hot">最热</a>
+                </li>
+                <li>
+                    <a href="/production/nav/new"  id="new">最新</a>
+                </li>
+                <li class="nav-header">
+                    作品分类
+                </li>
+            </ul>
+
+            <ul class="nav nav-list" id="bar">
+
+
+
+            </ul>
+        </div>
+
+        <div class="span10" th:if="${productionPage} != null" >
+            <div id="production" th:each="p : ${productionPage}">
+
+                <div  style="margin-bottom: 30px;border: 10px solid #cccc;padding: 5px;padding-left: 20px;padding-right: 20px">
+
+                    <h4 th:text="${p.production.ptitle}"></h4>
+                    <p th:text="${p.production.psummary}"></p>
+
+                    <div>
+                    <span style="float:right;margin-right: 10px">
+                    <p>
+                        <span class="badge" th:text="'点赞数：'+${p.production.eVoteSize}"></span>
+                        <span class="badge" th:text="'阅读量：'+${p.production.readSize}"></span>
+                </p>
+                    </span>
+                    </div>
+
+                    <a th:text="${p.userName}" th:href="'/production/'+${p.userName}+'/productionCenter'"></a>&nbsp;&nbsp;&nbsp;
+                    <a th:text="${p.direction}  "></a>&nbsp;&nbsp;
+                    <a th:text="${p.catagorys}"></a>&nbsp;&nbsp;&nbsp;
+                    <span th:text="${#dates.format(p.production.puploadTime,'yyyy-MM-dd')}"></span>
+
+                </div>
+
+            </div>
+            <div class="col-md-12 column">
+                <ul class="pagination pull-right">
+                    <li class="disabled" th:if="${page} eq '1'" ><a>首页</a></li>
+                    <li th:if="${page} ne '1'"><a th:href="${url}+'?page=1&size='+${size}">首页</a></li>
+                    <li class="disabled" th:if="${page} le '1'"><a >上一页</a></li>
+                    <li th:if="${page} gt '1'"><a th:href="${url}+'?page='+${page-1}+'&size='+${size}">上一页</a></li>
+                    <li th:each="pageNo : ${#numbers.sequence(1, totalSize)}">
+                        <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+                        <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="${url}+'?page='+${pageNo}+'&size='+${size}" th:text="${pageNo}"></a>
+                    </li>
+                    <li th:if="${page} lt ${totalSize}"><a th:href="${url}+'?page='+${page+1}+'&size='+${size}">下一页</a></li>
+                    <li class="disable" th:if="${page} ge ${totalSize}"><a>下一页</a></li>
+                    <li class="disable" th:if="${page} eq ${totalSize}"><a>尾页</a></li>
+                    <li th:if="${page} ne ${totalSize}"><a th:href="${url}+'?page='+${totalSize}+'&size='+${size}">尾页</a></li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="span10 " th:if="${productionPage} == null">无相关作品</div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function() {
+        find1();
+        open();
+    });
+    function find1() {
+        $.ajax({
+            type:"get",
+            url:"/catagory/allCatagorys",
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data:{},
+            success:function(datas){
+                $("#bar").html("");
+                $(datas.data).each(
+                    function(){
+                        var ta = $("<li><a href='/production/nav/cata"+this.cid+"' id='cata"+this.cid+"'>"+this.caName+"</a></li>");
+                        $("#bar").append.call($("#bar"),ta);
+                    })
+            },
+            error : function(result) {
+                $("#bar").html("无分类信息");
+            }
+        });
+    }
+    function open() {
+        var v = document.getElementById("catagory").value;
+        var obj = document.getElementById(v);
+        obj.style.backgroundColor = "lightseagreen";
+        obj.style.color = "white";
+        obj.onclick=" return false; ";
+    }
+
+    function listAll(){
+        var key = $("#search").val();
+        var keyword = '/production/listAll?keyword='+key;
+        console.info(keyword);
+        $("#listAll").attr("href",keyword);
+    }
+</script>
+
+</body>
+</html>

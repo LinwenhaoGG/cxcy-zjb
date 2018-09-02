@@ -87,35 +87,41 @@ public class ProductionController {
     }
 
 
-    //    跳转测试页面
+    //    跳转发布作品页面(9.2)
     @RequestMapping(value = "/totest")
     public String totest(HttpSession session) {
         User user = userService.findByUsername("zpr");
         session.setAttribute("user",user);
+        return "production/uploadProduction";
+    }
+
+    //    跳转测试页面(9.2,不用添加也可以，只是为了跳到你的用户作品首页)
+    @RequestMapping(value = "/totest1")
+    public String totest1(HttpSession session) {
+        User user = userService.findByUsername("zpr");
+        session.setAttribute("user",user);
 //      return "production/showProduction";
 //        return "production/uploadProduction";
-//        return "production/amateurPro";
-        return "admins/pages/manage/production/product_detail";
+        return "production/amateurPro";
+//        return "admins/pages/manage/production/product_detail";
     }
 
     /**
-     * 进行全文搜索
+     * 进行全文搜索(9.2):默认给最火最热的前10条结果
      * @param keyword
      * @param pageIndex
      * @param pageSize
-     * @param model
+     * @param map
      * @return
      */
     @GetMapping("/listAll")
-    public /*ModelAndView*/  @ResponseBody ResultVO listEsProductions(
-            @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
-            @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
-            @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
+    public ModelAndView listEsProductions(
+            @RequestParam(value="keyword",required=false,defaultValue="") String keyword,//关键字默认为“”，全部搜索
+            @RequestParam(value="page",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
+            @RequestParam(value="size",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
             Map map) {
-
         Page<Production> page;
         List<ProductionVo> productionVoList = new ArrayList<>();
-//        boolean isEmpty = true; // 系统初始化时，没有作品数据
         try {
             Sort sort = new Sort(DESC,"readSize","eVoteSize","commentSize","puploadTime");
             Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
@@ -125,7 +131,7 @@ public class ProductionController {
             page = productionService.findOrderByTimeDesc(pageable);
 
         }
-        for(Production production :page) {
+        for (Production production : page) {
             ProductionVo productionVo = new ProductionVo();
             Long cId = production.getCatagorys();
             Catagorys catagorys = catagoryService.findByCatagorysId(cId);
@@ -139,21 +145,14 @@ public class ProductionController {
             productionVo.setProduction(production);
             productionVoList.add(productionVo);
         }
-        /*List<ProductionVo> list;
-        if(pageIndex * pageSize>productionVoList.size()){
-            list =  productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
-        }else {
-            list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
-        }*/
-//        map.put("productionPage", list);
+        map.put("productionPage", productionVoList);
         int totalSize = (int)((productionVoList.size()+pageSize-1)/pageSize);
         map.put("totalSize",totalSize);
-        map.put("productionPage", productionVoList);
         map.put("page",pageIndex);
         map.put("size",pageSize);
         map.put("keyword", keyword);
-//        return new ModelAndView("production/amateurPro",map);
-        return ResultUtils.success(map);
+        return new ModelAndView("production/amateurPro",map);
+//        return ResultUtils.success(map);
     }
 
 
@@ -551,7 +550,7 @@ public class ProductionController {
 
 
 
-    //--------------------------------------------------管理员方法--------------------------------------------------------------------------
+    //--------------------------------------------------管理员方法(9.2)--------------------------------------------------------------------------
 
     /**
      * 后台查看作品

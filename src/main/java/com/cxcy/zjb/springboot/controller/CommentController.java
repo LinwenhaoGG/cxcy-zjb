@@ -156,8 +156,7 @@ public class CommentController {
     }
 
     /**
-     * 管理员根据cId删除相应的用户评论，判断点击删除的用户和评论的用户ID是否同一个
-     * @param request
+     * 管理员根据cId删除相应的用户评论
      * @param pId
      * @param cId
      * @return
