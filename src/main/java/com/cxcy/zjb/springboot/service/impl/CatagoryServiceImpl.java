@@ -40,7 +40,7 @@ public class CatagoryServiceImpl implements CatagoryService {
 
     @Override
     public Catagorys findByCatagorysId(Long catagorysId) {
-        Catagorys catagorys = catagoryRepository.getOne(catagorysId);
+        Catagorys catagorys = catagoryRepository.findOne(catagorysId);
         return catagorys;
     }
 

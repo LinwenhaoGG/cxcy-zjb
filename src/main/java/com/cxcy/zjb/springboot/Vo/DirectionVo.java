@@ -14,12 +14,13 @@ public class DirectionVo {
     //方向
     private Direction direction;
     //分类
-    private List<Catagorys> catagorys;
+    private Integer catagorysNum;
 
-    public DirectionVo(Direction direction, List<Catagorys> catagorys) {
+    public DirectionVo(Direction direction, Integer catagorysNum) {
         this.direction = direction;
-        this.catagorys = catagorys;
+        this.catagorysNum = catagorysNum;
     }
+
     public DirectionVo() {
 
     }
