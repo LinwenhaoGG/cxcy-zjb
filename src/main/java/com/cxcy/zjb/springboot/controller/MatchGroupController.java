@@ -125,7 +125,7 @@ public class MatchGroupController {
     public ModelAndView listSignUp(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
                                    @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
                                    Map map) {
-        //获取当前登录的老师账号
+        //获取当前登录的账号
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Long uid = loginUser.getId();
@@ -148,6 +148,9 @@ public class MatchGroupController {
         map.put("page", page);
         map.put("size", size);
         map.put("matchGroupPage", matchGroupPage);
+        if (matchGroupPage.getNumber() == 0) {
+            map.put("isnull", 1);
+        }
         return new ModelAndView("matchs/matchGroup/signUpList", map);
     }
 }

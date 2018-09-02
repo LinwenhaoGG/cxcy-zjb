@@ -80,16 +80,15 @@
 
             <!-- 比赛id与比赛名称 -->
             <input type="hidden" name="id" th:value="*{matchs.id}" id="matchsId">
-            <div align="left">比赛名称:</div>
+            <label class="form-label col-xs-4 col-sm-2">比赛名称:</label>
             <input class="form-control" placeholder="请填写比赛名称" name="title" th:value="*{matchs.name}" id="title" type="text" />
-            <p align="left">比赛开始时间</p>
+            <label class="form-label col-xs-4 col-sm-2">比赛开始时间:</label>
             <input class="form-control" name="startTime" th:field="*{matchs.startTime}" id="startTime" type="date" />
-            <p align="left">比赛结束时间</p>
+            <label class="form-label col-xs-4 col-sm-2">比赛结束时间:</label>
             <input class="form-control" name="overTime" th:field="*{matchs.overTime}" id="overTime" type="date" />
-            <p align="left">截止报名时间</p>
+            <label class="form-label col-xs-4 col-sm-2">截止报名时间:</label>
             <input class="form-control" name="lastsigntime" th:field="*{matchs.lastsigntime}" id="lastsigntime" type="date" />
-            <p align="left"
-            >截止提交时间</p>
+            <label class="form-label col-xs-4 col-sm-2">截止提交时间:</label>
             <input class="form-control" name="lastsubmittime" th:field="*{matchs.lastsubmittime}" id="lastsubmittime" type="date" />
             <!-- markdown代码 -->
             <div class="editormd" id="test-editormd">

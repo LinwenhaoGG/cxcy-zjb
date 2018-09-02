@@ -18,6 +18,11 @@
             <ul class="thumbnails">
                 <h1 style="color: orangered" align="center">负责的比赛项目</h1>
                 <li class="span4">
+                    <div class="thumbnail" th:if="${isnull} eq 1">
+                        <div class="caption">
+                            <h3 style="color:#FF9900;">暂无负责的比赛信息</h3>
+                        </div>
+                    </div>
                     <div class="thumbnail" th:each="teacherEvent : ${teacherEventList}">
                         <div class="caption">
                             <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
@@ -42,7 +47,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12 column">
+<div class="col-md-12 column" th:if="${isnull} ne 1">
     <ul class="pagination pull-right">
         <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${totalPage}+' 页'"></a></li>
         <li class="disabled" th:if="${page} eq '1'" ><a>首页</a></li>

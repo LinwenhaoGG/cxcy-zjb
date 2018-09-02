@@ -148,7 +148,11 @@ public class MatchController {
         map.put("matchsPage", matchsPage);
         map.put("page", page);
         map.put("size", size);
-
+        if (matchsPage.getTotalPages() == 0) {
+            map.put("isnull", 1);
+        } else {
+            map.remove("isnull");
+        }
         return new ModelAndView("matchs/matchsList", map);
     }
 
@@ -174,6 +178,11 @@ public class MatchController {
         map.put("matchsPage", matchsPage);
         map.put("page", page);
         map.put("size", size);
+        if (matchsPage.getTotalPages() == 0) {
+            map.put("isnull", 1);
+        }else {
+            map.remove("isnull");
+        }
 
         return new ModelAndView("matchs/teacher/teacherMatchsList", map);
     }

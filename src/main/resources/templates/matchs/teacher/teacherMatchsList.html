@@ -15,10 +15,15 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2 align="center" style="color: palevioletred">比赛列表</h2>
+            <h2 align="center" style="color: palevioletred">已发布比赛列表</h2>
             <p align="right">
             <a  th:href="'/match/edit'"><button type="button"  class="btn btn-default btn-primary">发布比赛</button></a>
             </p>
+                <div class="thumbnail" th:if="${isnull} eq 1">
+                    <div class="caption">
+                        <h3 style="color: tomato">暂无发布的比赛信息</h3>
+                    </div>
+                </div>
                 <ul class="thumbnails" th:each="matchs : ${matchsPage.content}">
                 <li class="span4">
                     <div class="thumbnail">
@@ -38,7 +43,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12 column">
+<div class="col-md-12 column" th:if="${isnull} ne 1">
     <ul class="pagination pull-right">
         <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${matchsPage.getTotalPages()}+' 页'"></a></li>
         <li class="disabled" th:if="${page} eq '1'" ><a >首页</a></li>

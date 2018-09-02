@@ -41,6 +41,11 @@ public class MainController {
         return "register";
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "top";
+    }
+
     @GetMapping("/login-success")
     public ModelAndView define(Model model) {
         //判断是否已经登录
