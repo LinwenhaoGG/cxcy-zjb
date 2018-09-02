@@ -19,6 +19,7 @@
         <!--</div>-->
     <!--</div>-->
 <!--</div>-->
+<div th:replace="top::html"></div>
 <div class="layui-col-md12">
     <div class="layui-card">
         <div class="layui-card-header" th:align="center" th:text="'比赛名称'+${matchs.name}">标题</div>
@@ -33,9 +34,9 @@
 </div>
 <div class="col-md-12 column" th:align="right">
     <a th:href="'/group/signUp/'+*{matchs.id}" href="matchGroup/EventsignUp.html"
-       th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} le ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd hh:mm:ss')} ">
+       th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')} ">
         <button type="button" class="btn btn-default btn-primary">报名</button></a>
-    <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} ge ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd hh:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛报名结束</button>
+    <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛报名已截止</button>
 </div>
 </body>
 </html>

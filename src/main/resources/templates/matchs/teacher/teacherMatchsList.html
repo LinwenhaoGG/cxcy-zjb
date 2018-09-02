@@ -12,16 +12,17 @@
     </style>
 </head>
 <body>
+<div th:replace="top::html"></div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2 align="center" style="color: palevioletred">已发布比赛列表</h2>
+            <h2 align="center" style="color: palevioletred">发布的比赛列表</h2>
             <p align="right">
             <a  th:href="'/match/edit'"><button type="button"  class="btn btn-default btn-primary">发布比赛</button></a>
             </p>
                 <div class="thumbnail" th:if="${isnull} eq 1">
                     <div class="caption">
-                        <h3 style="color: tomato">暂无发布的比赛信息</h3>
+                        <h3 style="color: tomato">暂无您发布的比赛信息</h3>
                     </div>
                 </div>
                 <ul class="thumbnails" th:each="matchs : ${matchsPage.content}">
@@ -29,9 +30,9 @@
                     <div class="thumbnail">
                         <div class="caption">
                             <h3 th:text="${matchs.name}" style="color:steelblue"></h3>
-                            <p th:text="'比赛开始报名时间为:'+${matchs.startTime}"></p>
-                            <p th:text="'比赛截止报名时间为:'+${matchs.lastsigntime}"></p>
-                            <p th:text="'比赛正式结束时间为:'+${matchs.overTime}"></p>
+                            <p th:text="'比赛开始报名时间为:'+${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <p th:text="'比赛截止报名时间为:'+${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <p th:text="'比赛正式结束时间为:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p>
                                 <a  th:href="'/match/edit/'+ ${matchs.id}"><button type="button" class="btn btn-default btn-warning">编辑</button></a>
                                 <a class="btn btn-info"  href="#">功能开发中</a>

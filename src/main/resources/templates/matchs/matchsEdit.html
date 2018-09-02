@@ -74,22 +74,26 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-
+<div th:replace="top::html"></div>
+<!--<div class="container">-->
+    <!--<div class="row clearfix">-->
+        <!--<div class="col-md-12 column">-->
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="thumbnails">
             <!-- 比赛id与比赛名称 -->
             <input type="hidden" name="id" th:value="*{matchs.id}" id="matchsId">
-            <label class="form-label col-xs-4 col-sm-2">比赛名称:</label>
+            <p align="left">比赛名称:<p>
             <input class="form-control" placeholder="请填写比赛名称" name="title" th:value="*{matchs.name}" id="title" type="text" />
-            <label class="form-label col-xs-4 col-sm-2">比赛开始时间:</label>
+            <p align="left">比赛开始时间:<p>
             <input class="form-control" name="startTime" th:field="*{matchs.startTime}" id="startTime" type="date" />
-            <label class="form-label col-xs-4 col-sm-2">比赛结束时间:</label>
-            <input class="form-control" name="overTime" th:field="*{matchs.overTime}" id="overTime" type="date" />
-            <label class="form-label col-xs-4 col-sm-2">截止报名时间:</label>
+           <p align="left">截止报名时间:<p>
             <input class="form-control" name="lastsigntime" th:field="*{matchs.lastsigntime}" id="lastsigntime" type="date" />
-            <label class="form-label col-xs-4 col-sm-2">截止提交时间:</label>
+            <p align="left">截止提交时间:<p>
             <input class="form-control" name="lastsubmittime" th:field="*{matchs.lastsubmittime}" id="lastsubmittime" type="date" />
+            <p align="left">比赛结束时间:<p>
+            <input class="form-control" name="overTime" th:field="*{matchs.overTime}" id="overTime" type="date" />
             <!-- markdown代码 -->
             <div class="editormd" id="test-editormd">
             <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="content" th:text="*{matchs.content}""></textarea>
@@ -147,6 +151,7 @@
                 <div th:if=" ${#lists.isEmpty(matchs.id)}">发布</div>
                 <div th:if="not ${#lists.isEmpty(matchs.id)}">保存</div>
             </button>
+            </ul>
         </div>
     </div>
 </div>
@@ -265,7 +270,6 @@
                 data: {id:Id,name: name, content:content,htmlContent:htmlContent,startTime:startTime,
                     overTime:overTime,lastsigntime:lastsigntime,lastsubmittime:lastsubmittime},
                 success:function (result1) {
-                    alert("发布比赛成功");
                     console.log(result1);
                     //var mid = result1.data
                     $.ajax({
@@ -275,7 +279,7 @@
                         contentType:"application/json;charsetset=UTF-8",
                         data: JSON.stringify({eventList:itemList,mid:result1.data}),
                         success:function () {
-                            alert("发布比赛项目成功");
+                            alert("发布比赛成功");
                             window.location.href="/match/list";
                         },
                         error:function () {
