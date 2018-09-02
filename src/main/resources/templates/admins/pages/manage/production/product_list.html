@@ -8,11 +8,13 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="../../../static/h-ui/css/H-ui.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../static/h-ui.admin/css/H-ui.admin.css" />
-    <link rel="stylesheet" type="text/css" href="../../../lib/Hui-iconfont/1.0.8/iconfont.css" />
-    <link rel="stylesheet" type="text/css" href="../../../static/h-ui.admin/skin/default/skin.css" id="skin" />
-    <link rel="stylesheet" type="text/css" href="../../../static/h-ui.admin/css/style.css" />
+    <link href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui/css/H-ui.min.css" th:href="@{/h-ui/css/H-ui.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/H-ui.admin.css" th:href="@{/h-ui.admin/css/H-ui.admin.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/lib/Hui-iconfont/1.0.8/iconfont.css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/skin/default/skin.css" id="skin" th:href="@{/h-ui.admin/skin/default/skin.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/style.css" th:href="@{/h-ui.admin/css/style.css}"/>
+
     <title>后台管理</title>
 </head>
 <body>
@@ -73,8 +75,8 @@
             <dt><i class="Hui-iconfont">&#xe616;</i> 业余作品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="./production_classify.html" title="方向、类别管理">方向、类别管理</a></li>
-                    <li><a href="./product_list.html" title="作品审核管理">作品审核管理</a></li>
+                    <li><a th:href="@{/direction/proClassify}" title="方向、类别管理">方向、类别管理</a></li>
+                    <li><a th:href="@{/production/selectProBy}" title="作品审核管理">作品审核管理</a></li>
                 </ul>
             </dd>
         </dl>
@@ -100,16 +102,18 @@
         <div class="searchUser">
             <span class="ml-30">查询条件：</span>
             <span class="select-box">
-                <select class="select" size="1" name="searchLimit">
-                    <option value="0" selected>用户账号</option>
-                    <option value="1">作品标题</option>
+                <select class="select" size="1" id="searchLimit">
+                    <option value="1" th:if="${optionValue}!='2'" selected>用户账号</option>
+                     <option value="1" th:if="${optionValue}=='2'">用户账号</option>
+                     <option value="2" th:if="${optionValue}=='2'" selected>作品标题</option>
+                    <option value="2" th:if="${optionValue}!='2'">作品标题</option>
                 </select>
             </span>
-            <input type="text" class="input-text" placeholder="请输入查询关键字...">
-            <input class="btn btn-primary radius" type="button" value="查询">
+            <input type="text" class="input-text" th:if="${selectStr} == ''" placeholder="请输入查询关键字..." id="textstring">
+            <input type="text" class="input-text" th:if="${selectStr} != ''" th:value="${selectStr}" id="textstring">
+            <button class="btn btn-primary radius" type="button" onclick="select()">查询</button>
         </div>
         <div class="searchResult mt-20">
-            <!--头像、邮箱、真实姓名、认证状态、账号名、手机号码-->
             <table class="table table-border table-bg">
                 <thead class="text-c">
                     <tr>
@@ -120,38 +124,56 @@
                         <th width="100">操作</th>
                     </tr>
                 </thead>
-                <tbody class="text-c">
+                <h3 th:if="${productionPage} == null" th:text="${msg}"></h3>
+                <tbody class="text-c" th:if="${productionPage} != null" th:each="p : ${productionPage}">
                     <tr>
-                        <td>10023</td>
-                        <td>abc1352656</td>
-                        <td>Vue实战项目-美团外卖</td>
-                        <td class="text-l">Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖</td>
+                        <td th:text="${p.pId}"></td>
+                        <td th:text="${p.user}">abc1352656</td>
+                        <td th:text="${p.ptitle}"></td>
+                        <td th:text="${p.pSummary}" style="align-content: center"></td>
                         <td><a href="./product_detail.html">查看详情</a></td>
                     </tr>
-                    <tr>
-                        <td>10023</td>
-                        <td>abc1352656</td>
-                        <td>Vue实战项目-美团外卖</td>
-                        <td class="text-l">Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖</td>
-                        <td><a href="./product_detail.html">查看详情</a></td>
-                    </tr>
-                    <tr>
-                        <td>10023</td>
-                        <td>abc1352656</td>
-                        <td>Vue实战项目-美团外卖</td>
-                        <td class="text-l">Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖Vue实战项目-美团外卖</td>
-                        <td><a href="./product_detail.html">查看详情</a></td>
-                    </tr>
+
                 </tbody>
             </table>
 
         </div>
     </article>
+    <div class="col-md-12 column" th:if="${productionPage} != null">
+        <ul class="pagination pull-right">
+            <li class="disabled" th:if="${page} eq '1'" ><a href="#">首页</a></li>
+            <li th:if="${page} ne '1'"><a th:href="${url}+'&page=1&size='+${size}">首页</a></li>
+            <li class="disabled" th:if="${page} le '1'"><a href="#">上一页</a></li>
+            <li th:if="${page} gt '1'"><a th:href="${url}+'&page='+${page-1}+'&size='+${size}">上一页</a></li>
+            <li th:each="pageNo : ${#numbers.sequence(1, productionPage.getTotalPages())}">
+                <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+                <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="${url}+'&page='+${pageNo}+'&size='+${size}" th:text="${pageNo}"></a>
+            </li>
+            <li th:if="${page} lt ${productionPage.getTotalPages()}"><a th:href="${url}+'&page='+${page+1}+'&size='+${size}">下一页</a></li>
+            <li class="disabled" th:if="${page} ge ${productionPage.getTotalPages()}"><a>下一页</a></li>
+            <li class="disabled" th:if="${page} eq ${productionPage.getTotalPages()}"><a>尾页</a></li>
+            <li th:if="${page} ne ${productionPage.getTotalPages()}"><a th:href="${url}+'&page='+${productionPage.getTotalPages()}+'&size='+${size}">尾页</a></li>
+        </ul>
+    </div>
 </section>
 
-<script type="text/javascript" src="../../../lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="../../../lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="../../../static/h-ui/js/H-ui.js"></script>
-<script type="text/javascript" src="../../../static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<script type="text/javascript" src="../../../../../static/lib/jquery/1.9.1/jquery.min.js" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script>
+<script type="text/javascript" src="../../../../../static/lib/layer/2.4/layer.js" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" src="../../../../../static/h-ui/js/H-ui.js" th:src="@{/h-ui/js/H-ui.js}"></script>
+<script type="text/javascript" src="../../../../../static/h-ui.admin/js/H-ui.admin.page.js" th:src="@{/h-ui.admin/js/H-ui.admin.page.js}"></script>
+<script type="text/javascript">
+   function select() {
+       // 获取查询条件
+       var optionValue = $("#searchLimit option:selected") .val();
+       //获取关键字
+       var selectStr = $("#textstring").val();
+       if (selectStr != "") {
+           window.location.href = '/production/selectProBy?optionValue=' + optionValue + "&selectStr=" + selectStr;
+       }
+   }
+  </script>
+
+
+
 </body>
 </html>

@@ -106,6 +106,12 @@ public interface ProductionService {
     public List<Production> findAll(Sort sort);
 
     /**
+     * 查询所有的作品
+     * @return
+     */
+    public Page<Production> findAll(Pageable pageable);
+
+    /**
      * 按时间降序查找前10条已审核通过的作品
      * @return
      */
@@ -152,10 +158,5 @@ public interface ProductionService {
      */
     Page<Production> findByPtitleLike(String ptitle,Pageable pageable);
 
-    /**
-     * 通过用户id模糊查询
-     * @param ptitle
-     * @return
-     */
-    Page<Production> findByUserIdLike(Long userId,Pageable pageable);
+
 }

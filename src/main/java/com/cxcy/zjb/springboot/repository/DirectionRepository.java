@@ -19,4 +19,11 @@ public interface DirectionRepository extends JpaRepository<Direction,Long> {
      * @return
      */
     Page<Direction> findAll(Pageable pageable);
+
+    /**
+     * 通过名称查找
+     * @param dName
+     * @return
+     */
+    Direction findByDName(String dName);
 }

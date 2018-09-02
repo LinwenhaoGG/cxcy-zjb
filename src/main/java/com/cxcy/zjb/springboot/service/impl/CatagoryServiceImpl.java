@@ -45,6 +45,11 @@ public class CatagoryServiceImpl implements CatagoryService {
     }
 
     @Override
+    public Catagorys findByCatagorysByName(String name) {
+        return catagoryRepository.findByCaName(name);
+    }
+
+    @Override
     public List<Catagorys> findAll() {
         return catagoryRepository.findAll();
     }
@@ -56,7 +61,7 @@ public class CatagoryServiceImpl implements CatagoryService {
 
     @Override
     public Catagorys findById(Long cId) {
-        return catagoryRepository.getOne(cId);
+        return catagoryRepository.findOne(cId);
     }
 
     @Override

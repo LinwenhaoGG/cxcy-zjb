@@ -36,8 +36,22 @@ public interface DirectionService {
     public Direction findById(Long directionId);
 
     /**
+     * 通过名称查找
+     * @param name
+     * @return
+     */
+    public Direction findByName(String name);
+
+    /**
      * 删除方向
      * @param dId
      */
     public void deleteDir(Long dId);
+
+    /**
+     * 添加方向
+     * @param direction
+     * @return
+     */
+    public Direction save(Direction direction);
 }

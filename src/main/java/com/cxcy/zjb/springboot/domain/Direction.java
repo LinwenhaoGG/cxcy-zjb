@@ -31,4 +31,7 @@ public class Direction implements Serializable {
 
     }
 
+    public Direction(String dName) {
+        this.dName = dName;
+    }
 }

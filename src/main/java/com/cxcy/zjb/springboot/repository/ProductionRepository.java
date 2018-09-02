@@ -58,12 +58,12 @@ public interface ProductionRepository extends JpaRepository<Production,Long> {
      * @param ptitle
      * @return
      */
-    Page<Production> findByPtitleLike(String ptitle,Pageable pageable);
+    Page<Production> findByPtitleContaining(String ptitle,Pageable pageable);
 
     /**
      * 通过用户id标题模糊查询
      * @param userId
      * @return
      */
-    Page<Production> findByUserLike(Long userId,Pageable pageable);
+    Page<Production> findByUserContaining(Long userId,Pageable pageable);
 }

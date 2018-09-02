@@ -75,8 +75,8 @@
             <dt><i class="Hui-iconfont">&#xe616;</i> 业余作品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="./production_classify.html" title="方向、类别管理">方向、类别管理</a></li>
-                    <li><a href="./product_list.html" title="作品审核管理">作品审核管理</a></li>
+                    <li><a th:href="@{/direction/proClassify}" title="方向、类别管理">方向、类别管理</a></li>
+                    <li><a th:href="@{/production/selectProBy}" title="作品审核管理">作品审核管理</a></li>
                 </ul>
             </dd>
         </dl>
@@ -92,35 +92,81 @@
         </dl>
     </div>
 </aside>
-
+<input type="hidden" id="dId" th:value="*{dId}">
 <section class="Hui-article-box">
     <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../../index.html" class="maincolor">后台管理首页</a>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">业余作品管理</span>
     </nav>
     <article class="cl pd-20">
-        <input class="btn radius btn-secondary" type="button" value="添加作品分类">
-        <div class="mt-20">
+        <input class="btn radius btn-secondary" type="button" value="添加作品分类" onclick="$('#add-modal').modal('show')">
+        <div id="add-modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content radius">
+                    <div class="modal-body">
+                        <br>
+                        <div style="margin-top:10px;padding-left: 100px">
+                            <span>分类：</span>
+                            <input type="text" class="input-text radius" id="typeContent">
+                            <div style="display: inline-block;position: relative;cursor:pointer;" id="add_type"
+                            >
+                                <i class="Hui-iconfont " style="font-size:25px;position: absolute;left: 0;top: -23px">&#xe716;</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary">确定</button>
+                        <button class="btn" data-dismiss="modal" id="cancel-btn">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-30">
             <table class="table table-border table-bg">
                 <thead>
                     <tr>
-                        <th>分类</th>
-                        <th>作品数目</th>
-                        <th>操作</th>
+                        <th style="text-align:center">分类</th>
+                        <th style="text-align:center">作品数目</th>
+                        <th style="text-align:center">操作</th>
                     </tr>
                 </thead>
                 <tbody th:each="c : ${vos}">
                     <tr>
-                        <td th:text="${c.catagorys.caName}"></td>
-                        <td th:text="${c.proNum}"></td>
-                        <td>
-                            <a class="mr-30" href="#">修改该分类</a>
-                            <a class="mr-30" href="#">删除该分类</a>
+                        <td th:text="${c.catagorys.caName}" style="text-align:center"></td>
+                        <td th:text="${c.proNum}" style="text-align:center"></td>
+                        <td style="text-align:center">
+                            <button class="btn btn-link" type="button"  th:onclick="'update('+${c.catagorys.cId}+',\''+${c.catagorys.caName}+'\')'">修改该分类</button>
+
+                            <button class="btn btn-link" type="button" th:onclick="'deletePro('+${c.catagorys.cId}+')'">删除该分类</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div id="add-modal2" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content radius">
+                    <div class="modal-body">
+                        <input type="hidden" id="cId">
+                        <div style="margin-top:10px;padding-left: 100px">
+                            <span>原分类：</span>
+                            <span class="input-text radius" id="oldCata"></span>
+                        </div>
+                        <div style="margin-top:10px;padding-left: 100px">
+                            <span>新分类：</span>
+                            <input type="text" class="input-text radius" id="newCata">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="sumit()">确定</button>
+                        <button class="btn" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </article>
 </section>
 
@@ -128,6 +174,140 @@
 <script type="text/javascript" src="../../../../../static/lib/layer/2.4/layer.js" th:src="@{/lib/layer/2.4/layer.js}"></script>
 <script type="text/javascript" src="../../../../../static/h-ui/js/H-ui.js" th:src="@{/h-ui/js/H-ui.js}"></script>
 <script type="text/javascript" src="../../../../../static/h-ui.admin/js/H-ui.admin.page.js" th:src="@{/h-ui.admin/js/H-ui.admin.page.js}"></script>
+<script type="text/javascript">
+    $(function () {
 
+        $("#add_type").click(function(){
+            // 获取分类
+            var type = $("#typeContent").val();
+            if(type){
+                var newType = '<div class="Huialert Huialert-info info-button" style="display:inline-block; margin-top:10px; margin-right:10px;"><i class="Hui-iconfont dismiss_btn">&#xe6a6;</i><span class="new_type">'+type+'</span></div>';
+                $(".modal-body").append(newType);
+                $("#typeContent").val("");
+            }
+
+        });
+
+        $(".modal-body").on('click','.dismiss_btn',function(){
+            $(this).parent().remove();
+        });
+
+        // 确定添加
+        $(".modal-footer").on('click','.btn-primary',function(){
+            // 分类数组
+            var typeList = [];
+            // 方向id
+            var dId = $("#dId").val();
+            $(this).parent().siblings(".modal-body").children(".info-button").each(function(){
+                typeList.push($(this).children('.new_type').text());
+            });
+            if(typeList.length == 0){
+                $("#typeContent").attr({"placeholder":"请输入添加的分类后点击+"});
+            }
+
+            else{
+                $.ajax({
+                    url:"/catagory/saveCatagorys",
+                    type: "POST",
+                    dataType: "json",
+                    data:{
+                        "dId":dId,
+                        "caName[]":typeList
+                    },
+                    traditional:true,
+                    success:function(data){
+                        // 隐藏弹框
+                        $("#add-modal").hide();
+                        if(data.code != 0){
+                            alert(data.message);
+                        }else{
+                            alert("添加成功");
+                        }
+                        location.reload(true);
+                    },
+                    error:function(){
+                        alert("添加失败");
+                    }
+                })
+            }
+        });
+
+        // 点击取消，清楚所有之前填的内容
+        $("#cancel-btn").click(function(){
+            // 清空分类和方向input
+            $("#typeContent").val("");
+            $("#dirContent").val("");
+            // 清空新添加的分类标签
+            $(".modal-body").children(".info-button").remove();
+        })
+    });
+
+
+    function sumit(){
+       var cId = $("#cId").val();
+
+       var newCate = $("#newCata").val();
+       if(newCate != ""){
+           var url = "/catagory/saveCatagorysById?cId="+cId+"&caName="+newCate;
+           find2(url);
+       }else{
+           $("#newCata").attr({"placeholder":"请输入修改后名字"});
+       }
+    }
+    function  update(id,name) {
+        $("#add-modal2").modal("show");
+        $("#oldCata").text(name);
+        $("#cId").val(id);
+    }
+    function deletePro(cId) {
+
+        var toUrl ="/catagory/deleteCatagorysById/"+cId;
+        var con=confirm("是否确认删除？");
+        if(con==true)
+            find1(toUrl);
+    }
+    function find1(toUrl) {
+        $.ajax({
+            type:"get",
+            url:toUrl,
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data:{},
+            success:function(datas){
+                if(datas.code != 0){
+                    alert(datas.message);
+                }else{
+                    location.reload(true);
+                }
+
+            },
+            error : function(result) {
+                alert("发生未知错误，请稍后重试");
+            }
+        });
+
+    }
+    function find2(toUrl) {
+        $.ajax({
+            type:"get",
+            url:toUrl,
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data:{},
+            success:function(datas){
+                if(datas.code != 0){
+                    alert(datas.message);
+                }else{
+                    location.reload(true);
+                }
+
+            },
+            error : function(result) {
+                alert("发生未知错误，请稍后重试");
+            }
+        });
+
+    }
+    </script>
 </body>
 </html>

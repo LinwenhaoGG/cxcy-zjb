@@ -46,8 +46,18 @@ public class DirectionServiceImpl implements DirectionService {
     }
 
     @Override
+    public Direction findByName(String name) {
+        return directionRepository.findByDName(name);
+    }
+
+    @Override
     public void deleteDir(Long dId) {
         directionRepository.delete(dId);
+    }
+
+    @Override
+    public Direction save(Direction direction) {
+        return directionRepository.save(direction);
     }
 
 

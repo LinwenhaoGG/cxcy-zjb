@@ -19,6 +19,9 @@ public interface CatagoryRepository extends JpaRepository<Catagorys, Long> {
      */
     List<Catagorys> findByDirection(Long direction);
 
+    //通过名称查找
+    public Catagorys findByCaName(String caName);
+
 
 
 

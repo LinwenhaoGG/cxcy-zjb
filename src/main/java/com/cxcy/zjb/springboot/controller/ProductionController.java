@@ -6,6 +6,7 @@ import com.cxcy.zjb.springboot.domain.es.EsProduction;
 import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.service.es.EsProductionService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
+import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -169,10 +170,12 @@ public class ProductionController {
     // 分页显示用户的所有作品信息
     @GetMapping("/{username}/productionCenter")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
-    public ModelAndView showAllProduction(@PathVariable("username") String username ,
+    public ModelAndView showAllProduction(HttpServletRequest request,@PathVariable("username") String username ,
                                                     @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
                                                     @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
                                                     Map map){
+        User u = (User)request.getSession().getAttribute("user");
+
         //设置分页
         Pageable pageable = new PageRequest(pageIndex-1, pageSize);
 //        根据用户名查找用户
@@ -188,12 +191,21 @@ public class ProductionController {
         }else{
             map.put("productionPage",productions);
         }
-        String url = "/production/"+username+"/productionCenter";
-        map.put("user",username);
-        map.put("url",url);
+
         map.put("page",pageIndex);
         map.put("size",pageSize);
-        return new ModelAndView("production/productionOtherCenter",map);
+        if(u!=null && username.equals(u.getUsername())){
+            String url = "/production/center/user"+u.getId();
+            map.put("url",url);
+            map.put("userName",username);
+            return new ModelAndView("production/productionCenter",map);
+        }else{
+            String url = "/production/"+username+"/productionCenter";
+            map.put("user",username);
+            map.put("url",url);
+            return new ModelAndView("production/productionOtherCenter",map);
+        }
+
     }
 
     //    删除对应的作品:需要先判断作品是否作者的，好像不用判断，当显示作品详情的时 候已经对作品的作者进行判断了才会显示删除接口
@@ -686,42 +698,50 @@ public class ProductionController {
     }
 
     /**
-     * 通过作品标题模糊查询作品
-     * @param ptitle
+     * 查询所有作品或通过用户id查询、根据作品标题模糊查询
+     * @param optionValue
+     * @param selectStr
      * @param pageIndex
      * @param pageSize
      * @param map
      * @return
      */
-    @GetMapping("/selectByUserId/{ptitle}")
-    public ModelAndView selectByPtitle(@PathVariable("ptitle") String ptitle,
-                                                 @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                                 @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
-                                                 Map map) {
-        Pageable pageable = new PageRequest(pageIndex,pageSize);
-        Page<Production> production = productionService.findByPtitleLike(ptitle,pageable);
-        map.put("production",production);
-
-        map.put("page",pageIndex);
-        map.put("size",pageSize);
-        //返回地址要修改
-        return new ModelAndView("production/amateurPro",map);
-    }
-    @GetMapping("/selectByUserId/{userId}")
-    public ModelAndView selectByUserId(@PathVariable("userId") Long userId,
-                                       @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                       @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
-                                       Map map) {
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
-        Page<Production> production = productionService.findByUserIdLike(userId, pageable);
-        map.put("production", production);
-
+    @GetMapping("/selectProBy")
+    public ModelAndView selectProBy(@RequestParam(value ="optionValue", required = false,defaultValue = "0") Integer optionValue,
+                                     @RequestParam(value ="selectStr", required = false,defaultValue = "") String selectStr,
+                                     @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                     @RequestParam(value = "size", required = false, defaultValue = "5") Integer pageSize,
+                                     Map map) {
+        Pageable pageable = new PageRequest(pageIndex-1, pageSize);
+        Page<Production> production;
+        String msg = "";
+        if(optionValue==0){
+            production = productionService.findAll(pageable);
+        }else if(optionValue==1){
+            Long userId;
+                userId = Long.parseLong(selectStr);
+            System.out.println(userId);
+                production = productionService.findAllByUserId(userId, pageable);
+        }else{
+            production = productionService.findByPtitleLike(selectStr,pageable);
+        }
+        if(production!=null && production.getTotalPages() == 0){
+            production = null;
+            msg = "无相关作品";
+        }
+        map.put("productionPage", production);
+        map.put("msg",msg);
+        String url = "/production/selectProBy?optionValue="+optionValue+"&selectStr="+selectStr;
+        map.put("url",url);
         map.put("page", pageIndex);
         map.put("size", pageSize);
+        map.put("optionValue",optionValue);
+        map.put("selectStr",selectStr);
         //返回地址要修改
-        return new ModelAndView("production/amateurPro", map);
+        return new ModelAndView("admins/pages/manage/production/product_list", map);
 
     }
+
 }
 
 

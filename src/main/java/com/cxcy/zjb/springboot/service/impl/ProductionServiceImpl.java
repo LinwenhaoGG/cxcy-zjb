@@ -182,6 +182,11 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
+    public Page<Production> findAll(Pageable pageable) {
+        return productionRepository.findAll(pageable);
+    }
+
+    @Override
     public List<Production> findTop10orderByTimeDesc() {
         return productionRepository.findTop10ByPCheckOrderByPuploadTimeDesc(0);
     }
@@ -214,11 +219,7 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public Page<Production> findByPtitleLike(String ptitle,Pageable pageable) {
-        return productionRepository.findByPtitleLike(ptitle,pageable);
+        return productionRepository.findByPtitleContaining(ptitle,pageable);
     }
 
-    @Override
-    public Page<Production> findByUserIdLike(Long userId, Pageable pageable) {
-        return productionRepository.findByUserLike(userId,pageable);
-    }
 }

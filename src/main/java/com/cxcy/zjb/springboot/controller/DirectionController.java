@@ -11,10 +11,7 @@ import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -76,8 +73,8 @@ public class DirectionController {
     @GetMapping("/deleteDirection")
     public @ResponseBody
     ResultVO deleteDirection(@RequestParam(value="dId") Long dId){
-        Catagorys catagorys = catagoryService.findByCatagorysId(dId);
-        if (catagorys != null) {
+        List<Catagorys> catagorys = catagoryService.findByDid(dId);
+        if (catagorys.size()!=0) {
             return ResultUtils.error(1,"此方向下有分类，无法删除");
         }else{
             directionService.deleteDir(dId);
@@ -85,14 +82,56 @@ public class DirectionController {
         }
 
     }
-    //    跳转测试页面
-    @RequestMapping(value = "/totest")
-    public String totest() {
-      /*  User user = userService.findByUsername("zpr");
-//        User user = userService.findUserById(1224L);
-        session.setAttribute("user",user);
-//      return "/production/showProduction";
-//        return user;*/
+    //    跳转到管理员端方向、分类管理页面
+    @RequestMapping(value = "/proClassify")
+    public String proClassify() {
         return "/admins/pages/manage/production/production_classify";
+    }
+    /**
+     * 修改方向
+     * @param dId
+     * @param dName
+     * @return
+     */
+    @GetMapping("/updateDirection")
+    public @ResponseBody
+    ResultVO updateDirection(@RequestParam(value="dId") Long dId,
+                             @RequestParam(value="dName") String dName) {
+        Direction direction = directionService.findById(dId);
+        direction.setDName(dName);
+        Direction save = directionService.save(direction);
+        if (save != null) {
+            return ResultUtils.success(save);
+        } else {
+            return ResultUtils.error(1, "添加不成功");
+        }
+    }
+    /**
+     * 添加方向和多个分类
+     * @param dName
+     * @param caNames
+     * @return
+     */
+    @PostMapping("/saveDirAndCata")
+    public @ResponseBody
+    ResultVO saveDirAndCata(@RequestParam(value="dName") String dName,
+                           @RequestParam(value="caName[]") String[] caNames){
+        ResultVO resultVO = ResultUtils.error(2,"添加方向成功，分类名称重复，添加失败"); ;
+        Direction direction = directionService.findByName(dName);
+        if(direction != null){
+            resultVO = ResultUtils.error(1,"已含有此方向");
+            return resultVO;
+        }
+        direction = new Direction(dName);
+        directionService.save(direction);
+        for(int i = 0;i<caNames.length;i++){
+            Catagorys cata = catagoryService.findByCatagorysByName(caNames[i]);
+            if(cata == null){
+                Catagorys catagorys = new Catagorys(direction.getDId(),caNames[i]);
+                catagoryService.save(catagorys);
+                resultVO = ResultUtils.success();
+            }
+        }
+        return resultVO;
     }
 }

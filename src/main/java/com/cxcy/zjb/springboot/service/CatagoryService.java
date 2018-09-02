@@ -39,6 +39,13 @@ public interface CatagoryService {
     public Catagorys findByCatagorysId(Long catagorysId);
 
     /**
+     * 通过名称查找
+     * @param name
+     * @return
+     */
+    public Catagorys findByCatagorysByName(String name);
+
+    /**
      * 查找所有分类
      * @return
      */

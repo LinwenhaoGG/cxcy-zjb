@@ -7,23 +7,19 @@ import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.service.CatagoryService;
 import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
+import javafx.scene.effect.SepiaTone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 分类控制层
@@ -54,7 +50,7 @@ public class CatagoryController {
      * @return
      */
     @GetMapping("/findCatagorysByDid")
-    public ModelAndView findCatagorysByDid(@RequestParam("direction") long direction, Map map){
+    public ModelAndView findCatagorysByDid(@RequestParam("direction") Long direction, Map map){
         List<Catagorys> list = catagoryService.findByDid(direction);
         List<CatagoryVo> vos = new ArrayList<>();
         for(Catagorys catagorys:list){
@@ -62,8 +58,9 @@ public class CatagoryController {
             CatagoryVo catagoryVo = new CatagoryVo(catagorys,size);
             vos.add(catagoryVo);
         }
-
+        System.out.println(vos.toString());
         map.put("vos",vos);
+        map.put("dId",direction);
         return new ModelAndView("/admins/pages/manage/production/product_classify_detail",map);
     }
 
@@ -72,9 +69,9 @@ public class CatagoryController {
      * @param cId
      * @return
      */
-    @GetMapping("/deleteCatagorysById")
+    @GetMapping("/deleteCatagorysById/{cId}")
     public @ResponseBody
-    ResultVO deleteCatagorysById(@RequestParam("cId") long cId){
+    ResultVO deleteCatagorysById(@PathVariable("cId") Long cId){
         //如果分类下有作品，则无法删除，若无，则可以删除
         List<Production> productions = productionService.findByCid(cId);
         if(productions.size()!=0){
@@ -87,7 +84,7 @@ public class CatagoryController {
     }
 
     /**
-     * 修改或增加分类
+     * 修改分类
      * @param cId
      * @param dId
      * @param caName
@@ -96,20 +93,37 @@ public class CatagoryController {
     @GetMapping("/saveCatagorysById")
     public @ResponseBody
     ResultVO saveCatagorysById(@RequestParam(value="cId",required=false) Long cId,
-                               @RequestParam(value="dId") Long dId,
                                 @RequestParam(value="caName") String caName){
         Catagorys catagorys;
-        if(cId != null){
             catagorys = catagoryService.findById(cId);
             catagorys.setCaName(caName);
-        }else {
-            catagorys = new Catagorys(dId,caName);
-        }
         Catagorys newcata = catagoryService.save(catagorys);
-        if(newcata != null){
+        if(newcata.getCaName().equals(caName)){
             return ResultUtils.success(catagorys);
         }else{
-            return ResultUtils.error(1,"添加不成功");
+            return ResultUtils.error(1,"修改不成功");
         }
+    }
+
+    /**
+     * 添加多个分类
+     * @param dId
+     * @param caNames
+     * @return
+     */
+    @PostMapping("/saveCatagorys")
+    public @ResponseBody
+    ResultVO saveCatagorys(@RequestParam(value="dId") Long dId,
+                           @RequestParam(value="caName[]") String[] caNames){
+        ResultVO resultVO = ResultUtils.error(1,"已有分类，添加失败");
+        for(int i = 0;i<caNames.length;i++){
+            Catagorys cata = catagoryService.findByCatagorysByName(caNames[i]);
+            if(cata == null){
+                Catagorys catagorys = new Catagorys(dId,caNames[i]);
+                Catagorys newcata = catagoryService.save(catagorys);
+                resultVO = ResultUtils.success();
+            }
+        }
+        return resultVO;
     }
 }
