@@ -35,7 +35,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12 column">
+<div class="col-md-12 column" th:if="${matchsPage} ne 1">
     <ul class="pagination pull-right">
         <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${matchsPage.getTotalPages()}+' 页'"></a></li>
         <li class="disabled" th:if="${page} eq '1'" ><a >首页</a></li>

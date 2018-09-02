@@ -87,6 +87,11 @@ public class EventController {
         map.put("size", size);
         map.put("page", page);
         map.put("totalPage", totalPage);
+        if (teacherEventList.size() == 0) {
+            map.put("isnull", 1);
+        }else {
+            map.remove("isnull");
+        }
         return new ModelAndView("matchs/teacher/teacherEventList", map);
     }
 

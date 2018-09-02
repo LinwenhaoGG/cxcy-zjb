@@ -59,11 +59,10 @@ public class UserController {
      */
     @RequestMapping("/person")
     @ResponseBody
-    public User getUserId(){
-        //获取当前登录的用户
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return user;
+    public Object getUserId(){
+        //获取当前登录的用户
+        return  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     /**
