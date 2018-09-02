@@ -120,4 +120,56 @@ public class CommentController {
         }
         return ResultUtils.success();
     }
+
+
+    //------------------------------------------------------------管理员方法-------------------------------------------------------------------
+    /**
+     * 哪个用户访问哪个作品，显示该作品的所有评论,连带评论的所有信息
+     * @param pId
+     * @return
+     */
+    @GetMapping("/admin/listAllComments")
+    public @ResponseBody ResultVO adlistAllComments(@RequestParam("pId")Long pId){
+//        根据pid获取作品
+        List<Comment> comments ;
+        List list = new ArrayList();
+        try {
+            Production production = productionService.findByPId(pId);
+            comments = production.getComments();
+            for(Comment comment:comments ){
+                Map<String,Object> map1 = new HashMap<>();
+                Map<String,Object> map = new HashMap<>();
+                Long uId = commentService.findUserByCId(comment.getId());
+                User user = userService.findUserById(uId);
+                String username1 = user.getUsername();
+                map1.put(username1,comment);
+                map.put("map",map1);
+                list.add(map);
+            }
+            if(comments.size()==0){
+                return ResultUtils.error(1,"未有人评论");
+            }
+        }catch(Exception e){
+            return ResultUtils.error(1,"无法获取相应评论");
+        }
+        return ResultUtils.success(list);
+    }
+
+    /**
+     * 管理员根据cId删除相应的用户评论，判断点击删除的用户和评论的用户ID是否同一个
+     * @param request
+     * @param pId
+     * @param cId
+     * @return
+     */
+    @GetMapping("/admin/deleteComment")
+    public @ResponseBody ResultVO adeleteComment(@RequestParam("pId")Long pId,@RequestParam("cId")Long cId) {
+        try{
+                productionService.removeComment(pId,cId);//外键关联，需要先删除作品的cid
+                commentService.removeCommentById(cId);
+        }catch (Exception e){
+            return ResultUtils.error(1,"删除失败");
+        }
+        return ResultUtils.success();
+    }
 }

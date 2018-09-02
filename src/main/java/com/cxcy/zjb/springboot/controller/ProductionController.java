@@ -2,9 +2,7 @@ package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.*;
-import com.cxcy.zjb.springboot.domain.es.EsProduction;
 import com.cxcy.zjb.springboot.service.*;
-import com.cxcy.zjb.springboot.service.es.EsProductionService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,8 +50,6 @@ import java.util.List;
 public class ProductionController {
 
     @Autowired
-    private EsProductionService esProductionService;
-    @Autowired
     private ProductionService productionService;
     @Autowired
     private UserService userService;
@@ -73,16 +69,16 @@ public class ProductionController {
     /**
      * 定时审核作品:凌晨1点
      */
-    @Scheduled(cron = "* * 1 * * ?")
+    @Scheduled(cron = "* * 5 * * ?")
     public void checkWord() {
         //1.获取所有的未审核作品：0：未审核
-        List<Production> list = productionService.findByPCheck(0);
+        List<Production> list = productionService.findByPCheck(1);
         //2.遍历所有作品，对作品进行文字过滤
         for (Production production:list) {
             String fileName = production.getPContent();
             ResultVO resultVO = checkWord(fileName);
             if(resultVO.getCode()==0){
-                production.setPCheck(1);
+                production.setPCheck(0);
             }else{
                 production.setPCheck(2);
             }
@@ -97,7 +93,9 @@ public class ProductionController {
         User user = userService.findByUsername("zpr");
         session.setAttribute("user",user);
 //      return "production/showProduction";
-        return "production/uploadProduction";
+//        return "production/uploadProduction";
+//        return "production/amateurPro";
+        return "admins/pages/manage/production/product_detail";
     }
 
     /**
@@ -109,31 +107,53 @@ public class ProductionController {
      * @return
      */
     @GetMapping("/listAll")
-    public @ResponseBody ResultVO listEsProductions(
+    public /*ModelAndView*/  @ResponseBody ResultVO listEsProductions(
             @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
             @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
             @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
-            Model model) {
+            Map map) {
 
-        Page<EsProduction> page = null;
-        List<EsProduction> list = null;
+        Page<Production> page;
+        List<ProductionVo> productionVoList = new ArrayList<>();
 //        boolean isEmpty = true; // 系统初始化时，没有作品数据
         try {
-            Sort sort = new Sort(DESC,"readSize","voteSize","commentSize","createTime");
+            Sort sort = new Sort(DESC,"readSize","eVoteSize","commentSize","puploadTime");
             Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-            page = esProductionService.listHotestEsProductions(keyword, pageable);
-//            isEmpty = false;
+            page = productionService.listHotestProductions(keyword, pageable);
         } catch (Exception e) {
             Pageable pageable = new PageRequest(pageIndex, pageSize);
-            page = esProductionService.listEsProductions(pageable);
+            page = productionService.findOrderByTimeDesc(pageable);
+
         }
-
-        list = page.getContent();	// 当前所在页面数据列表
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("page", page);
-        model.addAttribute("productionList", list);
-
-        return ResultUtils.success(model);
+        for(Production production :page) {
+            ProductionVo productionVo = new ProductionVo();
+            Long cId = production.getCatagorys();
+            Catagorys catagorys = catagoryService.findByCatagorysId(cId);
+            String caName = catagorys.getCaName();
+            Long dId = catagorys.getDirection();
+            Direction direction = directionService.findById(dId);
+            String dName = direction.getDName();
+            productionVo.setDirection(dName);
+            productionVo.setCatagorys(caName);
+            productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+            productionVo.setProduction(production);
+            productionVoList.add(productionVo);
+        }
+        /*List<ProductionVo> list;
+        if(pageIndex * pageSize>productionVoList.size()){
+            list =  productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
+        }else {
+            list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
+        }*/
+//        map.put("productionPage", list);
+        int totalSize = (int)((productionVoList.size()+pageSize-1)/pageSize);
+        map.put("totalSize",totalSize);
+        map.put("productionPage", productionVoList);
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        map.put("keyword", keyword);
+//        return new ModelAndView("production/amateurPro",map);
+        return ResultUtils.success(map);
     }
 
 
@@ -464,20 +484,20 @@ public class ProductionController {
 //                根据已有ID查找对应的作品
                 Production orignalProduction = productionService.findByPId(pId);
 //                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题,作品的简介
-                orignalProduction.setPTitle(pTitle);
+                orignalProduction.setPtitle(pTitle);
                 orignalProduction.setPSort(pSort);
 //                orignalProduction.setPVideo(pVideo);
-                orignalProduction.setPSummary(pSummary);
+                orignalProduction.setPsummary(pSummary);
                 production = orignalProduction;
             }else {
                 // 查找到当前的用户
                 Long uid = user.getId();
                 Production newproduction = new Production();//新建一个作品
                 newproduction.setUser(uid);
-                newproduction.setPTitle(pTitle);
+                newproduction.setPtitle(pTitle);
                 newproduction.setPSort(pSort);
                 newproduction.setCatagorys(Catagorys);
-                newproduction.setPSummary(pSummary);
+                newproduction.setPsummary(pSummary);
                 production = newproduction;
             }
             //保存文件
@@ -527,6 +547,51 @@ public class ProductionController {
         model.addAttribute("commentSize",commentSize);
         return ResultUtils.success(model);
     }
+
+
+
+
+    //--------------------------------------------------管理员方法--------------------------------------------------------------------------
+
+    /**
+     * 后台查看作品
+     * @param pId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value="/admin/{pId}")
+    public /*@ResponseBody ResultVO*/ModelAndView getProduction(@PathVariable("pId") Long pId,Model model) {
+        Production production = productionService.findByPId(pId);
+        List list = new ArrayList();
+        //根据production的分类id查找出对应的内容和方向内容
+        Long cId = production.getCatagorys();
+        Catagorys catagory = catagoryService.findByCatagorysId(cId);
+        model.addAttribute("catagory",catagory);
+        list.add(model);
+        list.add(production);
+         return new ModelAndView("admins/pages/manage/production/product_detail", "productionModel", list);
+//        return ResultUtils.success(list);
+    }
+
+    /**
+     * 管理员端通过或不通过作品
+     * @param pId
+     * @param pCheck
+     * @return
+     */
+    @GetMapping("/updatePcheck/{pId}")
+    public @ResponseBody ResultVO updatePcheck(@PathVariable("pId") Long pId,
+                                               @RequestParam("pCheck") Integer pCheck) {
+        Production production = productionService.findByPId(pId);
+        if(pCheck == 0) {//如果是已审核0的状态，则改为审核不通过2
+            production.setPCheck(2);
+        }else if(pCheck == 2){//如果是审核不通过2的状态，则改为审核通过0
+            production.setPCheck(0);
+        }
+        productionService.save(production);
+        return ResultUtils.success();
+    }
+
 
 }
 

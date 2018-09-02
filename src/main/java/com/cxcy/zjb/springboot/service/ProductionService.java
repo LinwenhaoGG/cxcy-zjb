@@ -10,12 +10,10 @@
  */
 package com.cxcy.zjb.springboot.service;
 
-import com.cxcy.zjb.springboot.domain.Comment;
 import com.cxcy.zjb.springboot.domain.Production;
 
 import java.util.List;
 
-import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -130,4 +128,14 @@ public interface ProductionService {
      * @return
      */
     List<Production> findByPCheck(int i);
+
+    /**
+     * 最热作品列表，分页
+     * @param keyword
+     * @param pageable
+     * @return
+     */
+    Page<Production> listHotestProductions(String keyword, Pageable pageable);
+
+
 }

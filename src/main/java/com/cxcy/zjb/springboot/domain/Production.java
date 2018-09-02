@@ -17,7 +17,6 @@ import java.util.List;
  * Production 作品实体
  */
 @Entity
-@Document(indexName = "production", type = "production")
 @Data
 public class Production implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -28,12 +27,12 @@ public class Production implements Serializable {
 
     @NotEmpty(message = "作品标题不能为空")
     @Size(min=2, max=50)
-    @Column(nullable = false, length = 50) // 映射为字段，值不能为空
-    private String pTitle;             //作品标题
+    @Column(nullable = false,name = "p_title", length = 50) // 映射为字段，值不能为空
+    private String ptitle;             //作品标题
 
     @NotEmpty(message = "作品概要不能为空")
-    @Column(nullable = false,length = 100)
-    private String pSummary;            //作品简介
+    @Column(nullable = false,name = "p_summary",length = 100)
+    private String psummary;            //作品简介
 
     @NotEmpty(message = "内容不能为空")
     @Column(nullable = false) // 映射为字段，值不能为空
@@ -145,7 +144,7 @@ public class Production implements Serializable {
     public String toString() {
         return "Production{" +
                 "pId=" + pId +
-                ", pTitle='" + pTitle + '\'' +
+                ", ptitle='" + ptitle + '\'' +
                 ", pContent='" + pContent + '\'' +
                 ", pVideo='" + pVideo + '\'' +
                 ", pSort=" + pSort +
