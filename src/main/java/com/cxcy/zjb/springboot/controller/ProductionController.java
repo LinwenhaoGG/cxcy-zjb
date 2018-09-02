@@ -15,6 +15,11 @@ import org.springframework.data.domain.Sort;
 import com.cxcy.zjb.springboot.Vo.ProductionVo;
 import com.cxcy.zjb.springboot.domain.Catagorys;
 import com.cxcy.zjb.springboot.domain.Production;
+import com.cxcy.zjb.springboot.enums.ResultEnum;
+import com.cxcy.zjb.springboot.service.CatagoryService;
+import com.cxcy.zjb.springboot.service.DirectionService;
+import com.cxcy.zjb.springboot.service.ProductionService;
+import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -54,8 +59,6 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class ProductionController {
 
     @Autowired
-    private EsProductionService esProductionService;
-    @Autowired
     private ProductionService productionService;
     @Autowired
     private UserService userService;
@@ -77,14 +80,14 @@ public class ProductionController {
      */
     @Scheduled(cron = "* * 1 * * ?")
     public void checkWord() {
-        //1.获取所有的未审核作品：1：未审核
-        List<Production> list = productionService.findByPCheck(1);
+        //1.获取所有的未审核作品：0：未审核
+        List<Production> list = productionService.findByPCheck(0);
         //2.遍历所有作品，对作品进行文字过滤
         for (Production production:list) {
             String fileName = production.getPContent();
             ResultVO resultVO = checkWord(fileName);
             if(resultVO.getCode()==0){
-                production.setPCheck(0);
+                production.setPCheck(1);
             }else{
                 production.setPCheck(2);
             }
@@ -93,6 +96,16 @@ public class ProductionController {
     }
 
 
+    //    跳转测试页面
+    @RequestMapping(value = "/totest")
+    public String totest(HttpSession session) {
+        User user = userService.findByUsername("zpr");
+        session.setAttribute("user",user);
+//      return "production/showProduction";
+//        return "production/uploadProduction";
+//        return "production/amateurPro";
+        return "admins/pages/manage/production/product_detail";
+    }
     //    跳转到编辑页面
     @RequestMapping(value = "/toEditProduction")
     public  ModelAndView toEditProduction(String username,Long pId,Map map) {
@@ -106,35 +119,56 @@ public class ProductionController {
      * @param keyword
      * @param pageIndex
      * @param pageSize
-     * @param model
      * @return
      */
     @GetMapping("/listAll")
-    public @ResponseBody ResultVO listEsProductions(
+    public /*ModelAndView*/  @ResponseBody ResultVO listEsProductions(
             @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
             @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
             @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
-            Model model) {
+            Map map) {
 
-        Page<EsProduction> page = null;
-        List<EsProduction> list = null;
+        Page<Production> page;
+        List<ProductionVo> productionVoList = new ArrayList<>();
 //        boolean isEmpty = true; // 系统初始化时，没有作品数据
         try {
-            Sort sort = new Sort(DESC,"readSize","voteSize","commentSize","createTime");
+            Sort sort = new Sort(DESC,"readSize","eVoteSize","commentSize","puploadTime");
             Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-            page = esProductionService.listHotestEsProductions(keyword, pageable);
-//            isEmpty = false;
+            page = productionService.listHotestProductions(keyword, pageable);
         } catch (Exception e) {
             Pageable pageable = new PageRequest(pageIndex, pageSize);
-            page = esProductionService.listEsProductions(pageable);
+            page = productionService.findOrderByTimeDesc(pageable);
+
         }
-
-        list = page.getContent();	// 当前所在页面数据列表
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("page", page);
-        model.addAttribute("productionList", list);
-
-        return ResultUtils.success(model);
+        for(Production production :page) {
+            ProductionVo productionVo = new ProductionVo();
+            Long cId = production.getCatagorys();
+            Catagorys catagorys = catagoryService.findByCatagorysId(cId);
+            String caName = catagorys.getCaName();
+            Long dId = catagorys.getDirection();
+            Direction direction = directionService.findById(dId);
+            String dName = direction.getDName();
+            productionVo.setDirection(dName);
+            productionVo.setCatagorys(caName);
+            productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+            productionVo.setProduction(production);
+            productionVoList.add(productionVo);
+        }
+        /*List<ProductionVo> list;
+        if(pageIndex * pageSize>productionVoList.size()){
+            list =  productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
+        }else {
+            list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
+        }*/
+//        map.put("productionPage", list);
+        int totalSize = (int)((productionVoList.size()+pageSize-1)/pageSize);
+        map.put("totalSize",totalSize);
+        map.put("productionPage", productionVoList);
+        map.put("page",pageIndex);
+        map.put("size",pageSize);
+        map.put("keyword", keyword);
+//        return new ModelAndView("production/amateurPro",map);
+        return ResultUtils.success(map);
     }
 
     /**
@@ -235,15 +269,6 @@ public class ProductionController {
         }
     }
 
-    //    跳转测试页面
-    @RequestMapping(value = "/totest")
-    public String totest(HttpSession session) {
-        User user = userService.findByUsername("zpr");
-//        User user = userService.findUserById(1224L);
-        session.setAttribute("user",user);
-//      return "/production/showProduction";
-//        return user;
-        return "/production/uploadProduction";
     }
 
     /**
@@ -616,7 +641,7 @@ public class ProductionController {
                 orignalProduction.setPtitle(pTitle);
                 orignalProduction.setPSort(pSort);
 //                orignalProduction.setPVideo(pVideo);
-                orignalProduction.setPSummary(pSummary);
+                orignalProduction.setPsummary(pSummary);
                 production = orignalProduction;
             }else {
                 // 查找到当前的用户
@@ -626,7 +651,7 @@ public class ProductionController {
                 newproduction.setPtitle(pTitle);
                 newproduction.setPSort(pSort);
                 newproduction.setCatagorys(Catagorys);
-                newproduction.setPSummary(pSummary);
+                newproduction.setPsummary(pSummary);
                 production = newproduction;
             }
             //保存文件
@@ -678,24 +703,6 @@ public class ProductionController {
     }
 //----------------管理员端-------------------------------------
 
-    /**
-     * 管理员端通过或不通过作品
-     * @param pId
-     * @param pCheck
-     * @return
-     */
-    @GetMapping("/updatePcheck/{pId}")
-    public @ResponseBody ResultVO updatePcheck(@PathVariable("pId") Long pId,
-                                               @RequestParam("pCheck") Integer pCheck) {
-        Production production = productionService.findByPId(pId);
-        if(pCheck == 0) {//如果是已审核0的状态，则改为审核不通过2
-            production.setPCheck(2);
-        }else if(pCheck == 2){//如果是审核不通过2的状态，则改为审核通过0
-            production.setPCheck(0);
-        }
-        productionService.save(production);
-        return ResultUtils.success();
-    }
 
     /**
      * 查询所有作品或通过用户id查询、根据作品标题模糊查询
@@ -741,6 +748,51 @@ public class ProductionController {
         return new ModelAndView("admins/pages/manage/production/product_list", map);
 
     }
+
+
+
+
+    //--------------------------------------------------管理员方法--------------------------------------------------------------------------
+
+    /**
+     * 后台查看作品
+     * @param pId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value="/admin/{pId}")
+    public /*@ResponseBody ResultVO*/ModelAndView getProduction(@PathVariable("pId") Long pId,Model model) {
+        Production production = productionService.findByPId(pId);
+        List list = new ArrayList();
+        //根据production的分类id查找出对应的内容和方向内容
+        Long cId = production.getCatagorys();
+        Catagorys catagory = catagoryService.findByCatagorysId(cId);
+        model.addAttribute("catagory",catagory);
+        list.add(model);
+        list.add(production);
+         return new ModelAndView("admins/pages/manage/production/product_detail", "productionModel", list);
+//        return ResultUtils.success(list);
+    }
+
+    /**
+     * 管理员端通过或不通过作品
+     * @param pId
+     * @param pCheck
+     * @return
+     */
+    @GetMapping("/updatePcheck/{pId}")
+    public @ResponseBody ResultVO updatePcheck(@PathVariable("pId") Long pId,
+                                               @RequestParam("pCheck") Integer pCheck) {
+        Production production = productionService.findByPId(pId);
+        if(pCheck == 0) {//如果是已审核0的状态，则改为审核不通过2
+            production.setPCheck(2);
+        }else if(pCheck == 2){//如果是审核不通过2的状态，则改为审核通过0
+            production.setPCheck(0);
+        }
+        productionService.save(production);
+        return ResultUtils.success();
+    }
+
 
 }
 

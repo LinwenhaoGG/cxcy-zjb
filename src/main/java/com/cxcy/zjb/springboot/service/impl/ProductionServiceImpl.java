@@ -17,12 +17,12 @@ import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.repository.ProductionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -221,5 +221,13 @@ public class ProductionServiceImpl implements ProductionService {
     public Page<Production> findByPtitleLike(String ptitle,Pageable pageable) {
         return productionRepository.findByPtitleContaining(ptitle,pageable);
     }
+    @Override
+    public Page<Production> listHotestProductions(String keyword, Pageable pageable) {
+        Sort sort = new Sort(DESC,"readSize","eVoteSize","commentSize","puploadTime");
+        if (pageable.getSort() == null) {
+            pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        }
 
+        return productionRepository.findByPtitleContainingOrPsummaryContainingAndPCheck(keyword, keyword,0, pageable);
+    }
 }

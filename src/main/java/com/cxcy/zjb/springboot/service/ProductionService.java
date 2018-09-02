@@ -158,5 +158,12 @@ public interface ProductionService {
      */
     Page<Production> findByPtitleLike(String ptitle,Pageable pageable);
 
+    /**
+     * 最热作品列表，分页
+     * @param keyword
+     * @param pageable
+     * @return
+     */
+    Page<Production> listHotestProductions(String keyword, Pageable pageable);
 
 }
