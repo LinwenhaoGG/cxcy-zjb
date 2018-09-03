@@ -18,6 +18,7 @@ public class Vote implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)     //自增长策略
     private Long vId;                  //主键
 
+
     @Column(name="user_id")
     private Long user;                  //与User一对一关系
 
@@ -26,6 +27,10 @@ public class Vote implements Serializable {
     private Timestamp vCreateTime;
 
     protected Vote(){                   //无参构造函数
+    }
+//  添加构造函数
+    public Vote(Long user){
+        this.user = user;
     }
 }
 

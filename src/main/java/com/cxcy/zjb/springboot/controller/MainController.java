@@ -73,4 +73,9 @@ public class MainController {
     public String getMain(){
         return "index";
     }
+
+    @GetMapping("/index")
+    public String index(){
+        return "index";
+    }
 }

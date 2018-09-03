@@ -1,0 +1,347 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="favicon.ico" >
+    <link rel="Shortcut Icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" th:href="@{/h-ui/css/H-ui.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/h-ui.admin/css/H-ui.admin.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}"/>
+    <link rel="stylesheet" type="text/css" id="skin" th:href="@{/h-ui.admin/skin/default/skin.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/h-ui.admin/css/style.css}"/>
+    <title>后台管理</title>
+    <style>
+        .descVideo{
+            display: block;
+            margin: 0 auto;
+            width:700px;
+            height:393px;
+            box-shadow: 0 0 30px skyblue;
+        }
+        .data_type{
+            text-decoration: none;
+            border: 1px solid #ccc;
+            height: 36px;
+            line-height: 24px;
+            min-width: 24px;
+            text-align: center;
+            border-radius: 100px;
+            font-size: 12px;
+            padding:0 8px;
+            color: #666;
+        }
+        .delete-btn {
+            position: absolute;
+            right: 300px;
+        }
+        .comments_list{
+            list-style: none;
+        }
+        .comments_list li{
+            margin-top: 10px;
+            padding-bottom:5px;
+            border-bottom:1px solid #ccc;
+        }
+        .comments_list li p{
+            color: #999;
+        }
+        .comments_list li .u_name{
+            color: #666;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .details_comment{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs"  th:href="@{/index.html}">后台管理系统</a>
+            <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;" th:href="@{/index.html}">&#xe667;</a>
+            <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+                <ul class="cl">
+                    <li>超级管理员</li>
+                    <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="javascript:;">个人信息</a></li>
+                            <li><a href="#">切换账户</a></li>
+                            <li><a href="#">退出</a></li>
+                        </ul>
+                    </li>
+                    <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+<aside class="Hui-aside">
+    <div class="menu_dropdown bk_2">
+        <dl id="menu-article">
+            <dt><i class="Hui-iconfont">&#xe616;</i> 用户认证<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+<<<<<<< HEAD
+                    <li><a href="../../../index.html" title="学生认证">学生认证</a></li>
+                    <li><a href="../../Identify/teacher.html" title="老师认证">老师认证</a></li>
+                    <li><a href="../../Identify/enterprise.html" title="企业认证">企业认证</a></li>
+                    <li><a href="../../Identify/admin.html" title="管理员认证">管理员认证</a></li>
+=======
+                    <li><a href="../../../../index.html" th:href="@{/index.html}" title="学生认证">学生认证</a></li>
+                    <li><a href="../../Identify/teacher.html" th:href="@{/admins/pages/Identify/teacher.html}" title="老师认证">老师认证</a></li>
+                    <li><a href="../../Identify/enterprise.html" th:href="@{/admins/pages/Identify/enterprise.html}" title="企业认证">企业认证</a></li>
+                    <li><a href="../../Identify/admin.html" th:href="@{/admins/pages/Identify/admin.html}" title="管理员认证">管理员认证</a></li>
+>>>>>>> 940b21f6e3c4dd34723b8773659aafa766890f46
+                </ul>
+            </dd>
+        </dl>
+        <dl id="menu-picture">
+            <dt><i class="Hui-iconfont">&#xe613;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a href="../user/studentManage.html" title="学生管理">学生管理</a></li>
+                    <li><a href="../user/teacherManage.html" title="老师管理">老师管理</a></li>
+                    <li><a href="../user/enterpriseManage.html" title="企业管理">企业管理</a></li>
+                    <li><a href="../user/adminManage.html" title="管理员管理">管理员管理</a></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl id="menu-product">
+            <dt><i class="Hui-iconfont">&#xe616;</i> 比赛管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a href="../competition/competition_list.html" title="比赛列表">比赛列表</a></li>
+                    <li><a href="../competition/competition_release.html" title="发布比赛">发布比赛</a></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl id="menu-comments">
+            <dt><i class="Hui-iconfont">&#xe616;</i> 业余作品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a th:href="@{/direction/proClassify}" title="方向、类别管理">方向、类别管理</a></li>
+                    <li><a th:href="@{/production/selectProBy}" title="作品审核管理">作品审核管理</a></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="Hui-iconfont">&#xe616;</i> 资讯后台<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a href="../../news/news_classify.html" title="类别管理">类别管理</a></li>
+                    <li><a href="../../news/news_manage.html" title="资讯管理">资讯管理</a></li>
+                    <li><a href="../../news/news_add.html" title="添加资讯">添加资讯</a></li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</aside>
+
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="./studentManage.html" class="maincolor">后台管理首页</a>
+        <span class="c-999 en">&gt;</span>
+        <span class="c-666">业余作品管理</span>
+    </nav>
+    <article class="cl pd-20 show_product">
+        <input type="hidden" th:value="*{productionModel[1].pId}" id="pid" />
+        <p class='text-r'>上传时间：<span th:text="${#dates.format(productionModel[1].puploadTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        <div class="clearfix">
+            <div class="f-l">
+                <p>分类:&nbsp;&nbsp;&nbsp; <a href="#" class="data_type"><span th:text="${productionModel[0].catagory.caName}"></span></a></p>
+            </div>
+            <div class="f-r">
+                <p class="f-l pl-20" style="color: #aaaaaa">浏览量: <span th:text="${productionModel[1].readSize}"></span></p>
+                <p class="f-l pl-20" style="color: #aaaaaa" id="voteSize">点赞量: <span th:text="${productionModel[1].eVoteSize}"></span></p>
+                <p class="f-l pl-20" style="color: #aaaaaa" id="commentSize">评论量: <span th:text="${productionModel[1].commentSize}"></span></p>
+            </div>
+        </div>
+        <div class="product clearfix">
+            <div class="product-title">
+                作品标题：<span th:text="${productionModel[1].ptitle}"></span>
+            </div>
+            <br>
+            <button class="btn btn-success radius f-r" value="0" id="check" th:if="${productionModel[1].pCheck} == 0"  th:onclick="'javascript:clickHandler()'">通过审核</button>
+            <button class="btn btn-success radius f-r" value="2" id="check" th:if="${productionModel[1].pCheck} == 2"  th:onclick="'javascript:clickHandler()'">不通过审核</button>
+            <!-- 作品简介 -->
+            <div class="desc">
+                作品简介：<span th:text="${productionModel[1].psummary}"></span>
+            </div>
+            <br>
+            <!-- 作品详情 -->
+            <div class="previewBox">
+                <span>作品详情：</span>
+                <a th:href="@{'https://view.officeapps.live.com/op/view.aspx?src=http://5x5n7e.natappfree.cc/'+${productionModel[1].pContent}}" class="btn radius btn-secondary" target="_blank">详情预览</a>
+            </div>
+            <br>
+            <!-- 视频介绍 -->
+            <div th:if="${productionModel[1].pVideo} != null">
+                视频预览：<!--http这一段是视频服务器路径+视频映射路径-->
+                <!--http这一段是视频服务器路径+视频映射路径-->
+                <video th:src="@{'http://5x5n7e.natappfree.cc/temp/'+${productionModel[1].pVideo}}" controls class="descVideo"></video>
+            </div>
+        </div>
+        <div class="comment mt-20">
+            <!-- 评论区 -->
+            <div class="comments">
+                <ul class="comments_list">
+                </ul>
+            </div>
+        </div>
+    </article>
+</section>
+<script type="text/javascript" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" th:src="@{/h-ui/js/H-ui.js}"></script>
+<script type="text/javascript" th:src="@{/h-ui.admin/js/H-ui.admin.page.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        Date.prototype.toLocaleString = function(){
+            if((this.getMonth()+1)<10){
+                var month = this.getMonth()+1;
+                month = "0"+month;
+            }else{
+                var month = this.getMonth()+1;
+            }
+            if(this.getDate()<10){
+                var date = this.getDate();
+                date = "0"+date;
+            }else{
+                var date = this.getDate();
+            }
+            if(this.getHours()<10){
+                var h = this.getHours();
+                h = "0"+h;
+            }else{
+                var h = this.getHours();
+            }
+            if(this.getMinutes()<10){
+                var m = this.getMinutes();
+                m="0"+m;
+            }else{
+                var m = this.getMinutes();
+            }
+            if(this.getSeconds()<10){
+                var s = this.getSeconds();
+                s="0"+s;
+            }else{
+                var s = this.getSeconds();
+            }
+            return this.getFullYear()+'-'+month+"-"+date+" "+
+                h+":"+m+":"+s;
+        };
+
+
+        loadComments();
+
+        // 删除评论
+        $(".comments_list").on('click','.delete-btn', function() {
+            var id = $(this).parent().parent().attr("id");
+            console.info(id);
+            var url3 = '/comment/admin/deleteComment?pId='+$("#pid").val()+'&cId='+id;
+            console.info(url3);
+            $.ajax({
+                url:url3,
+                type:'get',
+                success:function(){
+                    alert("删除成功");
+                    countVotesAndComments();
+                    loadComments();
+                },
+                error:function(err){
+                    alert("删除失败");
+                    console.log(err)
+                }
+
+            })
+
+
+        });
+    });
+
+    function clickHandler(){
+        var url = "/production/updatePcheck/"+$("#pid").val();
+        var pCheck = $("#check").attr("value");
+        console.info(pCheck);
+        console.info(url);
+        $.ajax({
+            type:"get",
+            url:url,
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data:{
+                "pCheck": pCheck
+            },
+            success:function(){
+                if(pCheck == 0){
+                    $("#check").attr("value",2);
+                    window.location.href='/production/admin/'+$("#pid").val();
+                }
+                else{
+                    $("#check").attr("value",0);
+                    window.location.href='/production/admin/'+$("#pid").val();
+                }
+            },
+            error : function(err) {
+                console(err);
+            }
+        });
+    }
+
+
+
+    function loadComments() {
+        $.ajax({
+            url: "/comment/admin/listAllComments?pId=" + $("#pid").val(),
+            type: 'get',
+            success: function (res) {
+                var data = res.data;
+                console.log(data);
+                var floorNum = 0;
+                $(".comments_list").empty();
+                $(data).each(function () {
+                    var u_name = Object.keys(this.map)[0];
+                    var object = this.map[u_name];
+                    var Createtime = new Date(object.createTime);
+                    Createtime = Createtime.toLocaleString();
+                    floorNum++;
+                    var newDom = '<li id="' + object.id + '"><p><span class="floor">#<span class="floor_num">' + floorNum + '</span>楼</span><span class="u_name">' +
+                        u_name + '</span></p><p class="details_comment">' + object.content + '</p><p class="comment_time">' + Createtime + '<button class="btn btn-primary  delete-btn">删除</button></p></li>'
+                    $(".comments_list").append(newDom);
+
+                });
+            },
+            error: function (err) {
+                console.log(err);
+            }
+
+        });
+    }
+
+        function countVotesAndComments() {
+            $.ajax({
+
+                url:"/production/countVoteAndComment/"+ $("#pid").val(),
+                type:'get',
+                success:function(res){
+                    $("#voteSize").html(res.data.voteSize);
+                    $("#commentSize").html(res.data.commentSize);
+                },
+                error:function(err){
+                    console.log(err);
+                }
+
+            });
+        }
+
+</script>
+
+</body>
+</html>

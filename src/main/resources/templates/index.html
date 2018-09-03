@@ -5,13 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" >
     <script src="../js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
     <script src="../js/toastr.min.js" th:src="@{/js/toastr.min.js}"></script>
 </head>
 <body>
-
-    <a href="/infCategory/1"><p>hello world</p></a>
+    <div th:replace="top::html"></div>
 
     <div id="informationShow">
         <div class="card my-4" id="informationShowByCategory">

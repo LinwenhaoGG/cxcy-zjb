@@ -12,6 +12,7 @@
     </style>
 </head>
 <body>
+<div th:replace="top::html"></div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
@@ -29,15 +30,15 @@
                             <h2 th:text="'比赛名称：'+${teacherEvent.mName}"></h2></a>
                             <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
                             <h3 th:text="'项目名称：'+${teacherEvent.eName}"></h3></a>
-                            <p th:text="'比赛开始报名时间为:'+${teacherEvent.startTime}"></p>
-                            <p th:text="'比赛开始评审时间为:'+${teacherEvent.lastsubmittime}"></p>
-                            <p th:text="'比赛正式结束时间为:'+${teacherEvent.overTime}"></p>
+                            <p th:text="'比赛开始报名时间为:'+ ${#dates.format(teacherEvent.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <p th:text="'比赛开始评审时间为:'+${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <p th:text="'比赛正式结束时间为:'+ ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p>
-                                <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd hh:mm:ss')}
-                                and ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} lt ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd hh:mm:ss')} "
+                                <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}
+                                and ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} lt ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} "
                                    class="btn btn-info"  href="#">作品评审</a>
-                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd hh:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>
-                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd hh:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>
+                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>
+                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>
                                 <a class="btn btn-default btn-success" th:href="'/match/preview/'+ ${teacherEvent.mId}" href="#">查看比赛</a>
                             </p>
                         </div>

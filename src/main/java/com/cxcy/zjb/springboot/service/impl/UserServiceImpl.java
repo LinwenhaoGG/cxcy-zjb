@@ -13,6 +13,15 @@ package com.cxcy.zjb.springboot.service.impl;
 import com.cxcy.zjb.springboot.Vo.*;
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.repository.*;
+
+import com.cxcy.zjb.springboot.Vo.UserMessage;
+import com.cxcy.zjb.springboot.domain.Inmessage;
+import com.cxcy.zjb.springboot.domain.Student;
+import com.cxcy.zjb.springboot.domain.User;
+import com.cxcy.zjb.springboot.repository.InMessageRepository;
+import com.cxcy.zjb.springboot.repository.StudentRepository;
+
+import com.cxcy.zjb.springboot.repository.UserRepository;
 import com.cxcy.zjb.springboot.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,8 +207,20 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         user.setState(1);
         return repository.save(user);
     }
-
      /**
+     * 管理员拒绝通过用户认证功能
+     * @param id
+     * @return
+     */
+    @Override
+    public User rejectPassUserIdentification(Long id) {
+       User user = repository.findOne(id);
+        //通过认证
+        user.setState(3);
+        return repository.save(user);
+    }
+
+    /**
      * 学生管理：查找已认证学生list集合
      */
     @Override
@@ -482,4 +503,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
          }
          return resultList;
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
+
 }

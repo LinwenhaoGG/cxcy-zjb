@@ -155,7 +155,7 @@ public class AdminController {
     public Result passIdentification(@RequestParam(value = "id" ,required = true) Long id){
 
 
-         try {
+        try {
 
             //根据id修改用户的认证状态
             User user =  userService.passUserIdentification(id);
@@ -166,7 +166,31 @@ public class AdminController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            return ResultUtil.error("暂时无法通过认证功能！");
+            return ResultUtil.error("暂时无法进行通过认证功能！");
+        }
+    }
+
+    /**
+     * 管理员拒绝通过用户认证功能
+     * @param id
+     * @return
+     */
+    @PostMapping("/rejectPass")
+    public Result rejectPassIdentification(@RequestParam(value = "id" ,required = true) Long id){
+
+
+         try {
+
+            //根据id修改用户的认证状态
+            User user =  userService.rejectPassUserIdentification(id);
+            if (user == null){
+                return ResultUtil.error("修改用户认证状态失败！");
+            }else {
+                return ResultUtil.success("修改成功！");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtil.error("暂时无法进行拒绝认证功能！");
         }
     }
 

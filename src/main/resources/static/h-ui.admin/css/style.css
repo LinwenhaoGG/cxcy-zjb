@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* 你自己的样式 */
+.select-box {
+    width: 150px;
+}
+
+.input-text {
+    width: 300px;
+}
+
+.modal-dialog {
+    margin-top: 80px;
+}
+
+.alter-detail {
+    width: 100%;
+    margin: 20px auto;
+    text-align: center;
+    margin-left: -100px;
+}
+
+.form-item {
+    margin: 20px 0;
+}
+
+.form-item span {
+    display: inline-block;
+    width: 200px;
+    text-align: right;
+}
+
+.form-item .input-text {
+    width: 250px;
+}
+
+.form-item textarea {
+    resize: none;
+    border-radius: 6px;
+}
+
+/*作品详情显示部分*/
+.show_product {
+    padding: 20px 200px 20px 100px;
+}
+
+/*作品评论区*/
+.comment {
+    padding: 10px 50px;
+    border: 1px solid #CCCCCC;
+}
+
+.comment h4 {
+    font-weight: 700;
+}
+
+.comment li {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+/*资讯列表*/
+.news_items li {
+    border: 1px solid #CCCCCC;
+    padding: 10px;
+}
+
+/*添加资讯*/
+.news_add .form-item .textarea {
+    width: 650px;
+    height: 600px;
+    vertical-align: top;
+}

@@ -10,6 +10,11 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.domain.Direction;
+
+import java.util.List;
+
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +24,34 @@ package com.cxcy.zjb.springboot.service;
  * @since 1.0.0
  */
 public interface DirectionService {
+
+    List<Direction> findAll();
+
+
+    /**
+     * 通过方向id查找
+     * @param directionId
+     * @return
+     */
+    public Direction findById(Long directionId);
+
+    /**
+     * 通过名称查找
+     * @param name
+     * @return
+     */
+    public Direction findByName(String name);
+
+    /**
+     * 删除方向
+     * @param dId
+     */
+    public void deleteDir(Long dId);
+
+    /**
+     * 添加方向
+     * @param direction
+     * @return
+     */
+    public Direction save(Direction direction);
 }

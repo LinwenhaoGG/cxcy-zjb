@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="../../static/js/uploading.js" th:src="@{/js/uploading.js}"></script>
+    <style>
+        body{
+            background-color: #f4f4f4;
+
+        }
+        .headTitle{
+            background-color: #fff;
+            height: 50px;
+            line-height: 50px;
+            padding-left:40px;
+            font-size: 24px;
+            color: #999;
+            letter-spacing: 2px;
+        }
+        .page{
+            background-color: #fff;
+            border-radius: 3px;
+            margin-top: 20px;
+            margin-left: 100px;
+            margin-right: 100px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px #ccc;
+            padding-bottom:20px;
+            padding-left: 60px;
+            padding-right:60px;
+            position: relative;
+        }
+        .classify{
+            padding-top: 20px;
+        }
+        .dropdown {
+            display: inline-block;
+            margin-right: 100px;
+            width: 200px;
+        }
+        .btn_button{
+            color: #337ab7;
+            background-color: #fff;
+        }
+        .word_title{
+            margin-top: 20px;
+            width: 100%;
+            background-color:#efefef;
+            border:none;
+            height: 30px;
+        }
+        .file_intro{
+            margin-top: 10px;
+            height: 140px;
+            display: inline-block;
+        }
+        .video_upload{
+            height: 260px;
+            margin-top:10px;
+        }
+        .file_choose,.video_choose{
+            /* 	margin-top: 10px; */
+            width: 100px;
+            height: 100px;
+            border:2px solid #ccc;
+            background: url(../../up/add.png) no-repeat;
+            display: inline-block;
+            float: left;
+        }
+        .file_choose input,.video_choose input{
+            width: 100px;
+            height: 100px;
+            filter:alpha(opacity=0);
+            -moz-opacity:0;
+            opacity:0;
+        }
+        .selected{
+            display: inline-block;
+            margin-top: 10px;
+            margin-left: 100px;
+        }
+        .videoBox{
+            display: inline-block;
+            margin-left: 100px;
+        }
+        .summit_btn{
+            position: absolute;
+            right: 60px;
+            bottom:25px;
+        }
+        .summit_btn1{
+            position: absolute;
+            right: 150px;
+            bottom:25px;
+        }
+        .desc{
+            margin-top: 10px;
+            position: relative;
+        }
+        .desc textarea{
+            padding:5px;
+            color: #666;
+            border-color: #ccc;
+        }
+        .desc-warning{
+            display: inline-block;
+            position: absolute;
+            bottom: 0px;
+            right: 340px;
+        }
+        .details-warning{
+            display: inline-block;
+            margin-left: 20px;
+
+        }
+        .video_upload{
+            position: relative;
+        }
+        .video_upload .video-warning{
+            position: absolute;
+            bottom:130px;
+            left: 140px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function(){
+
+            $.ajax({
+                url:"/direction/findAllDirection",
+                success:function(res){
+                    /* console.info(res);
+                     console.info(res.data.list[0].dname);*/
+
+                    // 获取方向
+                    var list = res.data.list;
+                    $(".typeselect1").text(list[0].dname);
+
+                    $(list).each(function() {
+                        var key = Object.keys($(this))[0];
+                        // console.log(key);
+                        var liDom = '<li class="lis" value="'+$(this)[key].did+'"><a href="#">'+$(this)[key].dname+'</a></li>';
+                        $(".dropdown-menu1").append(liDom);
+                    });
+                    // 获取分类
+                    var list1 = res.data.list1;
+                    $(".typeselect2").text(list1[0].caName);
+                    $(".typeselect2").attr({
+                        "value": list1[0].cid
+                    });
+
+                    $(list1).each(function(){
+
+                        var key = Object.keys($(this))[0];
+                        var newDom = '<li class="lis" value="'+$(this)[key].cid+'"><a href="#">'+$(this)[key].caName+'</a></li>';
+                        $(".dropdown-menu2").append(newDom);
+                    })
+                },
+                error:function(err){
+                    console.log(err)
+                }
+            });
+
+            $(".dropdown-menu1").on('click', '.lis', function() {
+                // 获取方向的id
+                var did = $(this).val();
+                var val = $(this).text();
+                $(".typeselect1").text(val);
+
+                $.ajax({
+                    url:"/catagory/findCatagorysByDid",
+                    method:"get",
+                    dataType:"json",
+                    data:{
+                        "direction":did
+                    },
+                    success:function(res){
+                        // 删除分类的所有选项c
+                        $(".dropdown-menu2").children('.lis').empty();
+
+                        // 添加新的分类
+                        var typelist = res.data;
+                        $(".typeselect2").text(typelist[0].caName);
+                        $(".typeselect2").attr({
+                            "value":typelist[0].cid
+                        });
+
+                        $(typelist).each(function(){
+                            var key = Object.keys($(this))[0];
+                            console.log($(this));
+                            var dom = '<li class="lis" value="'+$(this)[key].cid+'"><a href="#">'+$(this)[key].caName+'</a></li>';
+                            $(".dropdown-menu2").append(dom);
+                        });
+                    }
+                })
+            });
+        });
+
+
+
+    </script>
+</head>
+<body>
+<div class="headTitle">
+    发布作品
+</div>
+
+<div class="page">
+    <form id="myForm" enctype="multipart/form-data">
+        <!-- 分类 -->
+        <div class="classify">
+            <!-- 方向 -->
+            <div class="dropdown dropdown1">
+                <span style="color:#999">方向</span>
+                <button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<span class="typeselect typeselect1">
+						Action
+				</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu1 " aria-labelledby="dropdownMenu1">
+
+                </ul>
+            </div>
+
+            <!-- 分类 -->
+            <div class="dropdown dropdown2">
+                <span style="color:#999">分类</span>
+                <button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="typeselect typeselect2" value="">Action</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu2" aria-labelledby="dropdownMenu2">
+
+                </ul>
+            </div>
+
+            <!-- 类别 -->
+            <div class="dropdown dropdown3">
+                <span style="color:#999">类别</span>
+                <button class="btn dropdown-toggle btn_button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="typeselect typeselect3" value="0">创新</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu3 dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <li class="lis" value="0"><a href="#">创新</a></li>
+                    <li class="lis" value="1"><a href="#">实践</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 标题 -->
+
+        <input type="text" placeholder="输入作品标题" class="word_title">
+
+        <!-- 作品简介 -->
+        <div class="desc">
+            <p><span style="color:red">* </span>作品简介</p>
+
+            <textarea cols="60" rows="5" id="note"
+                      maxlength="100" value=""
+                      onkeyup="this.value=this.value.substring(0, 100)"
+                      onfocus="this.value=this.value.substring(0, 100)"
+                      placeholder="最多可输入100字"></textarea><span id="text-count">0</span>/100
+            <div class="alert alert-warning desc-warning" style="display:none">
+                <a href="#" class="close close-desc-warning" >
+                    &times;
+                </a>
+                作品简介不能为空
+            </div>
+        </div>
+
+        <!-- 文件介绍 -->
+        <div class="file_intro">
+            <p><span style="color:red">* </span>上传文件介绍(.doc/.docx)</p>
+            <div class="alert alert-warning details-warning" style="display:none">
+                <a href="#" class="close close-details-warning" >
+                    &times;
+                </a>
+                请上传文件介绍(.doc/.docx)
+            </div>
+            <div class="file_choose">
+                <input type="file" accept=".docx,.doc" id="wordFile">
+            </div>
+            <div class="selected" style="display:none">
+                <div>
+                    <img src="../../static/up/file.png" th:src="@{/up/file.png}" height="48" width="48" alt="">
+                </div>
+                <p class="file_name">什么什么文件</p>
+            </div>
+        </div>
+
+        <!-- 上传视频 -->
+        <div class="video_upload">
+            <p>(可选)上传mp4视频介绍</p>
+            <div class="alert alert-warning video-warning" style="display:none">
+                <a href="#" class="close close-video-warning" >
+                    &times;
+                </a>
+                请上传mp4格式视频介绍
+            </div>
+            <div class="video_choose">
+                <input type="file" accept=".mp4" id="videoFile">
+            </div>
+
+            <!-- 视频预览 -->
+            <div class="videoBox" style="display:none">
+                <video width="320" height="180" controls>
+                    <source src="" type="video/mp4">
+                    </source>
+                </video>
+            </div>
+        </div>
+    </form>
+    <input type="button" class="btn btn-primary summit_btn1" value="取消" th:onclick="'returnHtml('+${userId}+')'">
+    <input type="submit" class="btn btn-primary summit_btn">
+
+</div>
+</body>
+<script type="text/javascript">
+
+    function returnHtml(uId) {
+
+        window.location.href="/production/center/user" + uId;
+    }
+</script>
+</html>

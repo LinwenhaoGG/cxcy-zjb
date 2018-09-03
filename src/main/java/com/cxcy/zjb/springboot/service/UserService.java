@@ -26,13 +26,19 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface UserService {
-
     /**
-     * 根据id返回用户
-     * @param id
+     * 根据用户的名字查找用户
+     * @param username
      * @return
      */
-    public User findUserById(Long id);
+    User findByUsername(String username) ;
+
+    /**
+     * 通过userId查找
+     * @param userId
+     * @return
+     */
+    public User findUserById(Long userId);
 
     /**
      * 根据类型查询用户列表
@@ -104,6 +110,13 @@ public interface UserService {
      * @return
      */
     public User passUserIdentification(Long id);
+
+     /**
+     * 管理员拒绝通过用户认证功能
+     * @param id
+     * @return
+     */
+    public User rejectPassUserIdentification(Long id);
 
     /**
      * 学生管理：查找已认证学生list集合

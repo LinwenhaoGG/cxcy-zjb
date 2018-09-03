@@ -10,8 +10,16 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.domain.Direction;
+import com.cxcy.zjb.springboot.repository.DirectionRepository;
 import com.cxcy.zjb.springboot.service.DirectionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -23,5 +31,34 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DirectionServiceImpl implements DirectionService {
+
+    @Autowired
+    private DirectionRepository directionRepository;
+
+    @Override
+    public List<Direction> findAll() {
+        return directionRepository.findAll();
+    }
+
+    @Override
+    public Direction findById(Long directionId) {
+        return directionRepository.getOne(directionId);
+    }
+
+    @Override
+    public Direction findByName(String name) {
+        return directionRepository.findByDName(name);
+    }
+
+    @Override
+    public void deleteDir(Long dId) {
+        directionRepository.delete(dId);
+    }
+
+    @Override
+    public Direction save(Direction direction) {
+        return directionRepository.save(direction);
+    }
+
 
 }
