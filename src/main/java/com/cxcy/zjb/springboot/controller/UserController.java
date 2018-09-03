@@ -29,6 +29,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.util.ArrayList;
 
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈查询用户的一些个人信息〉
@@ -325,6 +326,7 @@ public class UserController {
         }
         return ResultUtil.error();
     }
+
 
 }
 

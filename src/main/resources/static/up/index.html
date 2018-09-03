@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>上传作品</title>
+    <meta http-equiv="Content-Type" content="multipart/form-data;charset=utf-8" />
+    <script src="../../static/js/jquery-3.1.1.min.js">
+    </script>
+    <script type="text/javascript" src="../../static/js/jquery.form.js"></script>
+</head>
+<body>
+<form enctype="multipart/form-data" action="/production/zpr/saveProduction"  method="post" id="itemForm">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <input type="hidden" name="username"  id="username">zpr<br/>
+    <input type="hidden" name="pId" id="pId"><br/>
+    <input  type="text" placeholder="请填写作品简介"  id="pSummary" name="pSummary"><br/>
+    <input  type="text" placeholder="请填写作品标题"  id="pTitle" name="pTitle"><br/>
+
+    <input  type="text" placeholder="类别（0、1）"  id="pSort" name="pSort" ><br/>
+    <input  type="text" placeholder="分类"  id="Catagorys" name="Catagorys"><br/>
+    相关文件：<br/>
+    <input type="file"  name="pContent" id="pContent">
+    <hr>
+    相关视频：<br/>
+    <input type="text"  name="pVideo" id="pVideo">
+    <hr>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>

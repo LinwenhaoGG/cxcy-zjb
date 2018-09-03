@@ -10,5 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author <a href="https://waylau.com">Way Lau</a> 
  */
 public interface CommentRepository extends JpaRepository<Comment, Long> {
- 
+    /**
+     * 根据cid查找评论
+     * @param Id
+     * @return
+     */
+    Comment findById(Long Id);
 }

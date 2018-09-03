@@ -64,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()//新加入
                 .and()
                 .csrf().disable();
+
     }
 
     /**

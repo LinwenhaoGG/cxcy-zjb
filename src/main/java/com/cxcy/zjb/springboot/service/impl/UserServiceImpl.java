@@ -10,12 +10,14 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+
 import com.cxcy.zjb.springboot.Vo.UserMessage;
 import com.cxcy.zjb.springboot.domain.Inmessage;
 import com.cxcy.zjb.springboot.domain.Student;
 import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.repository.InMessageRepository;
 import com.cxcy.zjb.springboot.repository.StudentRepository;
+
 import com.cxcy.zjb.springboot.repository.UserRepository;
 import com.cxcy.zjb.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,4 +147,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     public List<User> findUserListByStyle(Integer style) {
         return repository.findByStyle(style);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
+
 }

@@ -12,6 +12,10 @@ package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.Growth;
 
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -22,4 +26,13 @@ import com.cxcy.zjb.springboot.domain.Growth;
  */
 public interface GrowthService {
     public Growth saveGrowth(Growth growth);
+
+
+    Growth findByUser(Long uId);
+
+    Growth save(Growth growth);
+
+    List<Growth> findAll();
+
+    List<Growth> findAll(Sort sort);
 }

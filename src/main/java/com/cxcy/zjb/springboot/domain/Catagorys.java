@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class Catagorys implements Serializable{
 
     private static final long serialVersionUID = 1L;
@@ -19,6 +21,7 @@ public class Catagorys implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  //自增长策略
     private Long cId;     //作品分类的唯一标识
+
 
     @Column(name="direction_id")
     private Long direction;     //作品方向的主键id为作品分类的外键，它们为一对一的关系
@@ -31,5 +34,8 @@ public class Catagorys implements Serializable{
     protected Catagorys(){
 
     }
-
+    public Catagorys(Long direction, String caName) {
+        this.direction = direction;
+        this.caName = caName;
+    }
 }

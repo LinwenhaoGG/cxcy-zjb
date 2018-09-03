@@ -2,19 +2,32 @@ spring:
   #配置DataSource
   datasource:
     username: root
-    password: 123456
+    password: root
     url: jdbc:mysql://localhost:3306/cxcy?characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
+
+  resources:
+       static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${file.FilePath},classpath:/static/up,video:${file.FilePath}
 
   thymeleaf:
     #热部署静态文件
     cache: false
     #配置页面标准格式
     encoding: utf-8
+    #配置标准,不强制要求/结尾
     mode: LEGACYHTML5
     suffix: .html
     prefix: classpath:templates/
+
     #配置标准
+
+
+    content-type: text/html
+  http:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 100Mb
+      enabled: true
   #配置JPA
   jpa:
     show-sql: true
@@ -35,6 +48,8 @@ spring:
 server:
   port: 8080
 
+file:
+  FilePath: E:/Workspace/Temp/file/
 
 img:
   location: D:/upload/
@@ -44,5 +59,7 @@ img:
   context-path: /
 
 
+video:
+  VideoPath: file:/E:/temp/
 
 

@@ -25,13 +25,19 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface UserService {
-
     /**
-     * 根据id返回用户
-     * @param id
+     * 根据用户的名字查找用户
+     * @param username
      * @return
      */
-    public User findUserById(Long id);
+    User findByUsername(String username) ;
+
+    /**
+     * 通过userId查找
+     * @param userId
+     * @return
+     */
+    public User findUserById(Long userId);
 
     /**
      * 根据类型查询用户列表
