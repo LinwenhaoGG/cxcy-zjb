@@ -9,8 +9,12 @@
  * 作者姓名           修改时间           版本号              描述
  */
 package com.cxcy.zjb.springboot.repository;
+
 import com.cxcy.zjb.springboot.domain.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.ArrayList;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -21,5 +25,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0.0
  */
 public interface CompanyRepository extends JpaRepository<Company,Long> {
+   public ArrayList<Company>  findByName(@Param("name") String name);
+
+   public ArrayList<Company> findByNumber(@Param("number")String number);
 
 }

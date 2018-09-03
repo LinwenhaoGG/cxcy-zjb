@@ -11,6 +11,9 @@
 package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.Company;
+import org.springframework.data.domain.PageRequest;
+
+import java.util.ArrayList;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -21,5 +24,18 @@ import com.cxcy.zjb.springboot.domain.Company;
  * @since 1.0.0
  */
 public interface CompanyService {
+
     public Company saveCompany(Company company);
+
+    /**
+     * 查看未认证的企业信息
+     */
+     public  ArrayList  findCompanyIdentification(PageRequest pageRequest);
+
+    /**
+     * 根据查找已认证企业
+     * @return
+     */
+    public ArrayList findCertifiedTeacher(PageRequest pageRequest);
+
 }

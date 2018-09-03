@@ -50,5 +50,37 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     public User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
+    /**
+     * 学生认证：查看未认证的学生信息
+     * @param state
+     * @param style
+     * @param pageable
+     * @return
+     */
+    public Page<User> findByStateAndStyle(@Param("state") int state,@Param("style") int style,Pageable pageable);
+
+    /**
+     * 根据用户真实姓名查找用户
+     * @param name
+     * @return
+     */
+    public Page<User> findByNameAndStyleAndState(@Param("name") String name,@Param("style")int style,@Param("state")int state, Pageable pageable);
+    /**
+     *根据手机号码查询用户
+     */
+    public Page<User> findByTelephoneAndStyleAndState(@Param("telephone") String telephone,@Param("style")int style,@Param("state")int state, Pageable pageable);
+    /**
+     * 根据用户账号，查找是否存在已认证成功的用户
+     */
+    public User findByUsernameAndState(@Param("username")String username,@Param("state")int state);
+
+    /**
+     * 查找已认证商家
+     * @param style
+     * @param state
+     * @param cId
+     * @return
+     */
+    public User findByStyleAndStateAndCompany(@Param("style")int style,@Param("state")int state,@Param("cId")Long cId);
 
 }

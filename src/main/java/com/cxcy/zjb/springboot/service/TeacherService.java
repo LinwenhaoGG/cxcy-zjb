@@ -11,6 +11,9 @@
 package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.Teacher;
+import org.springframework.data.domain.PageRequest;
+
+import java.util.ArrayList;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -22,4 +25,16 @@ import com.cxcy.zjb.springboot.domain.Teacher;
  */
 public interface TeacherService {
     public Teacher saveTeacher(Teacher teacher);
+
+    /**
+     *查看未认证的老师信息
+     * @param pageRequest
+     * @return
+     */
+    public ArrayList findTeacherIdentificationList(PageRequest pageRequest);
+
+    /**
+     * 老师管理：查找已认证老师list集合
+     */
+    public ArrayList findCertifiedTeacher(PageRequest pageRequest);
 }

@@ -12,6 +12,7 @@ package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.Vo.UserMessage;
 import com.cxcy.zjb.springboot.domain.User;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,5 +84,64 @@ public interface UserService {
      */
     public User findUserInfoByNameAndPwd(String username, String pwd);
 
+    /**
+     * 学生认证：查看未认证的学生信息
+     * @param pageRequest
+     * @return
+     */
+    public ArrayList findStudentIdentificationList(PageRequest pageRequest);
 
+    /**
+     * 管理员：查看未认证的管理员信息
+     * @param pageRequest
+     * @return
+     */
+    public ArrayList findAdminIdentification(PageRequest pageRequest);
+
+    /**
+     * 管理员通过认证功能
+     * @param id
+     * @return
+     */
+    public User passUserIdentification(Long id);
+
+    /**
+     * 学生管理：查找已认证学生list集合
+     */
+    public ArrayList findCertifiedStudent(PageRequest pageRequest);
+
+    /**
+     * 根据关键字查找指定用户
+     * @param selectState
+     * @param keyword
+     * @return
+     */
+    public ArrayList findSingleStudent(int selectState, String keyword,PageRequest pageRequest);
+
+   /**
+     * 根据关键字查找指定老师
+     * @param selectState
+     * @param keyword
+     * @return
+     */
+    public ArrayList findTeacher(int selectState, String keyword,PageRequest pageRequest);
+
+     /**
+     * 根据关键字查找指定企业
+     * @param selectState
+     * @return
+     */
+    public ArrayList findCompany(int selectState,String keyword,PageRequest pageRequest);
+
+    /**
+     * 管理员管理：查找已认证管理员list集合
+     */
+    public ArrayList findCertifiedAdmin(PageRequest pageRequest);
+
+     /**
+     * 根据关键字查找指定管理员
+     * @param selectState
+     * @return
+     */
+    public ArrayList findAdmin(int selectState,String keyword,PageRequest pageRequest);
 }
