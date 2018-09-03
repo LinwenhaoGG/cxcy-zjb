@@ -78,17 +78,17 @@ public class ProductionController {
     /**
      * 定时审核作品:凌晨1点
      */
-    @Scheduled(cron = "* * 1 * * ?")
+    @Scheduled(cron = "* * 5 * * ?")
     public void checkWord() {
         //1.获取所有的未审核作品：0：未审核
         List<Production> list = productionService.findByPCheck(0);
         //2.遍历所有作品，对作品进行文字过滤
-        for (Production production:list) {
+        for (Production production : list) {
             String fileName = production.getPContent();
             ResultVO resultVO = checkWord(fileName);
-            if(resultVO.getCode()==0){
+            if (resultVO.getCode() == 0) {
                 production.setPCheck(1);
-            }else{
+            } else {
                 production.setPCheck(2);
             }
             productionService.save(production);
@@ -96,41 +96,47 @@ public class ProductionController {
     }
 
 
-    //    跳转测试页面
+    //    跳转上传作品页面  测试用的
     @RequestMapping(value = "/totest")
     public String totest(HttpSession session) {
+        //测试时除非用户登录，否则不能注释掉
         User user = userService.findByUsername("zpr");
-        session.setAttribute("user",user);
-//      return "production/showProduction";
-//        return "production/uploadProduction";
-//        return "production/amateurPro";
-        return "admins/pages/manage/production/product_detail";
+        session.setAttribute("user", user);
+        return "production/uploadProduction";
     }
+    //    跳转上传作品页面
+    @RequestMapping(value = "/uploadProduction")
+    public ModelAndView uploadProduction(HttpSession session,Map map) {
+        User user = (User)session.getAttribute("user");
+        map.put("userId",user.getId());
+
+        return new ModelAndView("production/uploadProduction", map);
+    }
+
     //    跳转到编辑页面
     @RequestMapping(value = "/toEditProduction")
-    public  ModelAndView toEditProduction(String username,Long pId,Map map) {
-        map.put("userName",username);
-        map.put("pId",pId);
-        return new ModelAndView("production/editProduction",map);
+    public ModelAndView toEditProduction(String username, Long pId, Map map) {
+        map.put("userName", username);
+        map.put("pId", pId);
+        return new ModelAndView("production/editProduction", map);
     }
 
     /**
-     * 进行全文搜索
+     * 进行全文搜索(9.2):默认给最火最热的前10条结果
      * @param keyword
      * @param pageIndex
      * @param pageSize
+     * @param map
      * @return
      */
     @GetMapping("/listAll")
-    public /*ModelAndView*/  @ResponseBody ResultVO listEsProductions(
-            @RequestParam(value="keyword",required=false,defaultValue="" ) String keyword,//关键字默认为“”，全部搜索
-            @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
-            @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
+    public ModelAndView listEsProductions(
+            @RequestParam(value="keyword",required=false,defaultValue="") String keyword,//关键字默认为“”，全部搜索
+            @RequestParam(value="page",required=false,defaultValue="0") int pageIndex,//默认从第一页开始搜索
+            @RequestParam(value="size",required=false,defaultValue="10") int pageSize,//默认每一页有10行数据
             Map map) {
-
         Page<Production> page;
         List<ProductionVo> productionVoList = new ArrayList<>();
-//        boolean isEmpty = true; // 系统初始化时，没有作品数据
         try {
             Sort sort = new Sort(DESC,"readSize","eVoteSize","commentSize","puploadTime");
             Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
@@ -140,7 +146,7 @@ public class ProductionController {
             page = productionService.findOrderByTimeDesc(pageable);
 
         }
-        for(Production production :page) {
+        for (Production production : page) {
             ProductionVo productionVo = new ProductionVo();
             Long cId = production.getCatagorys();
             Catagorys catagorys = catagoryService.findByCatagorysId(cId);
@@ -154,25 +160,19 @@ public class ProductionController {
             productionVo.setProduction(production);
             productionVoList.add(productionVo);
         }
-        /*List<ProductionVo> list;
-        if(pageIndex * pageSize>productionVoList.size()){
-            list =  productionVoList.subList((pageIndex - 1) * pageSize, productionVoList.size());
-        }else {
-            list = productionVoList.subList((pageIndex - 1) * pageSize, (pageIndex * pageSize));
-        }*/
-//        map.put("productionPage", list);
+        map.put("productionPage", productionVoList);
         int totalSize = (int)((productionVoList.size()+pageSize-1)/pageSize);
         map.put("totalSize",totalSize);
-        map.put("productionPage", productionVoList);
         map.put("page",pageIndex);
         map.put("size",pageSize);
         map.put("keyword", keyword);
-//        return new ModelAndView("production/amateurPro",map);
-        return ResultUtils.success(map);
+        return new ModelAndView("production/amateurPro",map);
+//        return ResultUtils.success(map);
     }
 
     /**
      * 用户查询自己所有的作品，包括未审核和审核不通过的
+     *
      * @param userId
      * @param pageIndex
      * @param pageSize
@@ -180,67 +180,68 @@ public class ProductionController {
      */
     @GetMapping("/center/user{userId}")
     public ModelAndView centerShowProduction(@PathVariable("userId") Long userId,
-                                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                              @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
-                                              Map map){
+                                             @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                             @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                             Map map) {
 
         //设置分页
-        Pageable pageable = new PageRequest(pageIndex-1, pageSize);
-        Page<Production> productions = productionService.findAllByUserId(userId,pageable);
-        if(productions.getTotalPages()==0){
-            map.put("productionPage",null);
-        }else{
-            map.put("productionPage",productions);
+        Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
+        Page<Production> productions = productionService.findAllByUserId(userId, pageable);
+        if (productions.getTotalPages() == 0) {
+            map.put("productionPage", null);
+        } else {
+            map.put("productionPage", productions);
         }
-        String url = "/production/center/user"+userId;
+        String url = "/production/center/user" + userId;
         User user = userService.findUserById(userId);
-        map.put("url",url);
-        map.put("userName",user.getUsername());
-        map.put("page",pageIndex);
-        map.put("size",pageSize);
-        return new ModelAndView("production/productionCenter",map);
+        map.put("url", url);
+        map.put("userName", user.getUsername());
+        map.put("page", pageIndex);
+        map.put("size", pageSize);
+        return new ModelAndView("production/productionCenter", map);
     }
 
     // 分页显示用户的所有作品信息
     @GetMapping("/{username}/productionCenter")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
-    public ModelAndView showAllProduction(HttpServletRequest request,@PathVariable("username") String username ,
-                                                    @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                                    @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
-                                                    Map map){
-        User u = (User)request.getSession().getAttribute("user");
+    public ModelAndView showAllProduction(HttpServletRequest request, @PathVariable("username") String username,
+                                          @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                          @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                          Map map) {
+        User u = (User) request.getSession().getAttribute("user");
 
         //设置分页
-        Pageable pageable = new PageRequest(pageIndex-1, pageSize);
+        Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
 //        根据用户名查找用户
         Page<Production> productions;
         User user = userService.findByUsername(username);
         Long uId = user.getId();
 //      根据用户ID查找所有的作品
-        productions = productionService.findByUserAndPCheck(uId,pageable);
+        productions = productionService.findByUserAndPCheck(uId, pageable);
         System.out.println(uId);
         System.out.println(productions.getTotalPages());
-        if(productions.getTotalPages()==0){
-            map.put("productionPage",null);
-        }else{
-            map.put("productionPage",productions);
+        if (productions.getTotalPages() == 0) {
+            map.put("productionPage", null);
+        } else {
+            map.put("productionPage", productions);
         }
 
-        map.put("page",pageIndex);
-        map.put("size",pageSize);
-        if(u!=null && username.equals(u.getUsername())){
-            String url = "/production/center/user"+u.getId();
-            map.put("url",url);
-            map.put("userName",username);
-            return new ModelAndView("production/productionCenter",map);
-        }else{
-            String url = "/production/"+username+"/productionCenter";
-            map.put("user",username);
-            map.put("url",url);
-            return new ModelAndView("production/productionOtherCenter",map);
+        map.put("page", pageIndex);
+        map.put("size", pageSize);
+        if (u != null && username.equals(u.getUsername())) {
+            String url = "/production/center/user" + u.getId();
+            map.put("url", url);
+            map.put("userName", username);
+            return new ModelAndView("production/productionCenter", map);
+        } else {
+            String url = "/production/" + username + "/productionCenter";
+            map.put("user", username);
+            map.put("url", url);
+            return new ModelAndView("production/productionOtherCenter", map);
         }
 
     }
+
 
     //    删除对应的作品:需要先判断作品是否作者的，好像不用判断，当显示作品详情的时 候已经对作品的作者进行判断了才会显示删除接口
     @GetMapping("/{username}/deleteProduction/{pId}")
@@ -269,7 +270,6 @@ public class ProductionController {
         }
     }
 
-    }
 
     /**
      * 查看作品
@@ -302,6 +302,8 @@ public class ProductionController {
         Long dId = catagory.getDirection();
         Direction direction = directionService.findById(dId);
         Vote currentVote = null; // 当前用户的点赞情况
+        User userById = userService.findUserById(production.getUser());//根据作品id查找作者昵称
+        String userName = userById.getUsername();
         //根据pid查找对应的作品
         List list = new ArrayList();
         if(user != null){
@@ -310,6 +312,7 @@ public class ProductionController {
             if(uId.equals(id)){
                 isProductionOwner = true;
             }
+
             // 判断操作用户的点赞情况
             List<Vote> votes = production.getVotes();
             for (Vote vote : votes) {
@@ -335,6 +338,7 @@ public class ProductionController {
         model.addAttribute("catagory",catagory);
         model.addAttribute("currentVote",currentVote);
         model.addAttribute("isProductionOwner",isProductionOwner);
+        model.addAttribute("userName",userName);
         list.add(model);
         list.add(production);
         return new ModelAndView("/production/showProduction", "productionModel", list);

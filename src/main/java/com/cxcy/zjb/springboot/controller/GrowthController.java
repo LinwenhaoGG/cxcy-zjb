@@ -34,7 +34,7 @@ public class GrowthController {
     }*/
 
     //更新所有用户的积分情况以及用户的排名
-    @Scheduled(cron = "* * 1 * * ?")
+    @Scheduled(cron = "* * 5 * * ?")
     public void updateRank(){
         //1.对用户成长表中的点赞和评论和浏览量进行累加得到积分
         //1.1获取所有用户的growth

@@ -45,12 +45,23 @@ public class CatagoryController {
     }
 
     /**
-     * 通过方向查找分类和分类下作品的数量
+     * 根据方向id查找对应的分类
      * @param direction
      * @return
      */
     @GetMapping("/findCatagorysByDid")
-    public ModelAndView findCatagorysByDid(@RequestParam("direction") Long direction, Map map){
+    public @ResponseBody
+    ResultVO findCatagorysByDid(@RequestParam("direction") long direction){
+        List<Catagorys> list = catagoryService.findByDid(direction);
+        return ResultUtils.success(list);
+    }
+    /**
+     * 通过方向查找分类和分类下作品的数量
+     * @param direction
+     * @return
+     */
+    @GetMapping("/findCatagorysAndNum")
+    public ModelAndView findCatagorysAndnum(@RequestParam("direction") Long direction, Map map){
         List<Catagorys> list = catagoryService.findByDid(direction);
         List<CatagoryVo> vos = new ArrayList<>();
         for(Catagorys catagorys:list){
@@ -86,7 +97,6 @@ public class CatagoryController {
     /**
      * 修改分类
      * @param cId
-     * @param dId
      * @param caName
      * @return
      */

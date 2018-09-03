@@ -64,7 +64,9 @@ $(document).ready(function() {
     $(".dropdown1").on('click', '.lis', function() {
 
         var val = $(this).text();
+
         $(".typeselect1").text(val);
+
     });*/
 
     // 分类
@@ -255,7 +257,15 @@ $(document).ready(function() {
                     console.info(res);
                     var url4 = res.data;
                     window.location.href=url4;
-
+                    /*$.ajax({
+                        url:'url4',
+                        success:function(){
+                            console.info("成功");
+                        },
+                        error:function(err){
+                            console.log(err);
+                        }
+                    })*/
                 },
                 error:function(err){
                     console.log(err);

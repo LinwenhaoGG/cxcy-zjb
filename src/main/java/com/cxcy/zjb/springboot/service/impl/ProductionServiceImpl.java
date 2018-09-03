@@ -198,6 +198,11 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
+    public Page<Production> findOrderByTimeDesc(Pageable pageable) {
+        return productionRepository.findByPCheckOrderByPuploadTimeDesc(0,pageable);
+    }
+
+    @Override
     public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort) {
         return productionRepository.findFirst7ByCatagorysAndPCheck(catagoryId,0,sort);
     }

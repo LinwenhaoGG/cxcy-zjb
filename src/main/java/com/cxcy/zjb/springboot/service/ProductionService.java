@@ -124,6 +124,12 @@ public interface ProductionService {
     public List<Production> findOrderByTimeDesc();
 
     /**
+     * 按时间降序分页查找已审核通过的作品
+     * @return
+     */
+    public Page<Production> findOrderByTimeDesc(Pageable pageable);
+
+    /**
      * 按分类查询前7条已审核作品
      * @param catagoryId
      * @return
