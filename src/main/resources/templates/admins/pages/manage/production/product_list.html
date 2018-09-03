@@ -130,8 +130,8 @@
                         <td th:text="${p.pId}"></td>
                         <td th:text="${p.user}">abc1352656</td>
                         <td th:text="${p.ptitle}"></td>
-                        <td th:text="${p.pSummary}" style="align-content: center"></td>
-                        <td><a href="./product_detail.html">查看详情</a></td>
+                        <td th:text="${p.psummary}" style="align-content: center"></td>
+                        <td><a th:href="@{'/production/admin/'+${p.pId}}">查看详情</a></td>
                     </tr>
 
                 </tbody>

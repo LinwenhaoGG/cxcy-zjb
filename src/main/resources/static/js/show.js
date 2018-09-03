@@ -179,6 +179,7 @@ function countVotesAndComments() {
 
     });
 }
-function returnHtml(url) {
-    window.location.href="/production/center/user"+url;
+function returnHtml(username) {
+
+    window.location.href="/production/"+username+"/productionCenter";
 }

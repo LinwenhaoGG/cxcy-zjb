@@ -201,6 +201,8 @@ public class ProductionServiceImpl implements ProductionService {
         return productionRepository.findByPCheckOrderByPuploadTimeDesc(0);
     }
 
+
+
     @Override
     public List<Production> findFirst7ByCatagorysAndPCheck(Long catagoryId, Sort sort) {
         return productionRepository.findFirst7ByCatagorysAndPCheck(catagoryId,0,sort);

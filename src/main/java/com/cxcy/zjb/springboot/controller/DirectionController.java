@@ -99,6 +99,10 @@ public class DirectionController {
                              @RequestParam(value="dName") String dName) {
         Direction direction = directionService.findById(dId);
         direction.setDName(dName);
+        Direction byName = directionService.findByName(dName);
+        if(byName != null){
+            return ResultUtils.error(1, "方向已存在");
+        }
         Direction save = directionService.save(direction);
         if (save != null) {
             return ResultUtils.success(save);

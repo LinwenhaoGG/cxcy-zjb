@@ -46,6 +46,7 @@ public interface ProductionRepository extends JpaRepository<Production,Long> {
     List<Production> findTop10ByPCheckOrderByPuploadTimeDesc(Integer pCheck);
     //按上传时间降序查找
     List<Production> findByPCheckOrderByPuploadTimeDesc(Integer pCheck);
+
     //按分类查询出前7条已审核作品
     List<Production> findFirst7ByCatagorysAndPCheck(Long categoryId, Integer pCheck, Sort sort);
     //按用户名分页查询所有作品
