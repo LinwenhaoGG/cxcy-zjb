@@ -10,10 +10,12 @@
  */
 package com.cxcy.zjb.springboot.controller;
 
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.cxcy.zjb.springboot.Vo.*;
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.ResultUtil;
+import com.cxcy.zjb.springboot.utils.SendSmsUtil;
 import com.cxcy.zjb.springboot.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +30,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -61,6 +64,9 @@ public class UserController {
     @RequestMapping("/person")
     @ResponseBody
 
+    /**
+     * 获取当前登录用户
+     */
     public Object getUserId(){
         //获取当前登录的用户
         return  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -327,6 +333,76 @@ public class UserController {
         return ResultUtil.error();
     }
 
+    /**
+     * 给指定的手机号码发送手机验证码
+     * @param telephone
+     */
+    @RequestMapping("/sendSms")
+    @ResponseBody
+    public Result sendSms(@RequestParam(value = "telephone",required = false) String telephone, HttpSession session){
+        SendSmsResponse response = null;
+        try {
+            String randomCode = SendSmsUtil.getRandomCode();
+            session.setAttribute("randomCode",randomCode);
+            response= SendSmsUtil.sendSms(telephone,randomCode);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Result result = ResultUtil.success(response.getCode());
+        return result;
+    }
+
+    @RequestMapping("/register")
+    @ResponseBody
+    public Result register(@Valid UserRegister register, BindingResult bindingResult, HttpSession session){
+
+        List<Authority> authorities = new ArrayList<>();
+        if (bindingResult.hasErrors()){
+            String msg = bindingResult.getFieldError().getDefaultMessage();
+            System.out.println(msg);
+            return ResultUtil.error(msg);
+        }
+        //1,验证验证码是否正确
+        String randomCode = (String)session.getAttribute("randomCode");
+        if (!randomCode.equalsIgnoreCase(register.getCode())){
+            return ResultUtil.error("验证码错误！");
+        }
+        session.setAttribute("randomCode","");
+        //2,将信息存数据库
+        User userInfo = new User();
+        BeanUtils.copyProperties(register,userInfo);
+        userInfo.setAuthorities(authorities);
+        userInfo.setStyle(Integer.parseInt(register.getStyle()));
+        //若该用户为管理员，则直接将认证状态改为认证中
+        if (register.getStyle().equalsIgnoreCase("4")){
+            userInfo.setState(2);
+        }
+        //3,将数据存数据库
+        User info = userService.saveUserInfo(userInfo);
+
+        Result success = ResultUtil.success(info);
+
+        return success;
+    }
+
+    /**
+     * 查找账号是否已经存在
+     * @return
+     */
+    @RequestMapping("/key")
+    @ResponseBody
+    public Result findKey(@RequestParam(value = "uName",required = true) String uName){
+        //1,根据用户名查询是否已经存在
+        User userInfo = userService.findUserInfo(uName);
+        //2,返回数据
+        Result result = null;
+        if (userInfo == null){
+            result = ResultUtil.success();
+        }else {
+            result =  ResultUtil.error("账号已存在");
+        }
+        return result;
+    }
 
 }
 
