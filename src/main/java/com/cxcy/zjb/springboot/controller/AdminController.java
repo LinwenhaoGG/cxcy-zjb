@@ -44,4 +44,14 @@ public class AdminController {
 
         return new ModelAndView("matchs/adminsMatchsList", map);
     }
+
+    @RequestMapping("/")
+    public String index() {
+        return "admins/index";
+    }
+
+    @RequestMapping("/test")
+    public String test() {
+        return "admins/test";
+    }
 }
