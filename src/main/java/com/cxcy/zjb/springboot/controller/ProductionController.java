@@ -1,29 +1,20 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.Vo.ProductionVo;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.*;
-import com.cxcy.zjb.springboot.domain.es.EsProduction;
 import com.cxcy.zjb.springboot.service.*;
-import com.cxcy.zjb.springboot.service.es.EsProductionService;
+import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
-import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import com.cxcy.zjb.springboot.Vo.ProductionVo;
-import com.cxcy.zjb.springboot.domain.Catagorys;
-import com.cxcy.zjb.springboot.domain.Production;
-import com.cxcy.zjb.springboot.enums.ResultEnum;
-import com.cxcy.zjb.springboot.service.CatagoryService;
-import com.cxcy.zjb.springboot.service.DirectionService;
-import com.cxcy.zjb.springboot.service.ProductionService;
-import com.cxcy.zjb.springboot.service.UserService;
-import com.cxcy.zjb.springboot.utils.CheckWordUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,15 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -106,8 +88,8 @@ public class ProductionController {
     }
     //    跳转上传作品页面
     @RequestMapping(value = "/uploadProduction")
-    public ModelAndView uploadProduction(HttpSession session,Map map) {
-        User user = (User)session.getAttribute("user");
+    public ModelAndView uploadProduction(Map map) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         map.put("userId",user.getId());
 
         return new ModelAndView("production/uploadProduction", map);
@@ -279,8 +261,8 @@ public class ProductionController {
      * @return
      */
     @RequestMapping(value="/{pId}")
-    public /*@ResponseBody ResultVO*/ModelAndView getProductionByPId(HttpServletRequest request, @PathVariable("pId") Long pId,Model model) {
-        User user = (User) request.getSession().getAttribute("user");
+    public /*@ResponseBody ResultVO*/ModelAndView getProductionByPId( @PathVariable("pId") Long pId,Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);
 
@@ -629,12 +611,12 @@ public class ProductionController {
      * @return
      */
     @RequestMapping(value="/saveProduction")
-    public @ResponseBody ResultVO saveProduction(HttpServletRequest request,
+    public @ResponseBody ResultVO saveProduction(
                             @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
                             @RequestParam(value="pSummary") String pSummary,
                             @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
                             @RequestParam("pContent") MultipartFile pContent, @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
-        User user = (User) request.getSession().getAttribute("user");
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             Production production;
             // 判断是修改还是新增
@@ -684,8 +666,8 @@ public class ProductionController {
      * @return
      */
     @GetMapping("/addOrRemoveVote/{pId}")
-    public @ResponseBody ResultVO addOrRemoveVote(HttpServletRequest request,@PathVariable("pId") Long pId) {
-       User user = (User)request.getSession().getAttribute("user");
+    public @ResponseBody ResultVO addOrRemoveVote(@PathVariable("pId") Long pId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try{
            productionService.createVoteOrRemoveVote(pId,user);
        }catch (Exception e){

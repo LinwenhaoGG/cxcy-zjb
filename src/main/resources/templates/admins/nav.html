@@ -39,7 +39,7 @@
 		</div>
 	</div>
 </header>
-<aside class="Hui-aside">
+<aside class="Hui-aside" style="position: fixed"><!--这里注意改-->
 	<div class="menu_dropdown bk_2">
 		<dl id="menu-article">
 			<dt><i class="Hui-iconfont">&#xe616;</i> 用户认证<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
@@ -67,8 +67,8 @@
             <dt><i class="Hui-iconfont">&#xe616;</i> 比赛管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="./pages/manage/competition/competition_list.html" title="比赛列表">比赛列表</a></li>
-                    <li><a href="./pages/manage/competition/competition_release.html" title="发布比赛">发布比赛</a></li>
+                    <li><a th:href="@{/admins/matchslist}" href="./pages/manage/competition/competition_list.html" title="比赛列表">比赛列表</a></li>
+                    <li><a th:href="@{/admins/addmatchs}"    href="./pages/manage/competition/competition_release.html" title="发布比赛">发布比赛</a></li>
                 </ul>
             </dd>
         </dl>

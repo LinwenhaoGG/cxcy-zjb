@@ -187,27 +187,7 @@ public class MatchController {
         return new ModelAndView("matchs/teacher/teacherMatchsList", map);
     }
 
-    /**
-     * 管理员查看所有页面
-     * @param map
-     * @return
-     */
-    @GetMapping("/adminslist")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
-    public ModelAndView listMatchsAdmin(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
-                                        @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
-                                         Map map) {
-        //根据开始时间排序
-        Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
-        PageRequest request = new PageRequest(page - 1, size,sort);
-        //根据排序查出分页
-        Page<Matchs> matchsPage = matchService.findAll(request);
-        map.put("matchsPage", matchsPage);
-        map.put("page", page);
-        map.put("size", size);
 
-        return new ModelAndView("matchs/adminsMatchsList", map);
-    }
 
     /**
      * 删除
