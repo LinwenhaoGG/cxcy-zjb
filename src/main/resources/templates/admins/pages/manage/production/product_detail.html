@@ -94,14 +94,17 @@
             <!-- 作品详情 -->
             <div class="previewBox">
                 <span>作品详情：</span>
-                <a th:href="@{'https://view.officeapps.live.com/op/view.aspx?src=http://5x5n7e.natappfree.cc/'+${productionModel[1].pContent}}" class="btn radius btn-secondary" target="_blank">详情预览</a>
+                <a th:href="@{'https://view.officeapps.live.com/op/view.aspx?src=http://fu2jfz.natappfree.cc/'+${productionModel[1].pContent}}" class="btn radius btn-secondary" target="_blank">详情预览</a>
             </div>
             <br>
             <!-- 视频介绍 -->
             <div th:if="${productionModel[1].pVideo} != null">
                 视频预览：<!--http这一段是视频服务器路径+视频映射路径-->
                 <!--http这一段是视频服务器路径+视频映射路径-->
-                <video th:src="@{'http://5x5n7e.natappfree.cc/temp/'+${productionModel[1].pVideo}}" controls class="descVideo"></video>
+                <video th:src="@{'http://fu2jfz.natappfree.cc/temp/'+${productionModel[1].pVideo}}" controls class="descVideo"></video>
+            </div>
+            <div th:if="${productionModel[1].pVideo} == null">
+                视频预览：暂无视频
             </div>
         </div>
         <div class="comment mt-20">

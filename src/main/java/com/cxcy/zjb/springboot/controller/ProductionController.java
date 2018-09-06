@@ -60,7 +60,7 @@ public class ProductionController {
     /**
      * 定时审核作品:凌晨1点
      */
-    @Scheduled(cron = "* * 5 * * ?")
+    @Scheduled(cron = "* * 1 * * ?")
     public void checkWord() {
         //1.获取所有的未审核作品：0：未审核
         List<Production> list = productionService.findByPCheck(0);
@@ -78,14 +78,6 @@ public class ProductionController {
     }
 
 
-    //    跳转上传作品页面  测试用的
-    @RequestMapping(value = "/totest")
-    public String totest(HttpSession session) {
-        //测试时除非用户登录，否则不能注释掉
-        User user = userService.findByUsername("zpr");
-        session.setAttribute("user", user);
-        return "production/uploadProduction";
-    }
     //    跳转上传作品页面
     @RequestMapping(value = "/uploadProduction")
     public ModelAndView uploadProduction(Map map) {
@@ -186,11 +178,11 @@ public class ProductionController {
     // 分页显示用户的所有作品信息
     @GetMapping("/{username}/productionCenter")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
-    public ModelAndView showAllProduction(HttpServletRequest request, @PathVariable("username") String username,
+    public ModelAndView showAllProduction(@PathVariable("username") String username,
                                           @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
                                           @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
                                           Map map) {
-        User u = (User) request.getSession().getAttribute("user");
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         //设置分页
         Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
@@ -199,7 +191,7 @@ public class ProductionController {
         User user = userService.findByUsername(username);
         Long uId = user.getId();
 //      根据用户ID查找所有的作品
-        productions = productionService.findByUserAndPCheck(uId, pageable);
+        productions = productionService.findAllByUserId(uId, pageable);
         System.out.println(uId);
         System.out.println(productions.getTotalPages());
         if (productions.getTotalPages() == 0) {
@@ -599,7 +591,6 @@ public class ProductionController {
 
     /**
      * 新建或者修改作品，成功则返回对应的作品路径
-     * @param request
      * @param pId
      * @param pTitle
      * @param pSummary
@@ -654,13 +645,12 @@ public class ProductionController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String redirectUrl = "/production/" + pId;
+        String redirectUrl = ""+pId;
         return ResultUtils.success(redirectUrl);
     }
 
     /**
      * 取消或者点赞
-     * @param request
      * @param pId
      * @return
      */

@@ -126,7 +126,7 @@ $(document).ready(function() {
             $(".videoBox").show();
             // 给路径
             var url = getFileURL(this.files[0]);
-            alert(url)
+            // alert(url)
             if(url){
                 $("video").attr({
                     "src": url
@@ -256,6 +256,7 @@ $(document).ready(function() {
 
                     console.info(res);
                     var url4 = res.data;
+                    console.info(url4);
                     window.location.href=url4;
                     /*$.ajax({
                         url:'url4',
