@@ -66,7 +66,7 @@
                         );
                     var li6 = $("<ul class=\"dropdown-menu\" aria-labelledby=\"dropdownMenu1\"></ul>");
                     if (datas.style == '1') {//如果是学生，就有作品中心和比赛中心
-                        var li3 = $( "<li><a href='#'>作品中心</a></li>");
+                        var li3 = $( "<li><a href='/production/center/user"+datas.id+"'>作品中心</a></li>");
                         var li4 = $("<li><a href='/group/list'>比赛中心</a></li>");
 
                     }else if(datas.style == '2'){//如果是老师，就有资讯中心和比赛中心
