@@ -205,6 +205,7 @@
     </script>
 </head>
 <body>
+<div th:replace="top::html" ></div>
 <div class="headTitle">
     发布作品
 </div>
@@ -318,7 +319,7 @@
         </div>
     </form>
     <input type="button" class="btn btn-primary summit_btn1" value="取消" th:onclick="'returnHtml('+${userId}+')'">
-    <input type="submit" class="btn btn-primary summit_btn">
+    <input type="submit" class="btn btn-primary summit_btn" value="上传作品">
 
 </div>
 </body>

@@ -255,7 +255,6 @@ public class ProductionController {
 
     /**
      * 查看作品
-     * @param request
      * @param pId
      * @param model
      * @return

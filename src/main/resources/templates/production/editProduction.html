@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
     <script src="../../static/js/edit.js" th:src="@{/js/edit.js}"></script>
     <style>
@@ -244,6 +245,7 @@
     </script>
 </head>
 <body>
+<div th:replace="top::html" ></div>
 <input type="hidden" id="username" th:value="*{userName}">
 <input type="hidden" id="pId" th:value="*{pId}">
 <div class="headTitle">
