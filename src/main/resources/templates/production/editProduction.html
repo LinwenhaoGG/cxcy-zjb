@@ -121,6 +121,14 @@
             bottom:130px;
             left: 140px;
         }
+        #returnBut{
+            position: fixed;
+            top: 8px;
+            right: 100px;
+            color: black;
+            font-size: 25px;
+            font-family: cursive;
+        }
     </style>
 
     <script>
@@ -230,7 +238,7 @@
 
                     $("video").attr("src","/temp/"+data1.pvideo);
 
-
+                    $("#uId").val(data1.user);
 
 
 
@@ -239,20 +247,22 @@
             });
         });
 
-
-
+        function returnHtml() {
+            var uId = $('#uId').val();
+            window.location.href="/production/center/user" + uId;
+        }
 
     </script>
 </head>
 <body>
-<div th:replace="top::html" ></div>
 <input type="hidden" id="username" th:value="*{userName}">
 <input type="hidden" id="pId" th:value="*{pId}">
 <div class="headTitle">
-    发布作品
+    编辑作品
 </div>
-
+<button class="btn btn-link" type="button" id="returnBut" onclick="returnHtml()">返回作品中心</button><br>
 <div class="page">
+    <input type="hidden" id="uId">
     <form id="myForm" enctype="multipart/form-data">
         <!-- 分类 -->
         <div class="classify">
