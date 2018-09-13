@@ -14,7 +14,7 @@
                 第一届IT文化节<br />
             </h3>
             <table class="table table-condensed table-bordered" th:each="achievementList : ${eventAchievementList}">
-                <thead>
+                <thead th:if="${achievementList.size()} ne 0" >
                 <tr>
                     <th>排名</th>
                     <th>比赛项目名称</th>

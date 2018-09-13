@@ -20,8 +20,6 @@ spring:
     prefix: classpath:templates/
 
     #配置标准
-
-
     content-type: text/html
   http:
     multipart:

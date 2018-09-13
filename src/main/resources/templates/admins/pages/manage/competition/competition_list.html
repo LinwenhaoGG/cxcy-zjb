@@ -9,6 +9,7 @@
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
     <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <
     <title>后台管理</title>
 </head>
 <body>
@@ -48,7 +49,7 @@
                 </tr>
                 </thead>
                 <tbody th:each="matchs:${matchsPage}">
-                    <tr>
+                    <tr th:id="'matchid'+${matchs.id}">
                         <td th:text="${matchs.id}">10001</td>
                         <td th:text="${matchs.name}">全国英语作文比赛</td>
                         <td th:text="${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}" >2018年8月31日13:23:28</td>
@@ -56,7 +57,7 @@
                         <td th:text="${#dates.format(matchs.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}">2018年8月31日13:23:37</td>
                         <td th:text="${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}">2018年8月31日13:23:37</td>
                         <td>
-                            <a href="javascript:;" data-id="" class="del_compotition">删除</a>
+                            <a th:onclick="'a('+${matchs.id}+')'" data-id="" class="del_compotition">删除</a>
                             <a href="./competition_alter.html?id=" th:href="'/admins/matchsEdit/'+${matchs.id}">修改</a>
                         </td>
                     </tr>
@@ -83,4 +84,27 @@
     </div>
 </section>
 </body>
+<script>
+    function a(id) {
+        if(confirm("你确定要删除吗？删除后将无法恢复！")){
+            $.ajax({
+                url: "/match/delete",
+                type:'POST',
+                data:{mid:id},
+                success:function () {
+                    alert("删除成功!");
+                    $('#matchid'+id).remove();
+                },
+                error:function (result) {
+                    alert("删除失败!"+result.message);
+                }
+            })
+
+
+
+        }
+
+    }
+
+</script>
 </html>

@@ -191,16 +191,15 @@ public class MatchController {
 
     /**
      * 删除
-     * @param id 要删除的比赛id
+     * @param mid 要删除的比赛id
      * @return
      */
-    @GetMapping("/delete/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
-    public ModelAndView deletematchs(@PathVariable(value = "id") long id) {
-
-        matchService.deleteMatchById(id);
-
-        return new ModelAndView("matchs/success");
+    @RequestMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public ResultVO deletematchs(@RequestParam("mid") Long mid) {
+        matchService.deleteMatchById(mid);
+        return ResultUtils.success();
     }
 
     /**

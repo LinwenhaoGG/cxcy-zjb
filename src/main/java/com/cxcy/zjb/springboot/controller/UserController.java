@@ -58,15 +58,11 @@ public class UserController {
     private GrowthService growthService;
 
     /**
-     * 聊天模块：获取当前用户的id
+     * 获取当前登录的用户
      * @return
      */
     @RequestMapping("/person")
     @ResponseBody
-
-    /**
-     * 获取当前登录用户
-     */
     public Object getUserId(){
         //获取当前登录的用户
         return  SecurityContextHolder.getContext().getAuthentication().getPrincipal();

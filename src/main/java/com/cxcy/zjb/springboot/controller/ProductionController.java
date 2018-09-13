@@ -600,10 +600,13 @@ public class ProductionController {
      */
     @RequestMapping(value="/saveProduction")
     public @ResponseBody ResultVO saveProduction(
-                            @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
+                            @RequestParam(value="pId",required = false) Long pId,
+                            @RequestParam("pTitle") String pTitle,
                             @RequestParam(value="pSummary") String pSummary,
-                            @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
-                            @RequestParam("pContent") MultipartFile pContent, @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
+                            @RequestParam("pSort") Integer pSort,
+                            @RequestParam(value ="Catagorys") Long Catagorys,
+                            @RequestParam("pContent") MultipartFile pContent,
+                            @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             Production production;

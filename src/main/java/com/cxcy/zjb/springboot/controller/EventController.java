@@ -6,10 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.converter.EventMatchs2TeacherEvent;
 import com.cxcy.zjb.springboot.domain.Event;
+import com.cxcy.zjb.springboot.domain.MatchGroup;
 import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.dto.TeacherEvent;
 import com.cxcy.zjb.springboot.service.EventService;
+import com.cxcy.zjb.springboot.service.MatchGroupService;
 import com.cxcy.zjb.springboot.service.MatchService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,6 +46,9 @@ public class EventController {
 
     @Autowired
     private MatchService matchService;
+
+    @Autowired
+    private MatchGroupService matchGroupService;
 
     @Autowired
     private UserService userService;
@@ -95,6 +101,7 @@ public class EventController {
         return new ModelAndView("matchs/teacher/teacherEventList", map);
     }
 
+
     /**
      * 测试接口
      * @param map
@@ -111,6 +118,30 @@ public class EventController {
         return eventList;
     }
 
+    /**
+     * 跳转到对应的评审页面
+     * @param eventid
+     * @param model
+     * @return
+     */
+    @GetMapping("/groupPreview")
+    public String groupPreview(@RequestParam("eventid") Long eventid,
+                                     Model model) {
+        Event event = eventService.getEventById(eventid);
+        model.addAttribute("eventInfo", event);
+        return "matchs/teacher/groupPreview";
+    }
+
+    @PostMapping("/getGroup")
+    @ResponseBody
+    public ResultVO getGroup(@RequestParam("eventId") Long eventid) {
+        if (matchGroupService.getPreviewGroupNum(eventid) == 0) {
+            return ResultUtils.error(1,"所有小组已经评审完毕！");
+        }
+        List<MatchGroup> matchGroupList = matchGroupService.getMatchGroupToPreview(eventid);
+
+        return ResultUtils.success(matchGroupList);
+    }
 
     /**
      * 删除项目

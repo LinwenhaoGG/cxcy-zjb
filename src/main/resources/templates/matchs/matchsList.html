@@ -30,7 +30,7 @@
                             <p th:text="'比赛发布成绩时间为:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}">
                                 也称普林斯顿结构，是一种将程序指令存储器和数据存储器合并在一起的存储器结构。程序指令存储地址和数据存储地址指向同一个存储器的不同物理位置。
                             </p>
-                            <p>
+                            <p style="text-align: right">
                                 <a class="btn btn-primary" th:href="'/match/preview/'+ ${matchs.id}" href="#">查看比赛</a>
                                 <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default btn-danger disabled" >成绩未发布</button>
                                 <a class="btn btn-info"  th:href="'/match/matchAchievement/'+ ${matchs.id}" th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} ">查看成绩</a>

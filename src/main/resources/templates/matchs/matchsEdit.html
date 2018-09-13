@@ -82,6 +82,7 @@
     <h1 align="center">发布比赛</h1>
     <article class="cl pd-20">
         <div class="alter-detail">
+            <input type="hidden" th:value="${matchs.id}" id="matchsId">
             <div class="form-item">
                 <span>比赛名称：</span>
                 <input type="text" th:value="${matchs.name}" id="title" class="input-text radius size-M" name="name">
@@ -109,7 +110,7 @@
                 <textarea class="editormd-html-textarea" name="htmlContent" id="htmlContent" th:text="*{matchs.htmlContent}"></textarea>
             </div>
             <!-- 添加子项目模块 -->
-            <div class="btnBox">
+            <div class="btnBox" th:if="${#lists.isEmpty(matchs.id)}">
                 <!-- 触发模态框 -->
                 <button  class="btn btn-default btn-success" data-toggle="modal" data-target="#myModal">添加子项目</button>
             </div>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script src="../../static/js/uploading.js" th:src="@{/js/GroupUpload.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            background-color: #f4f4f4;
+
+        }
+        .headTitle{
+            background-color: #fff;
+            height: 50px;
+            line-height: 50px;
+            padding-left:40px;
+            font-size: 24px;
+            color: #999;
+            letter-spacing: 2px;
+        }
+        .page{
+            background-color: #fff;
+            border-radius: 3px;
+            margin-top: 20px;
+            margin-left: 100px;
+            margin-right: 100px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px #ccc;
+            padding-bottom:20px;
+            padding-left: 60px;
+            padding-right:60px;
+            position: relative;
+        }
+        .classify{
+            padding-top: 20px;
+        }
+        .dropdown {
+            display: inline-block;
+            margin-right: 100px;
+            width: 200px;
+        }
+        .btn_button{
+            color: #337ab7;
+            background-color: #fff;
+        }
+        .word_title{
+            margin-top: 20px;
+            width: 100%;
+            background-color:#efefef;
+            border:none;
+            height: 30px;
+        }
+        .file_intro{
+            margin-top: 10px;
+            height: 140px;
+            display: inline-block;
+        }
+        .video_upload{
+            height: 260px;
+            margin-top:10px;
+        }
+        .file_choose,.video_choose{
+            /* 	margin-top: 10px; */
+            width: 100px;
+            height: 100px;
+            border:2px solid #ccc;
+            background: url(../../up/add.png) no-repeat;
+            display: inline-block;
+            float: left;
+        }
+        .file_choose input,.video_choose input{
+            width: 100px;
+            height: 100px;
+            filter:alpha(opacity=0);
+            -moz-opacity:0;
+            opacity:0;
+        }
+        .selected{
+            display: inline-block;
+            margin-top: 10px;
+            margin-left: 100px;
+        }
+        .videoBox{
+            display: inline-block;
+            margin-left: 100px;
+        }
+        .summit_btn{
+            position: absolute;
+            right: 60px;
+            bottom:25px;
+        }
+        .summit_btn1{
+            position: absolute;
+            right: 150px;
+            bottom:25px;
+        }
+        .desc{
+            margin-top: 10px;
+            position: relative;
+        }
+        .desc textarea{
+            padding:5px;
+            color: #666;
+            border-color: #ccc;
+        }
+        .desc-warning{
+            display: inline-block;
+            position: absolute;
+            bottom: 0px;
+            right: 340px;
+        }
+        .details-warning{
+            display: inline-block;
+            margin-left: 20px;
+
+        }
+        .video_upload{
+            position: relative;
+        }
+        .video_upload .video-warning{
+            position: absolute;
+            bottom:130px;
+            left: 140px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="headTitle">
+    提交作品
+</div>
+
+<div class="page">
+    <form id="myForm" enctype="multipart/form-data">
+
+        <!-- 标题 -->
+
+        <div class="headTitle" style="color: #00a8c6" th:text="'小组名称：'+${matchGroup.name}">
+            提交作品
+        </div>
+
+        <input type="hidden" id="groupId"  th:value="${matchGroup.id}">
+
+        <!-- 文件介绍 -->
+        <div class="file_intro">
+            <p><span style="color:red">* </span>上传文件介绍(.doc/.docx)</p>
+            <div class="alert alert-warning details-warning" style="display:none">
+                <a href="#" class="close close-details-warning" >
+                    &times;
+                </a>
+                请上传文件介绍(.doc/.docx)
+            </div>
+            <div class="file_choose">
+                <input type="file" accept=".docx,.doc" id="wordFile">
+            </div>
+            <div class="selected" style="display:none">
+                <div>
+                    <img src="../../../static/up/file.png" th:src="@{/up/file.png}" height="48" width="48" alt="">
+                </div>
+                <p class="file_name">什么什么文件</p>
+            </div>
+        </div>
+
+        <!-- 上传视频 -->
+        <div class="video_upload">
+            <p>(可选)上传mp4视频介绍</p>
+            <div class="alert alert-warning video-warning" style="display:none">
+                <a href="#" class="close close-video-warning" >
+                    &times;
+                </a>
+                请上传mp4格式视频介绍
+            </div>
+            <div class="video_choose">
+                <input type="file" accept=".mp4" id="videoFile">
+            </div>
+
+            <!-- 视频预览 -->
+            <div class="videoBox" style="display:none">
+                <video width="320" height="180" controls>
+                    <source src="" type="video/mp4">
+                    </source>
+                </video>
+            </div>
+        </div>
+    </form>
+    <input type="button" class="btn btn-primary summit_btn1" value="取消" th:onclick="'returnHtml()'">
+    <input type="submit" class="btn btn-primary summit_btn" value="上传作品">
+
+</div>
+</body>
+<script type="text/javascript">
+
+    function returnHtml() {
+        window.location.href="/group/list";
+    }
+</script>
+</html>

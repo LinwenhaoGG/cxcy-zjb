@@ -84,6 +84,7 @@ $(document).ready(function() {
 
     // 类别
     $(".dropdown3").on('click', '.lis', function() {
+
         //type
         var type = $(this).val();
         // 选项值
@@ -101,7 +102,7 @@ $(document).ready(function() {
 
         // 获取文件名并显示
         var file_url = $(this).val().split("\\");
-        let s = fileSuffix(file_url[file_url.length-1]);
+        var s = fileSuffix(file_url[file_url.length-1]);
         if(s){
             $(".selected").show();
             $(".file_name").text(file_url[file_url.length-1]);
@@ -117,7 +118,7 @@ $(document).ready(function() {
     $(".video_choose input").change(function(){
         // 获取文件名并显示
         var video_url = $(this).val().split("\\");
-        let s = videoSuffix(video_url[video_url.length-1]);
+        var s = videoSuffix(video_url[video_url.length-1]);
         // 隐藏提示
         $(".video-warning").hide();
         if(s){
@@ -174,8 +175,8 @@ $(document).ready(function() {
         // 获取文件名
         var file_url = $(".file_choose input").val();
         // 后缀名是否正确
-        let file_suffix=$(".file_choose input").val().split("\\");
-        let ss = fileSuffix(file_suffix[file_suffix.length-1]);
+        var file_suffix=$(".file_choose input").val().split("\\");
+        var ss = fileSuffix(file_suffix[file_suffix.length-1]);
         ss=!ss;
 
         // 获取文件
@@ -183,7 +184,7 @@ $(document).ready(function() {
 
         // 获取视频
         var video_url = $(".video_choose input").val().split("\\");
-        let s = videoSuffix(video_url[video_url.length-1]);
+        var s = videoSuffix(video_url[video_url.length-1]);
         var vf = document.getElementById("videoFile").files.length;
         if((vf == 0)||(!s)){
             vf="";
@@ -195,7 +196,7 @@ $(document).ready(function() {
 
 
 
-        let fd = new FormData($('#myForm')[0]);
+        var fd = new FormData($('#myForm')[0]);
         fd.append('Catagorys',cid);
         fd.append('pSort',sort);
         fd.append('pTitle',title);

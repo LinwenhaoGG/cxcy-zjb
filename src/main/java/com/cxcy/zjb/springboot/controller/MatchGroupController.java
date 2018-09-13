@@ -3,6 +3,7 @@ package com.cxcy.zjb.springboot.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cxcy.zjb.springboot.Vo.MatchGroupVo;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.converter.MatchGroup2EventSignUp;
 import com.cxcy.zjb.springboot.domain.*;
@@ -14,6 +15,7 @@ import com.cxcy.zjb.springboot.utils.LongUtils;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -42,6 +45,9 @@ public class MatchGroupController {
 
     @Autowired
     private EventService eventService;
+
+    @Value("${video.VideoPath}")
+    private String VideoPath;
      /**
      * 跳转报名页面
      * @param map
@@ -57,6 +63,21 @@ public class MatchGroupController {
         return new ModelAndView("matchs/matchGroup/EventsignUp", map);
     }
 
+    @GetMapping("/submit")
+    public ModelAndView upload(@RequestParam Long gid,  Map map) {
+        //通过id获取该小组情况
+        MatchGroup matchGroup = matchGroupService.getMatchGroupByid(gid);
+        //获取当前登录的账号
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //判断登录用户是否该作者
+        if (!loginUser.getId().equals(matchGroup.getUser())) {
+            return new ModelAndView("/matchs/matchGroup/signUpList",map);
+        }
+
+        map.put("matchGroup",matchGroup);
+
+        return new ModelAndView("/matchs/matchGroup/groupUpload",map);
+    }
 
     /**
      * 保存对比赛的报名信息
@@ -74,7 +95,8 @@ public class MatchGroupController {
         String GmemberList=json.getString("memberList");
         Long eventId=json.getLong("eventId");
         String team_name=json.getString("team_name");
-        Long uid = 1L;
+        //获取当前登录人ID
+        Long uid = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         //memberList
         List<GroupMember> memberList = new ArrayList<>();
         //比赛队伍对象
@@ -155,4 +177,60 @@ public class MatchGroupController {
         }
         return new ModelAndView("matchs/matchGroup/signUpList", map);
     }
+
+    /**
+     * 新建或者修改作品，成功则返回对应的作品路径
+     * @param pContent
+     * @param videoFile
+     * @return
+     */
+    @RequestMapping(value="/uploadProduction")
+    public @ResponseBody ResultVO uploadProduction(
+            @RequestParam(value="groupId") Long groupId,
+            @RequestParam("pContent") MultipartFile pContent,
+            @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            MatchGroup matchGroup = matchGroupService.getMatchGroupByid(groupId);
+            //保存文件
+            String filePath =new  ProductionController().saveFile(pContent);
+            //保存视频
+            if(videoFile!=null){
+                String video = new  ProductionController().saveVideo(videoFile,"video");
+                if(video!=null){
+                    matchGroup.setMvAddress(video);
+                }
+            }
+            matchGroup.setDocAddress(filePath);
+            //保存小组情况
+            MatchGroup returnMatchGroup = matchGroupService.saveMatchGroup(matchGroup);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String redirectUrl = "/group/list";
+        return ResultUtils.success(redirectUrl);
+    }
+
+    /**
+     * 保存评审后的数组
+     * @param groupList
+     * @return
+     */
+//    ,consumes = "application/json"
+    @RequestMapping(value = "/saveGroupList",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO saveGroupList(@RequestBody MatchGroupVo[] groupList) {
+        MatchGroup savegroup;
+        try {
+            for (MatchGroupVo matchGroup : groupList) {
+                savegroup = matchGroupService.getMatchGroupByid(matchGroup.getId());
+                savegroup.setAchievement(matchGroup.getAchievement());
+                matchGroupService.saveMatchGroup(savegroup);
+            }
+        } catch (Exception e) {
+            return ResultUtils.error(1, "上传失败！");
+        }
+        return ResultUtils.success();
+    }
+
 }
