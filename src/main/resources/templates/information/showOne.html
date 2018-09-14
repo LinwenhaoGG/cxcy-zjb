@@ -5,49 +5,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"></head>
-<link rel="stylesheet" th:href="@{/css/layui.css}" href="//res.layui.com/layui/dist/css/layui.css"  media="all">
-<script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
-<script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
 <body>
-<div class="information-container">
-
-    <div>
-        <div>
-            <h2>
-                <a th:title="${user.username}" th:text="${informationModel.title}">
-
-                </a>
-            </h2>
-
-            <div>
-                <a th:href="'/information/' + ${user.username}" class="card-link" th:text="${user.username}" >x</a> 发表于: <i th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}"></i>
-                阅读量: <i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}"></i>
-                <!--<a th:if="${isInformationOwner}" th:href="'/information/' + ${informationModel.user.username}+ '/edit/'+ ${informationModel.id}" >编辑</a>-->
-                <!--<a href="javascript:void(0)" th:if="${isInformationOwner}" class="information-delete">删除</a>-->
-            </div>
-            <hr>
-            <div class="layui-col-md12">
-                <div class="layui-card">
-                     <div class="layui-card-body" th:align="center" th:utext="${informationModel.htmlContent}">
-                内容
+<div th:replace="top::html"></div>
+<div class="mainbody" style="border: 1px solid #ccc;margin-top: 10px">
+    <div class="container clearfix" style="background-color: white ">
+        <div class="mainbody_topbg"></div>
+        <div class="bread">当前位置：
+            <a th:href="@{/index}">首页</a> >
+            <a th:href="@{/information/showAllNotice}">资讯</a> >
+            <a th:text="${informationModel.informationCategory.name}" th:href="@{/information/showAllNotice?catagory=}+${informationModel.informationCategory.id}">资讯详情</a>
+        </div>
+        <div class="maincontent" style="width: 100%">
+            <div class="post">
+                <h2><a th:title="${informationModel.author}" th:text="${informationModel.title}">
+                </a></h2>
+                <div class="postdata">
+                    <div class="cate"> 作者：<a th:text="${informationModel.author}" >x</a> 发表于 </div>
+                    <div class="date" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</div>
+                    阅读量: <i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}"></i>
+                </div>
+                <div class="content" style="margin-left: 50px;margin-right: 50px">
+                    <div class="layui-card-body"  th:utext="${informationModel.htmlContent}">
+                        内容
                     </div>
+                    <br /><br />
+                    <p style="text-align: right;margin-right: 50px;" th:text="'编辑者:'+${informationModel.author}">小帅哥</p>
+                    <p style="text-align: right;margin-right: 50px;" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</p>
                 </div>
             </div>
-            <hr>
-        </div>
-        <div>
-            <h5>分类：<a href="#" th:text="${informationModel.informationCategory.name}">
 
-            </a></h5>
-
-            <h5 >作者：
-                <span th:text="${informationModel.author}"></span>
-            </h5>
         </div>
+        <div class="mainbody_bottombg"></div>
     </div>
-
 </div>
+
 </body>
 </html>

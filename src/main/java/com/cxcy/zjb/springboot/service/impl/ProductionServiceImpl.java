@@ -96,12 +96,12 @@ public class ProductionServiceImpl implements ProductionService {
 //        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        根据账号获取用户id
         Long uId = user.getId();
-        Long sId = user.getStudent();
+        User prodcutionUser = userService.findUserById(originalProduction.getUser());
         Comment comment = new Comment(uId, content);//先创建一个评论
         commentService.saveComment(comment);
 
         //根据用户id查找对应的growth
-        Growth growth = growthService.findByUser(sId);
+        Growth growth = growthService.findByUser(prodcutionUser.getStudent());
 
         //添加相应的gid的评论量+1
         growth.setGReadSize(growth.getGComment()+1);

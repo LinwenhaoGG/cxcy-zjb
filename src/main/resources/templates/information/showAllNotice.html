@@ -10,7 +10,7 @@
     <script src="../js/toastr.min.js" th:src="@{/js/toastr.min.js}"></script>
 </head>
 <body>
-
+<div th:replace="top::html"></div>
 <div id="mainContainer">
     <div id="mainContainerRepleace">
         <div class="card mb-4" th:each="information : ${informationList}">

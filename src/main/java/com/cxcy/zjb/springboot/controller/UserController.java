@@ -297,7 +297,7 @@ public class UserController {
         }
         //在growth表增加学生信息
         Growth growth = new Growth();
-        growth.setUser(saveUserInfo.getId());
+        growth.setUser(saveUserInfo.getStudent());
         Growth saveGrowth = growthService.saveGrowth(growth);
         if (saveGrowth == null){
              return ResultUtil.error("【用户认证】出错了，在growth表增加学生信息失败！");

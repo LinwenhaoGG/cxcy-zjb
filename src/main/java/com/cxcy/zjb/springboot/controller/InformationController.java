@@ -1,6 +1,7 @@
 package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.Vo.Response;
+import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.Information;
 import com.cxcy.zjb.springboot.domain.InformationCategory;
 import com.cxcy.zjb.springboot.domain.User;
@@ -8,12 +9,15 @@ import com.cxcy.zjb.springboot.service.InformationCategoryService;
 import com.cxcy.zjb.springboot.service.InformationService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
+import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +47,10 @@ public class InformationController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 返回资讯主页
+     * @return
+     */
     @GetMapping("/")
     public String informationIndex(){
         return "/information/index";
@@ -75,39 +83,72 @@ public class InformationController {
     public String showOneInformation(@PathVariable("id") Long id,Model model){
         Information information = informationService.getInformationById(id);
         informationService.readingIncrease(id);
-        User user = userService.findUserById(information.getId());
+        User user = userService.findUserById(information.getUser());
         model.addAttribute("informationModel",information);
         model.addAttribute("user",user);
         return "/information/showOne";
     }
 
+    /**
+     * 跳转所有资讯首页
+     * @param keyword
+     * @param pageIndex
+     * @param pageSize
+     * @param model
+     * @return
+     */
     @GetMapping("/showAllNotice")
-    public String showAllNotice(@RequestParam(value = "pageIndex",required = false,defaultValue = "1") int pageIndex,
+    public String showAllNotice(@RequestParam(name ="catagory",defaultValue = "0") Long catagory,
+                                @RequestParam(name = "keyword",defaultValue = "") String keyword,
+                                @RequestParam(value = "pageIndex",required = false,defaultValue = "1") int pageIndex,
                                 @RequestParam(value = "pageSize",required = false,defaultValue = "5") int pageSize,
                                 Model model){
         //根据开始时间排序
         Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"CreateTime");
         Pageable pageable = new PageRequest(pageIndex-1,pageSize,sort);
-        Page<Information> page = informationService.findAllByPage(pageable);
+        Page<Information> page;
+        if (catagory != 0) {//如果是按分类查找
+            //找出该分类
+            InformationCategory informationCategory = informationCategoryService.getInformationCategoryById(catagory);
+            page = informationService.listInformationOrderByCreateTimeDesc(informationCategory, pageable);
+        }else {//如果是按所有或查询查找
+            page = informationService.findByTitleLike(keyword, pageable);
+        }
         List<Information> list = page.getContent();
         model.addAttribute("informationList",list);
+        model.addAttribute("keyword",keyword);
+        model.addAttribute("catagory",catagory);
         model.addAttribute("page",page);
         model.addAttribute("pageIndex",pageIndex);
         model.addAttribute("pageSize",pageSize);
 
-        return "/information/showAllNotice";
+        return "/information/InformationAll";
     }
 
+    /**
+     * 管理自己的资讯发布
+     * @param username
+     * @param order
+     * @param categoryId
+     * @param keyword
+     * @param async
+     * @param pageIndex
+     * @param pageSize
+     * @param model
+     * @return
+     */
     @GetMapping("/{username}")
+    @PreAuthorize("hasAnyAuthority('ROLE_TEACHER','ROLE_ADMIN')")  // 指定角色权限才能操作方法
     public String listInformationByOrder(@PathVariable("username") String username,
                                          @RequestParam(value = "order",required = false,defaultValue = "new") String order,
-                                         @RequestParam(value = "category",required = false) Long categoryId,
+                                         @RequestParam(value = "category",required = false,defaultValue = "0") Long categoryId,
                                          @RequestParam(value = "keyword", required = false,defaultValue = "")String keyword,
                                          @RequestParam(value = "async",required = false) boolean async,
                                          @RequestParam(value = "pageIndex",required = false,defaultValue = "0") int pageIndex,
                                          @RequestParam(value = "pageSize",required = false,defaultValue = "5") int pageSize,
                                          Model model){
-        User user = (User) userDetailsService.loadUserByUsername(username);
+        //获取当前登录的用户
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Page<Information> page = null;
 
@@ -231,16 +272,12 @@ public class InformationController {
 
         //判断用户是否是资讯的所有者
         boolean isInformationOwner = false;
-//        if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-//                &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-//            principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (principal !=null && username.equals(principal.getUsername())) {
-//                isInformationOwner = true;
-//            }
-//        }
-
-        if(username.equals(author.getUsername())){
-            isInformationOwner = true;
+        if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+            User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (user !=null && username.equals(user.getUsername())) {
+                isInformationOwner = true;
+            }
         }
         model.addAttribute("isInformationOwner",isInformationOwner);
         model.addAttribute("informationModel",information);
@@ -270,4 +307,32 @@ public class InformationController {
     }
 
 
+    ///////////////////////////////////
+    //以下为管理员端
+    ///////////////////////////////////
+
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
+    @RequestMapping("/delete")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public ResultVO deleteInformation(@RequestParam("id") Long id) {
+        try {
+            informationService.removeInformation(id);
+        } catch (Exception e) {
+            return ResultUtils.error(1, "删除失败");
+        }
+        return ResultUtils.success();
+    }
+
+    @GetMapping("/ShowInformationAdmins")
+    public String informationUpdate(@RequestParam("id") Long id,
+                                    Model model) {
+        Information information = informationService.getInformationById(id);
+        model.addAttribute("information", information);
+        return "admins/pages/news/news_detail";
+    }
 }

@@ -10,11 +10,9 @@
     <link rel="stylesheet" th:href="@{/css/style.css}"href="/css/style.css"/>
     <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
-    <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+   <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
     <script th:src="@{/editormd/js/editormd.js}" src="/editormd/js/editormd.js"></script>
     <script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
-    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
     <script th:src="@{/js/toastr.min.js}"></script>
     <script>
         //发布资讯
@@ -52,34 +50,46 @@
     </script>
 </head>
 <body>
-    <div class="informationContent">
+<!-- 嵌入导航栏 -->
+<div th:replace="top::html"></div>
 
-        <div th:object="${informationModel.information}">
+
+<section class="Hui-article-box" style="border: 1px solid #ccc;margin-top: 10px">
+    <h1 align="center">发布资讯</h1>
+    <article class="cl pd-20">
+        <div class="alter-detail" th:object="${informationModel.information}">
             <input type="hidden" name="id" th:value="*{id}" id="informationId">
             <input type="hidden" id="username" th:value="${username}" name="username">
-            <div align="left">资讯标题:</div>
-            <input class="form-control" placeholder="请输入标题" name="title" th:value="*{title}" id="title" type="text" />
-            <div align="left">资讯作者:</div>
-            <input class="form-control" placeholder="请输入作者" name="author" th:value="*{author}" id="author" type="text" />
+            <div class="form-item">
+                <span>资讯标题:</span>
+                <input name="title" placeholder="请输入标题" th:value="*{title}" id="title" type="text" class="input-text radius size-M" >
+            </div>
+            <div class="form-item">
+                <span>资讯作者:</span>
+                <input placeholder="请输入作者" name="author" th:value="*{author}" id="author" type="text"  class="input-text radius size-M" >
+            </div>
             <div>
-                分类：<select id="informationCategory" th:placeholder="请选择">
-                <option th:value="*{id}" th:text="*{name}" th:each="informationCategory : ${informationModel.categories}" th:object="${informationCategory}"
-                        th:selected="${informationCategory eq informationModel.information.informationCategory}">java</option>
+                资讯分类：<select id="informationCategory" th:placeholder="请选择">
+                <option th:value="*{id}" th:text="*{name}" th:each="informationCategory : ${categories}" th:object="${informationCategory}"
+                        th:selected="${informationCategory eq information.informationCategory}">java</option>
             </select>
             </div>
             <!-- markdown代码 -->
-            <div class="editormd" id="test-editormd">
-                <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="content" th:text="*{content}""></textarea>
+            <div class="editormd" id="test-editormd" >
+                <textarea class="editormd-markdown-textarea" name="content" id="content" th:text="*{content}"></textarea>
                 <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
-                <textarea class="editormd-html-textarea" name="text" id="htmlContent" th:text="*{htmlContent}"></textarea>
+                <textarea class="editormd-html-textarea" name="htmlContent" id="htmlContent" th:text="*{htmlContent}"></textarea>
+            </div>
+            <div class="subprojects">
+                <!-- 发布按钮 -->
+                <button type="button" id="submitInformation" class="btn btn-default btn-primary" >发布</button>
             </div>
         </div>
+    </article>
+</section>
 
-        <div>
-            <button id="submitInformation" >发布</button>
-        </div>
 
-    </div>
+
     <script type="text/javascript">
         $(function() {
             editormd("test-editormd", {
@@ -101,7 +111,7 @@
                     //this.fullscreen();
                     //this.unwatch();
                     //this.watch().fullscreen();
-                    this.width("100%");
+                    this.width("90%");
                     this.height(480);
                     //this.resize("100%", 640);
                 }

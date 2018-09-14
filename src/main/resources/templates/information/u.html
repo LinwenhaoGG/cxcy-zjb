@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
     <script src="../../js/jquery-3.1.1.min.js"  th:src="@{/js/jquery-3.1.1.min.js}"></script>
 
@@ -16,53 +15,37 @@
 
 </head>
 <body>
-<div class="container information-content-container">
+<div th:replace="top::html"></div>
+<div class="container information-content-container" style="margin-top: 10px">
 
     <div class="row">
 
         <!-- 左侧栏目 -->
-        <div class="col-md-4 col-xl-3">
+        <div class="col-md-3 col-xl-2" style="border: 1px solid #ccc;margin-top: 10px">
 
-            <div class="row">
+            <div class="row" style="margin-top: 10px" align="center">
                 <div class="col-md-12">
                     <span>
 
-                        <img th:src="${user.avatar} == null ? '/images/avatar-defualt.jpg' : ${user.avatar} ">
+                        <img style="height: 120px;width: 120px" th:src="${user.avatar} == null ? '/images/avatar-defualt.jpg' : '/img/'+${user.avatar} ">
 
                     </span>
 
                 </div>
 
             </div>
-            <div class="row">
+            <div class="row" align="center">
 
                 <div class="col-md-12">
-                    <h2 class="card-text" th:text="${user.name}"></h2>
-                    <h4 class="card-text" th:text="${user.username}"></h4>
+                    <h2 class="card-text" style="color: #00a0e9" th:text="'用户:'+${user.username}"></h2>
                 </div>
             </div>
 
 
-            <div class="row ">
+            <div class="row" align="center">
                 <div class="col-md-12">
-                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i>
+                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i>邮箱：
                         <a href="mailto:waylau521@gmail.com" th:href="'mailto:'+ ${user.email}" th:text="${user.email}">waylau521@gmail.com</a></h5>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- 分类 -->
-            <div id="categoryMain">
-                <div class="card my-4" id="categoryRepleace">
-                    <h5 class="card-header"><i class="fa fa-bars" aria-hidden="true"></i> 分类 </h5>
-
-                    <ul class="list-group" th:each="informationCategory : ${informationCategories}" th:object="${informationCategory}">
-                        <div class="information-list-group-item">
-                            <a href="javascript:void(0)" th:attr="categoryId=*{id}" th:value="*{id}" class="information-query-by-category" th:text="*{name}">
-                            </a>
-                        </div>
-                    </ul>
                 </div>
             </div>
 
@@ -73,7 +56,7 @@
         <!-- 右侧栏目 -->
 
 
-        <div class="col-md-8 col-xl-9">
+        <div class="col-md-9 col-xl-10">
             <!-- 工具栏 -->
 
             <ul class="nav nav-tabs mr-auto">
@@ -86,10 +69,13 @@
                     <a class="nav-link" data-th-classappend="${order} eq 'hot' ? 'active' : ''" href="javascript:void(0)" th:attr="url='/information/'+${user.username}+'?order=hot'">最热</a>
                 </li>
 
-                <div class="form-inline mt-2 mt-md-0">
+                <div class="form-inline mt-2 mt-md-0" >
                     <input class="form-control mr-sm-2" type="text" placeholder="搜索" id="keyword" th:value="${keyword}">
                     <a href="javascript:void(0)" class="btn btn-outline-secondary my-2 my-sm-0" id="searchInformations" >
                         <i class="fa fa-search" aria-hidden="true" th:text="搜索" ></i></a>
+                    <span style="text-align: right">
+                    <a style="float: right" th:href="'/information/'+${#authentication.name}+'/create'"><button type="button" class="btn btn-default btn-primary">发布资讯</button></a>
+                    </span>
                 </div>
 
 
@@ -119,13 +105,7 @@
                         <!-- 处理页数小于等于7 的情况 -->
                         <ul class="pagination" data-th-if="${page.totalPages le 7}" >
                             <!-- 总记录数 -->
-                            <li class="tbpage-total-elements disabled">共<span th:text="${page.totalElements}"></span>条</li>
-
-                            <!-- 页面大小 -->
-                            <select class="custom-select tbpage-size" data-th-attr="pageIndex=${page.number}">
-                                <option data-th-each="i : ${#arrays.toIntegerArray({5,10,40,100})}" data-th-value="${i}"
-                                        data-th-selected="${i eq page.size}" data-th-text="${i}"></option>
-                            </select>
+                            <li class="tbpage-total-elements disabled"><span th:text="'共'+${page.totalElements}+'条'"></span></li>
 
                             <!-- 上一页 -->
                             <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
@@ -155,11 +135,6 @@
                             <!-- 总记录数 -->
                             <li class="tbpage-total-elements disabled">共[[${page.totalElements}]]条</li>
 
-                            <!-- 页面大小 -->
-                            <select class="custom-select tbpage-size" data-th-attr="pageIndex=${page.number}">
-                                <option data-th-each="i : ${#arrays.toIntegerArray({5,10,40,100})}" data-th-value="${i}"
-                                        data-th-selected="${i eq page.size}" data-th-text="${i}"></option>
-                            </select>
 
                             <!-- 上一页 -->
                             <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
@@ -237,22 +212,6 @@
                             </li>
                         </ul>
                     </nav>
-                    <!--<div class="col-md-12 column">-->
-                        <!--<ul class="pagination pull-right">-->
-                            <!--<li class="disabled" th:if="${pageIndex} eq '1'" ><a >首页</a></li>-->
-                            <!--<li th:if="${pageIndex} ne '1'"><a th:href="'/information/' + ${user.username}+'/?pageIndex=1'+'&&pageSize='+${pageSize}">首页</a></li>-->
-                            <!--<li class="disabled" th:if="${pageIndex} le '1'"><a >上一页</a></li>-->
-                            <!--<li th:if="${pageIndex} gt '1'"><a th:href="'/information/' + ${user.username}+'/?pageIndex='+${pageIndex-1}+'&&pageSize='+${pageSize}">上一页</a></li>-->
-                            <!--<li th:each="pageNo : ${#numbers.sequence(1, page.totalPages)}">-->
-                                <!--<a th:if="${pageNo} eq ${pageIndex}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>-->
-                                <!--<a th:if="${pageNo} ne ${pageIndex} and ${pageNo} le ${pageIndex+2} and ${pageNo} ge ${pageIndex-2}" th:href="'/information/' + ${user.username}+'/?pageIndex='+${pageNo}+'&&pageSize='+${pageSize}" th:text="${pageNo}"></a>-->
-                            <!--</li>-->
-                            <!--<li th:if="${pageIndex} lt ${page.getTotalPages()}"><a th:href="'/information/' + ${user.username}+'/?pageIndex='+${pageIndex+1}+'&&pageSize='+${pageSize}">下一页</a></li>-->
-                            <!--<li class="disabled" th:if="${pageIndex} ge ${page.getTotalPages()}"><a >下一页</a></li>-->
-                            <!--<li class="disabled" th:if="${pageIndex} eq ${page.getTotalPages()}"><a >尾页</a></li>-->
-                            <!--<li th:if="${pageIndex} ne ${page.getTotalPages()}"><a th:href="'/information/' + ${user.username}+'/?pageIndex='+${page.getTotalPages()}+'&&pageSize='+${pageSize}">尾页</a></li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
                 </div>
             </div>
 
@@ -261,8 +220,6 @@
     </div>
 </div>
 </body>
-
-
 <script th:inline="javascript">
     var username = [[${user.username}]];
     var categoryId = [[${categoryId}]];
@@ -270,9 +227,9 @@
 <script>
 
     $(function() {
-
-        var _pageSize;
         //存储用于搜索
+        var _pageSize=5;
+
 
         // 根据用户名、页面索引、页面大小获取用户列表
         function getInformationByName(pageIndex, pageSize) {
@@ -301,16 +258,12 @@
             });
         }
 
-        // 分页
-        $.tbpage("#mainContainer", function (pageIndex, pageSize) {
-            getInformationByName(pageIndex, pageSize);
-            _pageSize = pageSize;
-        });
 
         // 关键字搜索
         $("#searchInformations").click(function() {
             getInformationByName(0, _pageSize);
         });
+
 
         // 最新\最热切换事件
         $(".nav-item .nav-link").click(function() {
@@ -336,28 +289,10 @@
             $("#keyword").val('');
         });
 
-        //获取分类列表
-        function getCategory() {
-            $.ajax({
-                url: '/infCategory',
-                type: 'GET',
-                success: function (data) {
-                    $("#categoryMain").html(data);
-                },
-                error: function () {
-                    toastr.error("error!");
-                }
-            });
-        }
-
-        //根据分类查询
-        $(".information-content-container").on("click",".information-query-by-category",function (){
-
-            categoryId = $(this).attr('categoryId');
-            getInformationByName(0, _pageSize);
+        // 分页
+        $.tbpage("#mainContainer", function (pageIndex, pageSize) {
+            getInformationByName(pageIndex, _pageSize);
         });
-
-        getCategory();
 
     });
 

@@ -170,7 +170,12 @@ public class ProductionController {
         map.put("userName", user.getUsername());
         map.put("page", pageIndex);
         map.put("size", pageSize);
-        return new ModelAndView("production/productionCenter", map);
+        if (userId.equals(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
+            return new ModelAndView("production/productionCenter", map);
+        } else {
+            map.put("user", user.getUsername());
+            return new ModelAndView("production/productionOtherCenter", map);
+        }
     }
 
     // 分页显示用户的所有作品信息

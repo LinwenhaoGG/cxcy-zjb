@@ -1,6 +1,6 @@
 <!--_meta 作为公共模版分离出去-->
 <!DOCTYPE HTML>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -15,12 +15,12 @@
 <div th:replace="admins/nav::html"></div>
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../index.html" class="maincolor">后台管理首页</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/" class="maincolor">后台管理首页</a>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">资讯类别管理</span>
     </nav>
     <article class="cl pd-20">
-        <input class="btn radius btn-secondary" type="button" value="添加分类">
+        <a th:href="@{/infCategory/add}"><input class="btn radius btn-secondary" type="button" value="添加分类"></a>
         <div class="mt-20">
             <table class="table table-border table-bg">
                 <thead>
@@ -30,18 +30,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>通知公告</td>
+                <tr th:each="category:${informationCategories}">
+                    <td th:text="${category.name}">通知公告</td>
                     <td>
-                        <a class="mr-30" href="./news_classify_alter.html">修改该类别</a>
-                        <a class="mr-30" href="#">删除该类别</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>学校通知</td>
-                    <td>
-                        <a class="mr-30" href="./news_classify_alter.html">修改该类别</a>
-                        <a class="mr-30" href="#">删除该类别</a>
+                        <a class="mr-30" href="javascript:;" th:onclick="'category_update('+${category.id}+')'">修改该类别</a>
+                        <a class="ml-5" href="javascript:;" th:onclick="'category_del(this,'+${category.id}+')'" style="text-decoration:none" title="删除">删除该类别</a>
                     </td>
                 </tr>
                 </tbody>
@@ -49,7 +42,30 @@
         </div>
     </article>
 </section>
+<script type="text/javascript">
 
+    function category_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                type: 'POST',
+                url: '/infCategory/delete',
+                data:{"id":id},
+                dataType: 'json',
+                success: function(){
+                    $(obj).parents("tr").remove();
+                    layer.msg('已删除!',{icon:1,time:1000});
+                },
+                error:function(data) {
+                    layer.msg('操作失败!',{icon: 2,time:1000});
+                },
+            });
+        });
+    }
+
+    function category_update(id){
+        window.location.href = '/infCategory/update?id='+id;
+    }
+</script>
 
 </body>
 </html>

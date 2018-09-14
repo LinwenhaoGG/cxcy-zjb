@@ -183,3 +183,7 @@ function returnHtml(username) {
 
     window.location.href="/production/"+username+"/productionCenter";
 }
+function returnProductionList() {
+
+    window.location.href="/browse/recommend";
+}

@@ -1,17 +1,27 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.Vo.Response;
+import com.cxcy.zjb.springboot.domain.Information;
+import com.cxcy.zjb.springboot.domain.InformationCategory;
 import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.domain.User;
+import com.cxcy.zjb.springboot.service.InformationCategoryService;
+import com.cxcy.zjb.springboot.service.InformationService;
 import com.cxcy.zjb.springboot.service.MatchService;
 import com.cxcy.zjb.springboot.service.UserService;
+import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +35,12 @@ import java.util.Map;
 public class AdminController {
     @Autowired
     private MatchService matchService;
+
+    @Autowired
+    private InformationCategoryService informationCategoryService;
+
+    @Autowired
+    private InformationService informationService;
 
     @Autowired
     private UserService userService;
@@ -121,5 +137,95 @@ public class AdminController {
     @GetMapping("/test")
     public String test() {
         return "admins/test";
+    }
+
+    /**
+     * 管理员查看所有资讯类别
+     * @return
+     */
+    @GetMapping("/toInformationCategorieList")
+    public String toInformationCategorieList(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                                @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                                Model model) {
+        PageRequest request = new PageRequest(page - 1, size);
+        Page<InformationCategory> informationCategories = informationCategoryService.findAllByPage(request);
+        model.addAttribute("informationCategories", informationCategories);
+        return "admins/pages/news/news_classify";
+    }
+
+    /**
+     * 管理员查看所有资讯类别
+     * @return
+     */
+    @GetMapping("/toInformationList")
+    public String toInformation(@RequestParam(name = "keyword",defaultValue = "") String keyword,
+                                Model model) {
+//        PageRequest request = new PageRequest(page - 1, size);
+//        Page<InformationCategory> informationCategories = informationCategoryService.findAllByPage(request);
+        List<Information> informationList = informationService.findByTitleLike(keyword);
+        model.addAttribute("informationList", informationList);
+        return "admins/pages/news/news_information";
+    }
+
+    @GetMapping("/informationAdd")
+    public String informationAdd(Model model) {
+        //获取所有资讯分类
+        List<InformationCategory> categories = informationCategoryService.listInformationCategory();
+        Information information = new Information(null,null,null);
+        model.addAttribute("information", information);
+        model.addAttribute("categories",categories);
+        return "admins/pages/news/news_add";
+    }
+
+    @GetMapping("/informationUpdate")
+    public String informationUpdate(@RequestParam("id") Long id,
+                                    Model model) {
+        //获取所有资讯分类
+        List<InformationCategory> categories = informationCategoryService.listInformationCategory();
+        Information information = informationService.getInformationById(id);
+        model.addAttribute("information", information);
+        model.addAttribute("categories",categories);
+        return "admins/pages/news/news_add";
+    }
+
+    /**
+     * 保存资讯(增加或者修改资讯)
+     * @param information
+     * @return
+     */
+    @PostMapping("/saveInformation")
+    //@PreAuthorize("authentication.name.equals(#username)")
+    public ResponseEntity<Response> saveOrUpdateInformation( @RequestBody Information information) {
+        // 对 Catalog 进行空处理
+        if (information.getInformationCategory().getId() == null) {
+            return ResponseEntity.ok().body(new Response(false,"未选择分类"));
+        }
+        try {
+
+            // 判断是修改还是新增
+
+            if (information.getId()!=null) {
+                Information originalInformation = informationService.getInformationById(information.getId());
+                originalInformation.setTitle(information.getTitle());
+                originalInformation.setContent(information.getContent());
+                originalInformation.setHtmlContent(information.getHtmlContent());
+                originalInformation.setAuthor(information.getAuthor());
+                originalInformation.setInformationCategory(information.getInformationCategory());
+                informationService.saveInformation(originalInformation);
+            } else {
+                //获取当前登录的用户
+                User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                information.setUser(user.getId());
+                informationService.saveInformation(information);
+            }
+
+        } catch (ConstraintViolationException e)  {
+            return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(new Response(false, e.getMessage()));
+        }
+
+        String redirectUrl = "/admins/toInformationList";
+        return ResponseEntity.ok().body(new Response(true, "处理成功", redirectUrl));
     }
 }

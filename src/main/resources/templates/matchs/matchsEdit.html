@@ -272,8 +272,11 @@
 
             $.ajax({
                 url: "/match",
-                data: {id:Id,name: name, content:content,htmlContent:htmlContent,startTime:startTime,
-                    overTime:overTime,lastsigntime:lastsigntime,lastsubmittime:lastsubmittime},
+                type:'POST',
+                dataType:"json",
+                contentType:"application/json;charsetset=UTF-8",
+                data:JSON.stringify({id:Id,name: name, content:content,htmlContent:htmlContent,startTime:startTime,
+                    overTime:overTime,lastsigntime:lastsigntime,lastsubmittime:lastsubmittime}),
                 success:function (result1) {
                     console.log(result1);
                     //var mid = result1.data

@@ -11,6 +11,8 @@
 package com.cxcy.zjb.springboot.service;
 
 import com.cxcy.zjb.springboot.domain.InformationCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -49,4 +51,11 @@ public interface InformationCategoryService {
      * @return
      */
     public InformationCategory getInformationCategoryById(Long id);
+
+    /**
+     * 分页查找方向类别
+     * @param pageable
+     * @return
+     */
+    Page<InformationCategory> findAllByPage(Pageable pageable);
 }

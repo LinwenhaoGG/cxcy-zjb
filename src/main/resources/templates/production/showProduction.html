@@ -154,7 +154,8 @@
 
 </head>
 <body>
-<button class="btn btn-link" type="button" id="returnBut" th:onclick="'returnHtml(\''+*{productionModel[0].userName}+'\')'">返回作品中心</button><br>
+<button class="btn btn-info" style="margin-left: 120px;margin-top: 10px"  type="button" id="aaa" th:onclick="'returnProductionList()'">返回作品列表</button>
+<button class="btn btn-link" type="button" id="returnBut" th:onclick="'returnHtml(\''+*{productionModel[0].userName}+'\')'">作者作品中心</button><br>
 <div class="showPage">
 	<div class="work_title">
 		<!-- 标题 -->

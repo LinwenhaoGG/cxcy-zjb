@@ -1,6 +1,6 @@
 <!--_meta 作为公共模版分离出去-->
 <!DOCTYPE HTML>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,27 +16,30 @@
 
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../index.html" class="maincolor">后台管理首页</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/" class="maincolor">后台管理首页</a>
+        <span class="c-999 en">&gt;</span>
+        <a th:href="@{/admins/toInformationList}" class="maincolor">资讯管理</a>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">资讯详情</span>
     </nav>
     <article class="cl pd-20 show_product">
-        <p class='text-r'>发表时间: 2018年8月31日18:33:59</p>
+        <p class='text-r' th:text="'发表时间:'+${#dates.format(information.createTime, 'yyyy-MM-dd HH:mm:ss')} ">发表时间: 2018年8月31日18:33:59</p>
         <div class="clearfix">
-            <div class="f-l">
-                <p class='text-r'>作者: Tom</p>
-                <p>分类: 前端</p>
+            <div class="f-l" >
+                <p class='text-r'>作者: <span style="color: #00b050"  th:text="${information.author}"></span></p>
+                <p>分类: <span style="color: #00a0e9" th:text="${information.informationCategory.name}"></span></p>
             </div>
+            <br>
             <div class="f-r">
-                <p class="f-l pl-20" style="color: #aaaaaa">浏览量: 123</p>
+                <p class="f-l pl-20" th:text="'浏览量:'+${information.readSize}" style="color: #aaaaaa">浏览量: 123</p>
             </div>
         </div>
         <div class="product clearfix">
-            <div class="product-title">
+            <h2 class="product-title" th:text="'作题:'+${information.title}">
                 作题：习近平同博茨瓦纳总统马西西举行会谈
-                <input class="btn btn-danger radius f-r" type="button" value="删除该资讯">
-            </div>
-            <div class="product-introduct mt-20">
+            </h2>
+            <br>
+            <div class="layui-card-body"  th:utext="${information.htmlContent}">
                 新华社北京8月31日电（记者白洁、许可）国家主席习近平31日在人民大会堂同博茨瓦纳总统马西西举行会谈。
 
                 习近平指出，8年前我访问贵国，亲身感受到博茨瓦纳人民对中国人民的深厚情谊。我们赞赏博茨瓦纳政府致力于中博友好，全面深化对华合作。双方要登高望远，增进互信，深化合作，把两国关系提升到新的水平。

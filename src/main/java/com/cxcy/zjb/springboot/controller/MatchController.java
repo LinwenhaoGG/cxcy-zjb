@@ -54,7 +54,7 @@ public class MatchController {
     @RequestMapping
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
-    public ResultVO saveMatchs(Matchs matchs) {
+    public ResultVO saveMatchs(@RequestBody Matchs matchs) {
         log.info(matchs.toString());
         Matchs re; //数据库保存后返回的值
         //获取当前登录的账号

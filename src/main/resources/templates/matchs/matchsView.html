@@ -25,7 +25,7 @@
         <div class="layui-card-header" th:align="center" th:text="'比赛最终结束时间为：'+${matchs.overTime}">最终结束时间</div>
         <div class="layui-card-header" th:align="center" th:text="'比赛截止报名时间为：'+${matchs.lastsigntime}">截止报名时间</div>
         <div class="layui-card-header" th:align="center" th:text="'比赛截止提交时间为：'+${matchs.lastsubmittime}">截止提交时间</div>
-        <div class="layui-card-body" th:align="center" th:utext="${matchs.htmlContent}">
+        <div class="layui-card-body" th:align="left" th:utext="${matchs.htmlContent}">
             内容
         </div>
     </div>

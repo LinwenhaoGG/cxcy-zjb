@@ -60,6 +60,9 @@
 
 			</ul>
 		</div>
+		<div th:if="${totalSize} eq 0" align="center">
+			<h1 style="color: #00a8c6">没有符合你要求的作品</h1>
+		</div>
 
 		<div class="span10" th:if="${productionPage} != null" >
 			<div id="production" th:each="p : ${productionPage}">
@@ -86,7 +89,7 @@
 				</div>
 
 			</div>
-			<div class="col-md-12 column">
+			<div class="col-md-12 column" th:if="${totalSize} ne 0">
 				<ul class="pagination pull-right">
 					<li class="disabled" th:if="${page} eq '1'" ><a>首页</a></li>
 					<li th:if="${page} ne '1'"><a th:href="${url}+'?page=1&size='+${size}">首页</a></li>

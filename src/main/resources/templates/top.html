@@ -14,7 +14,10 @@
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
             <li>
-                <a href="#">创新创业资讯</a>
+                <a href="/">首页</a>
+            </li>
+            <li>
+                <a href="/information/showAllNotice">创新创业资讯</a>
             </li>
             <li>
                 <a href="/match/list">比赛项目</a>
@@ -70,7 +73,7 @@
                         var li4 = $("<li><a href='/group/list'>比赛中心</a></li>");
 
                     }else if(datas.style == '2'){//如果是老师，就有资讯中心和比赛中心
-                        var li3 = $("<li><a href='#'>资讯中心</a></li>");
+                        var li3 = $("<li><a href='/information/"+datas.username+"'>资讯中心</a></li>");
                         var li4 = $("<li><a href='/match/teacherList'>比赛中心</a></li>" +
                             "<li><a href='/event/teacherEvent'>评审中心</a></li>");
 
