@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title></title>
+	<!-- <link rel="stylesheet" type="text/css" href="showProduction.css"/> -->
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	<script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="bootstrap.min.js"></script>
+	<style>
+	body{
+			background-color:#f5f6f7;
+		}
+		.showPage{
+			background-color: #fff;
+			margin-left: 100px;
+			margin-right: 100px;
+			border-radius: 5px;
+			margin-top: 20px;
+			margin-bottom: 10px;
+			padding:10px 20px;
+			box-shadow: 0 0 10px #ccc;
+			position: relative;
+		}
+		.preview{
+			margin-left: 20px;
+		}
+		.desc,.previewBox,.videoDesc{
+			margin-top: 20px;
+		}
+		.videoDesc{
+			height: 440px;
+			border-bottom: 2px solid #eee;
+		}
+		.descVideo{
+			display: block;
+			margin: 0 auto;
+			width:700px;
+			height:393px;
+			box-shadow: 0 0 30px skyblue;
+		}
+	</style>
+
+</head>
+<body>
+<!-- 嵌入导航栏 -->
+<div th:replace="top::html"></div>
+	<!--  比赛的id -->
+	<input type="hidden" id="eventId" th:value="${eventInfo.id}">
+	<div class="showPage">
+	<h2 class="competitionName" style="text-align: center;font-weight: bold;color:#666" th:text="'比赛名称:'+${eventInfo.name}">比赛名称</h2>
+	<div class="teamName">
+		<p class="team_name" style="font-size: 20px;font-weight: bold;color:#999">小组组名：
+			<span id="team_name_content" style="color: #666;">超级棒棒糖</span>
+		</p>
+	</div>
+
+	<!-- 作品详情 -->
+	<div class="previewBox">
+		<span style="font-size:20px;font-weight:bold;color:#999;">作品详情：</span>
+
+		<a href="" class="btn btn-info preview" target="_blank" id="intro_details">	详情预览</a>
+
+
+	</div>
+
+	<!-- 视频介绍 -->
+	<div class="videoDesc">
+		<p style="font-size:20px;font-weight:bold;color:#999;">视频介绍：</p>
+		<video  controls class="descVideo">
+			<!--http这一段是视频服务器路径+视频映射路径-->
+			<source type="video/mp4" id="video_address"></source >
+		</video>
+	</div>
+	<!-- 评分 -->
+	<div class="score from-group">
+
+		<label>得分：</label>
+		<input type="text" class="form-control" placeholder="请输入评分（0-100）"  onkeyup="value=testScore(value)?value:''" id="getScore">
+	</div>
+
+	<!-- 评论下一个 -->
+	<div style="text-align: right;margin-top: 10px">
+		<button class="btn btn-info" onclick="next()" id="next_btn">下一组</button>
+	</div>
+	
+</div>
+</body>
+</html>
+<script type="text/javascript">
+
+	var data = [];
+	var len = 0;
+	// 发送的数据
+	var sendData = [];
+    // 比赛项目id
+    var eventId = $("#eventId").val();
+	$.ajax({
+		url:"/event/getGroup",
+		type:'POST',
+		data:{eventId:eventId},
+		success:(res)=>{
+		if(res.code==0){
+			data = res.data;
+			console.log(res);
+			if(data.length==1){
+				$("#next_btn").text("提交");
+			}
+			// 小组名
+			$("#team_name_content").text(data[0].name);
+			// 介绍文件地址
+			$("#intro_details").attr({"href":"内网穿透地址"+data[0].docAddress});
+			if(data[0].mvAddress == ""){
+				$(".videoDesc").hide();
+			}else{
+				$("#video_address").attr({"src":"视频服务器路径"+data[0].mvAddress});
+			}
+		}else {
+        alert("该项目所有小组已经评审完毕！");
+        window.location.href="/event/teacherEvent";
+		}
+
+
+		},
+		error:(error)=>{
+			console.log(error);
+		}
+	});
+
+	// 下一个
+	function next(){
+		// console.log($("#team_name_content").text(data[len].name))
+
+		// 判断是否有分数
+		if($("#getScore").val()==""){
+
+		}
+		// 判断是否是最后一个作品
+		else if(len == (data.length-1)){
+			// 获取分数
+			var object = {};
+			object.id = data[len].id;
+			object.achievement = $("#getScore").val();
+			// 把这组分数放入数组
+			sendData.push(object);
+			console.log(sendData);
+			$.ajax({
+				url:"/group/saveGroupList",
+                type: 'POST',
+                dataType: 'json',
+                contentType:"application/json",
+				data:JSON.stringify(sendData),
+				success:()=>{
+				    if(confirm("评审成绩提交成功，是否继续评审题目？")){
+                	window.location.href="/event/groupPreview?eventid="+eventId;
+			}else {
+
+                window.location.href="/event/teacherEvent";
+            }
+				},
+				error:()=>{alert("提交评审成绩时出现异常")
+                window.location.href="/event/groupPreview?eventid="+eventId;
+				}
+			})
+		
+		}
+		else{
+			// 获取分数
+			var object = {};
+			object.id = data[len].id;
+			object.achievement = $("#getScore").val();
+			// 把这组分数放入数组
+			sendData.push(object);
+
+			// 改变页面的值
+			len++;
+			if(len == data.length-1){
+				$("#next_btn").text("提交");		
+			}
+			$("#getScore").val("");
+			// 小组名
+			$("#team_name_content").text(data[len].name);
+			// 介绍文件地址
+			$("#intro_details").attr({"href":"内网穿透地址"+data[len].docAddress});
+			// 视频地址
+			if(data[len].mvAddress == ""){
+				$(".videoDesc").hide();
+			}else{
+				$("#video_address").attr({"src":"视频服务器路径"+data[len].mvAddress});
+			}
+		}
+	}
+
+	// 判断评分是否在0-100正整数范围内
+	function testScore(num){
+		var reg = /^((?!0)\d{1,2}|100)$/;
+  		if(!num.match(reg)){
+   			return false;
+ 		 }else{
+  			 return true;
+  		}
+	}
+</script>

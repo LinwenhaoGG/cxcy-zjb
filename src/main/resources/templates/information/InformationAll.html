@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <!--<meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+    <title>title</title>
+    <link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">
+    <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <style>
+        #search{
+            position: absolute;
+            right: 250px;
+            top: 120px;
+            inline-size: 200px;
+            block-size: 27px;
+        }
+        #searchBut{
+            position: absolute;
+            right: 180px;
+            top: 116px;
+            block-size: 35px;
+            border-radius: 30px;
+            background-color: #01a252;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="top::html"></div>
+
+<!--搜索框-->
+<input type="search" placeholder="搜索新闻标题" id="search" th:value="${keyword}">
+<a id="listAll"><button type="button" id="searchBut" class="btn btn一primary" th:onclick="'javascript:listAll()'">搜索</button></a><br><br>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <input id="catagory" type="hidden"  th:value="${catagory}">
+            <ul class="nav nav-list">
+
+                <li>
+                    <a href="/information/showAllNotice" id="recommend" th:if="${catagory} ne 0">全部新闻</a>
+                    <a  id="recommend" style="background-color: #01a252;color: white" th:if="${catagory} eq 0">全部新闻</a>
+                </li>
+                <li class="nav-header">
+                    新闻分类
+                </li>
+            </ul>
+
+            <ul class="nav nav-list" id="bar">
+
+
+
+            </ul>
+        </div>
+        <div th:if="${informationList.size()} eq 0" align="center">
+            <h1 style="color: #00a8c6">没有符合你要求的作品</h1>
+        </div>
+
+        <div class="span10" th:if="${informationList.size()} ne 0" >
+            <div id="production" th:each="information : ${informationList}">
+
+                <div  style="margin-bottom: 30px;border: 10px solid #cccc;padding: 5px;padding-left: 20px;padding-right: 20px">
+
+                    <a style="font-size: 20px; font-family: cursive;" th:text="${information.title}" th:href="'/information/showOneInformation/'+${information.id}"></a>
+                    <span style="float:right;margin-right: 10px;margin-top: 8px" th:text="${#dates.format(information.createTime,'yyyy-MM-dd')}"></span>
+                    <br>
+
+                </div>
+
+            </div>
+            <div class="col-md-12 column" th:if="${informationList.size()} ne 0">
+                <ul class="pagination pull-right">
+                    <li class="disabled" th:if="${pageIndex} eq '1'" ><a >首页</a></li>
+                    <li th:if="${pageIndex} ne '1'"><a th:href="'/information/showAllNotice?pageIndex=1'+'&&pageSize='+${pageSize}+'&&keyword'+${keyword}+'&&catagory'+${catagory}">首页</a></li>
+                    <li class="disabled" th:if="${pageIndex} le '1'"><a >上一页</a></li>
+                    <li th:if="${pageIndex} gt '1'"><a th:href="'/information/showAllNotice?pageIndex='+${pageIndex-1}+'&&pageSize='+${pageSize}+'&&keyword'+${keyword}+'&&catagory'+${catagory}">上一页</a></li>
+                    <li th:each="pageNo : ${#numbers.sequence(1, page.totalPages)}">
+                        <a th:if="${pageNo} eq ${pageIndex}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+                        <a th:if="${pageNo} ne ${pageIndex} and ${pageNo} le ${pageIndex+2} and ${pageNo} ge ${pageIndex-2}" th:href="'/information/showAllNotice?pageIndex='+${pageNo}+'&&pageSize='+${pageSize}+'&&keyword'+${keyword}+'&&catagory'+${catagory}" th:text="${pageNo}"></a>
+                    </li>
+                    <li th:if="${pageIndex} lt ${page.getTotalPages()}"><a th:href="'/information/showAllNotice?pageIndex='+${pageIndex+1}+'&&pageSize='+${pageSize}+'&&keyword'+${keyword}+'&&catagory'+${catagory}">下一页</a></li>
+                    <li class="disabled" th:if="${pageIndex} ge ${page.getTotalPages()}"><a >下一页</a></li>
+                    <li class="disabled" th:if="${pageIndex} eq ${page.getTotalPages()}"><a >尾页</a></li>
+                    <li th:if="${pageIndex} ne ${page.getTotalPages()}"><a th:href="'/information/showAllNotice?pageIndex='+${page.getTotalPages()}+'&&pageSize='+${pageSize}+'&&keyword'+${keyword}+'&&catagory'+${catagory}">尾页</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function() {
+        find1();
+        open();
+    });
+    function find1() {
+        $.ajax({
+            type:"get",
+            url:"/infCategory/allCatagorys",
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data:{},
+            success:function(datas){
+                $("#bar").html("");
+                $(datas.data).each(
+                    function(){
+                        var ta = $("<li><a href='/information/showAllNotice?catagory="+this.id+"' id='cata"+this.id+"'>"+this.name+"</a></li>");
+                        $("#bar").append.call($("#bar"),ta);
+                    })
+            },
+            error : function(result) {
+                $("#bar").html("无分类信息");
+            }
+        });
+    }
+    function open() {
+        var v = document.getElementById("catagory").value;
+        var obj = document.getElementById("cata"+v);
+        obj.style.backgroundColor = "#01a252";
+        obj.style.color = "white";
+        obj.onclick=" return false; ";
+    }
+
+    function listAll(){
+        var key = $("#search").val();
+        var keyword = '/information/showAllNotice?keyword='+key;
+        console.info(keyword);
+        $("#listAll").attr("href",keyword);
+    }
+</script>
+
+</body>
+</html>
