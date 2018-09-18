@@ -58,4 +58,11 @@ public interface MatchService {
     查询老师编写的比赛
      */
     Page<Matchs> findAllByUser(Long user,Pageable pageable);
+
+    /*
+   查询老师编写的比赛
+    */
+    Page<Matchs> findByNameLike(String name,Pageable pageable);
+
+
 }

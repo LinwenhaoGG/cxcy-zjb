@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -37,6 +39,17 @@ import org.springframework.stereotype.Service;
     @Override
     public Page<Information> findAllByPage(Pageable pageable) {
         return informationRepository.findAll(pageable);
+    }
+    /**
+     * 根据标题按照创建时间降序分页查询
+     * @param title
+     * @param pageable
+     * @return
+     */
+    @Override
+    public Page<Information> findByTitleLike(String title, Pageable pageable) {
+        title = "%" + title +"%";
+        return informationRepository.findByTitleLike(title, pageable);
     }
 
     /**
@@ -121,5 +134,9 @@ import org.springframework.stereotype.Service;
         return page;
     }
 
-
+    @Override
+    public List<Information> findByTitleLike(String string) {
+        string = "%" + string + "%";
+        return informationRepository.findByTitleLike(string);
+    }
 }

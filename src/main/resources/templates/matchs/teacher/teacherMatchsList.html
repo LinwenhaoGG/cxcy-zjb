@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>查看</title>
-    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <style>
         ul{
             list-style: none;
@@ -33,7 +31,7 @@
                             <p th:text="'比赛开始报名时间为:'+${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p th:text="'比赛截止报名时间为:'+${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p th:text="'比赛正式结束时间为:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p>
+                            <p style="text-align: right">
                                 <a  th:href="'/match/edit/'+ ${matchs.id}"><button type="button" class="btn btn-default btn-warning">编辑</button></a>
                                 <a class="btn btn-info"  href="#">功能开发中</a>
                             </p>

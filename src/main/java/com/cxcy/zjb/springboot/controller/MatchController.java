@@ -54,7 +54,7 @@ public class MatchController {
     @RequestMapping
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
-    public ResultVO saveMatchs(Matchs matchs) {
+    public ResultVO saveMatchs(@RequestBody Matchs matchs) {
         log.info(matchs.toString());
         Matchs re; //数据库保存后返回的值
         //获取当前登录的账号
@@ -187,40 +187,19 @@ public class MatchController {
         return new ModelAndView("matchs/teacher/teacherMatchsList", map);
     }
 
-    /**
-     * 管理员查看所有页面
-     * @param map
-     * @return
-     */
-    @GetMapping("/adminslist")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
-    public ModelAndView listMatchsAdmin(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
-                                        @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
-                                         Map map) {
-        //根据开始时间排序
-        Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
-        PageRequest request = new PageRequest(page - 1, size,sort);
-        //根据排序查出分页
-        Page<Matchs> matchsPage = matchService.findAll(request);
-        map.put("matchsPage", matchsPage);
-        map.put("page", page);
-        map.put("size", size);
 
-        return new ModelAndView("matchs/adminsMatchsList", map);
-    }
 
     /**
      * 删除
-     * @param id 要删除的比赛id
+     * @param mid 要删除的比赛id
      * @return
      */
-    @GetMapping("/delete/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_TEACHER')")  // 指定角色权限才能操作方法
-    public ModelAndView deletematchs(@PathVariable(value = "id") long id) {
-
-        matchService.deleteMatchById(id);
-
-        return new ModelAndView("matchs/success");
+    @RequestMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public ResultVO deletematchs(@RequestParam("mid") Long mid) {
+        matchService.deleteMatchById(mid);
+        return ResultUtils.success();
     }
 
     /**

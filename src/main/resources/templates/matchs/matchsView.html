@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>看什么看</title>
-    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"></head>
-    <link rel="stylesheet" th:href="@{/css/layui.css}" href="//res.layui.com/layui/dist/css/layui.css"  media="all">
-    <script th:src="@{/js/bootstrap.min.js}" src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/layui.css}" href="/res.layui.com/layui/dist/css/layui.css"  media="all">
+</head>
 <body >
 <!--<div class="container">-->
     <!--<div class="row clearfix">-->
@@ -27,7 +25,7 @@
         <div class="layui-card-header" th:align="center" th:text="'比赛最终结束时间为：'+${matchs.overTime}">最终结束时间</div>
         <div class="layui-card-header" th:align="center" th:text="'比赛截止报名时间为：'+${matchs.lastsigntime}">截止报名时间</div>
         <div class="layui-card-header" th:align="center" th:text="'比赛截止提交时间为：'+${matchs.lastsubmittime}">截止提交时间</div>
-        <div class="layui-card-body" th:align="center" th:utext="${matchs.htmlContent}">
+        <div class="layui-card-body" th:align="left" th:utext="${matchs.htmlContent}">
             内容
         </div>
     </div>

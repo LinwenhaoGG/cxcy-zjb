@@ -91,7 +91,7 @@
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-            <version>3.0.2.RELEASE</version>
+            <!--<version>3.0.2.RELEASE</version>-->
         </dependency>
         <!--   安全框架security测试类   -->
         <dependency>

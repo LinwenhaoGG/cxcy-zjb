@@ -23,14 +23,14 @@
                         </div>
                 </div>
                 </li>
-                <li class="span4" th:each="eventSignUp : ${eventSignUpList}">
+                <li class="span4" th:each="eventSignUp : ${eventSignUpList}" >
                     <div class="thumbnail">
                         <div class="caption" >
                             <h3 th:text="'报名的比赛项目名为：'+${eventSignUp.event.name}"></h3>
                             <h4 th:text="'参赛小队名称为:'+${eventSignUp.name}"></h4>
                             <p th:text="'报名时间为为:'+ ${#dates.format(eventSignUp.signtime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p>
-                                <a class="btn btn-primary" th:href="'/group/submit/'+ ${eventSignUp.id}" href="#">提交作品</a>
+                            <p style="text-align: right">
+                                <a class="btn btn-primary" th:href="'/group/submit?gid='+ ${eventSignUp.id}" href="#">提交作品</a>
                                 <a id="modal-102974" href="#modal-container-102974"  role="button" class="btn btn-info" data-toggle="modal">查询成绩</a>
                             </p>
                             <div class="modal fade" id="modal-container-102974" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

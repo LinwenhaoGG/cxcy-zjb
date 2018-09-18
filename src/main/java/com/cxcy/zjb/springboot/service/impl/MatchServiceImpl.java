@@ -82,4 +82,10 @@ public class MatchServiceImpl implements MatchService {
     public Page<Matchs> findAllByUser(Long user,Pageable pageable) {
         return matchRepository.findByUser(user,pageable);
     }
+
+    @Override
+    public Page<Matchs> findByNameLike(String name, Pageable pageable) {
+        name = "%" + name + "%";
+        return matchRepository.findByNameLike(name,pageable);
+    }
 }

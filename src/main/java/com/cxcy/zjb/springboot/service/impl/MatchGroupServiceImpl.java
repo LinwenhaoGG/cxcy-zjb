@@ -47,4 +47,19 @@ public class MatchGroupServiceImpl implements MatchGroupService {
     public List<MatchGroup> getMatchGroupByEventOrderByAchievement(Long eid) {
         return matchGroupRepository.findByEventOrderByAchievementDesc(eid);
     }
+
+    @Override
+    public MatchGroup getMatchGroupByid(Long gid) {
+        return matchGroupRepository.findOne(gid);
+    }
+
+    @Override
+    public List<MatchGroup> getMatchGroupToPreview(Long eventid) {
+        return matchGroupRepository.findGroupPreview(eventid);
+    }
+
+    @Override
+    public int getPreviewGroupNum(Long eventid) {
+        return matchGroupRepository.getPreviewGroupNum(eventid);
+    }
 }

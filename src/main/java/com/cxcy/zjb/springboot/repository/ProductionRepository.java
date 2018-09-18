@@ -25,13 +25,6 @@ public interface ProductionRepository extends JpaRepository<Production,Long> {
 
 
     /**
-     * 保存作品
-     * @param production
-     * @return
-     */
-    Production save(Production production);
-
-    /**
      * 根据用户的id查找到对应的所有作品
      * @param user
      * @return

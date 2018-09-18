@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>查看</title>
-    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
-    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <style>
         ul{
             list-style: none;
@@ -33,10 +31,11 @@
                             <p th:text="'比赛开始报名时间为:'+ ${#dates.format(teacherEvent.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p th:text="'比赛开始评审时间为:'+${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p th:text="'比赛正式结束时间为:'+ ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p>
+                            <p style="text-align: right">
                                 <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}
                                 and ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} lt ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} "
-                                   class="btn btn-info"  href="#">作品评审</a>
+                                   class="btn btn-info"  href="#"
+                                th:href="@{/event/groupPreview?eventid=}+${teacherEvent.eId}">作品评审</a>
                                 <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>
                                 <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>
                                 <a class="btn btn-default btn-success" th:href="'/match/preview/'+ ${teacherEvent.mId}" href="#">查看比赛</a>

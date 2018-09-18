@@ -1,50 +1,30 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.Vo.ProductionVo;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.*;
-import com.cxcy.zjb.springboot.domain.es.EsProduction;
 import com.cxcy.zjb.springboot.service.*;
-import com.cxcy.zjb.springboot.service.es.EsProductionService;
+import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
-import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import com.cxcy.zjb.springboot.Vo.ProductionVo;
-import com.cxcy.zjb.springboot.domain.Catagorys;
-import com.cxcy.zjb.springboot.domain.Production;
-import com.cxcy.zjb.springboot.enums.ResultEnum;
-import com.cxcy.zjb.springboot.service.CatagoryService;
-import com.cxcy.zjb.springboot.service.DirectionService;
-import com.cxcy.zjb.springboot.service.ProductionService;
-import com.cxcy.zjb.springboot.service.UserService;
-import com.cxcy.zjb.springboot.utils.CheckWordUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -78,7 +58,7 @@ public class ProductionController {
     /**
      * 定时审核作品:凌晨1点
      */
-    @Scheduled(cron = "* * 5 * * ?")
+    @Scheduled(cron = "* * 1 * * ?")
     public void checkWord() {
         //1.获取所有的未审核作品：0：未审核
         List<Production> list = productionService.findByPCheck(0);
@@ -96,18 +76,10 @@ public class ProductionController {
     }
 
 
-    //    跳转上传作品页面  测试用的
-    @RequestMapping(value = "/totest")
-    public String totest(HttpSession session) {
-        //测试时除非用户登录，否则不能注释掉
-        User user = userService.findByUsername("zpr");
-        session.setAttribute("user", user);
-        return "production/uploadProduction";
-    }
     //    跳转上传作品页面
     @RequestMapping(value = "/uploadProduction")
-    public ModelAndView uploadProduction(HttpSession session,Map map) {
-        User user = (User)session.getAttribute("user");
+    public ModelAndView uploadProduction(Map map) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         map.put("userId",user.getId());
 
         return new ModelAndView("production/uploadProduction", map);
@@ -198,17 +170,22 @@ public class ProductionController {
         map.put("userName", user.getUsername());
         map.put("page", pageIndex);
         map.put("size", pageSize);
-        return new ModelAndView("production/productionCenter", map);
+        if (userId.equals(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
+            return new ModelAndView("production/productionCenter", map);
+        } else {
+            map.put("user", user.getUsername());
+            return new ModelAndView("production/productionOtherCenter", map);
+        }
     }
 
     // 分页显示用户的所有作品信息
     @GetMapping("/{username}/productionCenter")
     /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
-    public ModelAndView showAllProduction(HttpServletRequest request, @PathVariable("username") String username,
+    public ModelAndView showAllProduction(@PathVariable("username") String username,
                                           @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
                                           @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
                                           Map map) {
-        User u = (User) request.getSession().getAttribute("user");
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         //设置分页
         Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
@@ -217,7 +194,7 @@ public class ProductionController {
         User user = userService.findByUsername(username);
         Long uId = user.getId();
 //      根据用户ID查找所有的作品
-        productions = productionService.findByUserAndPCheck(uId, pageable);
+        productions = productionService.findAllByUserId(uId, pageable);
         System.out.println(uId);
         System.out.println(productions.getTotalPages());
         if (productions.getTotalPages() == 0) {
@@ -273,14 +250,13 @@ public class ProductionController {
 
     /**
      * 查看作品
-     * @param request
      * @param pId
      * @param model
      * @return
      */
     @RequestMapping(value="/{pId}")
-    public /*@ResponseBody ResultVO*/ModelAndView getProductionByPId(HttpServletRequest request, @PathVariable("pId") Long pId,Model model) {
-        User user = (User) request.getSession().getAttribute("user");
+    public /*@ResponseBody ResultVO*/ModelAndView getProductionByPId( @PathVariable("pId") Long pId,Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);
 
@@ -618,7 +594,6 @@ public class ProductionController {
 
     /**
      * 新建或者修改作品，成功则返回对应的作品路径
-     * @param request
      * @param pId
      * @param pTitle
      * @param pSummary
@@ -629,12 +604,15 @@ public class ProductionController {
      * @return
      */
     @RequestMapping(value="/saveProduction")
-    public @ResponseBody ResultVO saveProduction(HttpServletRequest request,
-                            @RequestParam(value="pId",required = false) Long pId,@RequestParam("pTitle") String pTitle,
+    public @ResponseBody ResultVO saveProduction(
+                            @RequestParam(value="pId",required = false) Long pId,
+                            @RequestParam("pTitle") String pTitle,
                             @RequestParam(value="pSummary") String pSummary,
-                            @RequestParam("pSort") Integer pSort, @RequestParam(value ="Catagorys") Long Catagorys,
-                            @RequestParam("pContent") MultipartFile pContent, @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
-        User user = (User) request.getSession().getAttribute("user");
+                            @RequestParam("pSort") Integer pSort,
+                            @RequestParam(value ="Catagorys") Long Catagorys,
+                            @RequestParam("pContent") MultipartFile pContent,
+                            @RequestParam(value="videoFile",required = false) MultipartFile videoFile) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             Production production;
             // 判断是修改还是新增
@@ -673,19 +651,18 @@ public class ProductionController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String redirectUrl = "/production/" + pId;
+        String redirectUrl = ""+pId;
         return ResultUtils.success(redirectUrl);
     }
 
     /**
      * 取消或者点赞
-     * @param request
      * @param pId
      * @return
      */
     @GetMapping("/addOrRemoveVote/{pId}")
-    public @ResponseBody ResultVO addOrRemoveVote(HttpServletRequest request,@PathVariable("pId") Long pId) {
-       User user = (User)request.getSession().getAttribute("user");
+    public @ResponseBody ResultVO addOrRemoveVote(@PathVariable("pId") Long pId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try{
            productionService.createVoteOrRemoveVote(pId,user);
        }catch (Exception e){

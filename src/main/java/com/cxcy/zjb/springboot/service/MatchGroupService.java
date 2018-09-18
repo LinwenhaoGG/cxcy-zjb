@@ -46,4 +46,26 @@ public interface MatchGroupService {
      * @return
      */
     public List<MatchGroup> getMatchGroupByEventOrderByAchievement(Long eid);
+
+    /**
+     * 通过id获取该东西
+     * @param gid
+     * @return
+     */
+    public MatchGroup getMatchGroupByid(Long gid);
+
+    /**
+     * 通过比赛项目id查找出队伍，进行评审
+     * @param eventid
+     * @return
+     */
+    public List<MatchGroup> getMatchGroupToPreview(Long eventid);
+
+    /**
+     * 通过id获取还未评审的数量
+     *
+     * @param eventid
+     * @return
+     */
+    public int getPreviewGroupNum(Long eventid);
 }

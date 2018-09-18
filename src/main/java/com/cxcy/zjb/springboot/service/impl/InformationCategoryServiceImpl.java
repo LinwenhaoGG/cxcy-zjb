@@ -14,6 +14,8 @@ import com.cxcy.zjb.springboot.domain.InformationCategory;
 import com.cxcy.zjb.springboot.repository.InformationCategoryRepository;
 import com.cxcy.zjb.springboot.service.InformationCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,5 +78,8 @@ public class InformationCategoryServiceImpl implements InformationCategoryServic
         return informationCategoryRepository.findOne(id);
     }
 
-
+    @Override
+    public Page<InformationCategory> findAllByPage(Pageable pageable) {
+        return informationCategoryRepository.findAll(pageable);
+    }
 }

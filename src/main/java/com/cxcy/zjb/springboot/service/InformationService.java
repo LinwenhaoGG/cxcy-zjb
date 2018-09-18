@@ -15,6 +15,8 @@ import com.cxcy.zjb.springboot.domain.InformationCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -93,4 +95,19 @@ public interface InformationService {
      * @return
      */
     Page<Information> findAllByPage(Pageable pageable);
+
+    /**
+     * 根据标题按照创建时间降序分页查询
+     * @param title
+     * @param pageable
+     * @return
+     */
+    Page<Information> findByTitleLike(String title,Pageable pageable);
+
+    /**
+     * 通过标题查询所有
+     * @param string
+     * @return
+     */
+    List<Information> findByTitleLike(String string);
 }

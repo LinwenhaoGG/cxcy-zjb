@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param pageable
      * @return
      */
-    Page<User> findByNameLike(String name, Pageable pageable);
+   Page<User> findByNameLike(String name, Pageable pageable);
 
     /**
      * 根据用户账号查询用户

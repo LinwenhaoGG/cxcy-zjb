@@ -9,6 +9,7 @@ import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +36,14 @@ public class CommentController {
 
     /**
      * 根据访问的用户发表评论
-     * @param request
      * @param pId
      * @param comment
      * @return
      */
     @PostMapping("/createComment/{pId}")
 //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
-    public @ResponseBody ResultVO createComment(HttpServletRequest request,
-                                                @PathVariable("pId") Long pId,@RequestParam("comment") String comment) {
-        User user = (User)request.getSession().getAttribute("user");
+    public @ResponseBody ResultVO createComment(@PathVariable("pId") Long pId,@RequestParam("comment") String comment) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             productionService.createComment(pId,comment,user);
          } catch (Exception e) {
@@ -59,11 +58,11 @@ public class CommentController {
      * @return
      */
     @GetMapping("/listAllComments")
-    public @ResponseBody ResultVO listAllComments(HttpServletRequest request,@RequestParam("pId")Long pId){
+    public @ResponseBody ResultVO listAllComments(@RequestParam("pId")Long pId){
 //        根据pid获取作品
         List<Comment> comments ;
         List list = new ArrayList();
-        User user1 = (User)request.getSession().getAttribute("user");
+        User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = user1.getUsername();
         try {
             Production production = productionService.findByPId(pId);
@@ -95,16 +94,14 @@ public class CommentController {
 
     /**
      * 根据cId删除相应的用户评论，判断点击删除的用户和评论的用户ID是否同一个
-     * @param request
      * @param pId
      * @param cId
      * @return
      */
     @GetMapping("/deleteComment")
-    public @ResponseBody ResultVO deleteComment(HttpServletRequest request,
-                                                @RequestParam("pId")Long pId,@RequestParam("cId")Long cId) {
+    public @ResponseBody ResultVO deleteComment(@RequestParam("pId")Long pId,@RequestParam("cId")Long cId) {
 //        获取相应的用户id
-        User user = (User)request.getSession().getAttribute("user");
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try{
             Long uId = commentService.findUserByCId(cId);
             Long uId1 = user.getId();
@@ -157,7 +154,6 @@ public class CommentController {
 
     /**
      * 管理员根据cId删除相应的用户评论，判断点击删除的用户和评论的用户ID是否同一个
-     * @param request
      * @param pId
      * @param cId
      * @return
