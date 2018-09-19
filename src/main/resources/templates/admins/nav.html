@@ -45,21 +45,21 @@
 			<dt><i class="Hui-iconfont">&#xe616;</i> 用户认证<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-                    <li><a href="../../../../index.html" th:href="@{/admins/index}" title="学生认证">学生认证</a></li>
-                    <li><a href="../../Identify/teacher.html" th:href="@{/admins/pages/Identify/teacher.html}" title="老师认证">老师认证</a></li>
-                    <li><a href="../../Identify/enterprise.html" th:href="@{/admins/pages/Identify/enterprise.html}" title="企业认证">企业认证</a></li>
-                    <li><a href="../../Identify/admin.html" th:href="@{/admins/pages/Identify/admin.html}" title="管理员认证">管理员认证</a></li>
+                    <li><a href="../../../../index.html" th:href="@{/admin}" title="学生认证">学生认证</a></li>
+                    <li><a href="../../Identify/teacher.html" th:href="@{/admins/toTeacher}" title="老师认证">老师认证</a></li>
+                    <li><a href="../../Identify/enterprise.html" th:href="@{/admins/toEnterprise}" title="企业认证">企业认证</a></li>
+                    <li><a href="../../Identify/admin.html" th:href="@{/admins/toAdmin}" title="管理员认证">管理员认证</a></li>
 				</ul>
 	        </dd>
         </dl>
 		<dl id="menu-picture">
-            <dt><i class="Hui-iconfont">&#xe613;</i> 用户认管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe613;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="./pages/manage/user/studentManage.html" title="学生管理">学生管理</a></li>
-                    <li><a href="./pages/manage/user/teacherManage.html" title="老师管理">老师管理</a></li>
-                    <li><a href="./pages/manage/user/enterpriseManage.html" title="企业管理">企业管理</a></li>
-                    <li><a href="./pages/manage/user/adminManage.html" title="管理员管理">管理员管理</a></li>
+                    <li><a href="/admins/studentManage" th:href="@{/admins/studentManage}" title="学生管理">学生管理</a></li>
+                    <li><a href="./pages/manage/user/teacherManage.html" th:href="@{/admins/teacherManage}" title="老师管理">老师管理</a></li>
+                    <li><a href="./pages/manage/user/enterpriseManage.html" th:href="@{/admins/enterpriseManage}" title="企业管理">企业管理</a></li>
+                    <li><a href="./pages/manage/user/adminManage.html" th:href="@{/admins/adminManage}" title="管理员管理">管理员管理</a></li>
                 </ul>
             </dd>
         </dl>

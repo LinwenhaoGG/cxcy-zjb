@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(userList.getTotalPages());
+        resultList.add(userList.getTotalElements());
         resultList.add(list);
         return resultList;
     }
@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(userList.getTotalPages());
+        resultList.add(userList.getTotalElements());
         resultList.add(list);
         return resultList;
     }
@@ -242,7 +242,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(userList.getTotalPages());
+        resultList.add(userList.getTotalElements());
         resultList.add(list);
         return resultList;
     }
@@ -457,7 +457,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(userList.getTotalPages());
+        resultList.add(userList.getTotalElements());
         resultList.add(list);
         return resultList;
     }

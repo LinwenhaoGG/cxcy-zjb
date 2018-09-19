@@ -70,7 +70,7 @@ public class CompanyServiceImpl implements CompanyService {
          }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(companyList.getTotalPages());
+        resultList.add(companyList.getTotalElements());
         resultList.add(list);
         return resultList;
     }
@@ -100,7 +100,7 @@ public class CompanyServiceImpl implements CompanyService {
         }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(companyList.getTotalPages());
+        resultList.add(companyList.getTotalElements());
         resultList.add(list);
          return resultList;
     }

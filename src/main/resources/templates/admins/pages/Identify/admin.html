@@ -8,6 +8,10 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
+     <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/js/adminValidate.js}"></script>
+    <link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
     <title>后台管理-管理员认证</title>
 </head>
 <body>
@@ -15,65 +19,22 @@
 <div th:replace="admins/nav::html"></div>
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../index.html" class="maincolor">用户认证</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../index.html" th:href="@{/admin}" class="maincolor">用户认证</a>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">管理员认证</span>
     </nav>
     <article class="cl pd-20">
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">管理员姓名：李四</span>
-                <span class="mr-30">手机号码：138001383000</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <input class="btn mt-20 ml-20 btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn mt-20 ml-20 btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
+
+         <!--企业信息展示-->
+        <div id="content">
+
         </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">管理员姓名：李四</span>
-                <span class="mr-30">手机号码：138001383000</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <input class="btn mt-20 ml-20 btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn mt-20 ml-20 btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">管理员姓名：李四</span>
-                <span class="mr-30">手机号码：138001383000</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <input class="btn mt-20 ml-20 btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn mt-20 ml-20 btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
-        </div>
+
+        <!--分页-->
+        <div id="demo2"></div>
+
+
+
     </article>
 </section>
 

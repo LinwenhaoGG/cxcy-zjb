@@ -236,6 +236,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/studentIdentification")
+    @ResponseBody
     public Result studentIdentificationList(@RequestParam(value = "page",defaultValue = "1") Integer page ,//当前页
                                             @RequestParam(value = "size",defaultValue = "2") Integer size ){
 
@@ -256,6 +257,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/teacherIdentification")
+    @ResponseBody
     public Result teacherIdentification(@RequestParam(value = "page",defaultValue = "1") Integer page ,//当前页
                                             @RequestParam(value = "size",defaultValue = "2") Integer size ){
 
@@ -278,6 +280,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/companyIdentification")
+    @ResponseBody
     public Result companyIdentification(@RequestParam(value = "page",defaultValue = "1") Integer page ,//当前页
                                             @RequestParam(value = "size",defaultValue = "2") Integer size ){
 
@@ -301,6 +304,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/adminIdentification")
+    @ResponseBody
     public Result adminIdentification(@RequestParam(value = "page",defaultValue = "1") Integer page ,//当前页
                                             @RequestParam(value = "size",defaultValue = "3") Integer size ){
          try {
@@ -324,8 +328,8 @@ public class AdminController {
      * @return
      */
     @PostMapping("/pass")
+    @ResponseBody
     public Result passIdentification(@RequestParam(value = "id" ,required = true) Long id){
-
 
         try {
 
@@ -348,6 +352,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/rejectPass")
+    @ResponseBody
     public Result rejectPassIdentification(@RequestParam(value = "id" ,required = true) Long id){
 
 
@@ -373,6 +378,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/certifiedStudent")
+    @ResponseBody
     public Result findCertifiedStudent(@RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size" ,defaultValue = "5") int size){
 
@@ -396,6 +402,7 @@ public class AdminController {
      * @return
      */
     @RequestMapping("/findStudent")
+    @ResponseBody
     public Result findSingleStudent(@RequestParam(value = "selectState",required = true) int selectState,
                                     @RequestParam(value = "keywork" , required = true) String keyword,
                                     @RequestParam(value = "page",required = false,defaultValue = "1")int page ,
@@ -427,6 +434,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/certifiedTeacher")
+    @ResponseBody
     public Result findCertifiedTeacher(@RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size" ,defaultValue = "5") int size){
 
@@ -448,6 +456,7 @@ public class AdminController {
      * @return
      */
     @RequestMapping("/findTeacher")
+    @ResponseBody
     public Result findTeacher(@RequestParam(value = "selectState",required = true) int selectState,
                                     @RequestParam(value = "keywork" , required = true) String keyword,
                                     @RequestParam(value = "page",required = false,defaultValue = "1")int page ,
@@ -479,6 +488,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/certifiedCompany")
+    @ResponseBody
     public Result findCertifiedCompany(@RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size" ,defaultValue = "5") int size){
 
@@ -501,6 +511,7 @@ public class AdminController {
      * @return
      */
     @RequestMapping("/findCompany")
+    @ResponseBody
     public Result findCompany(@RequestParam(value = "selectState",required = true) int selectState,
                                     @RequestParam(value = "keywork" , required = true) String keyword,
                                     @RequestParam(value = "page",required = false,defaultValue = "1")int page ,
@@ -532,6 +543,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/certifiedAdmin")
+    @ResponseBody
     public Result findCertifiedAdmin(@RequestParam(value = "page",defaultValue = "1") int page,
                                        @RequestParam(value = "size" ,defaultValue = "5") int size){
 
@@ -554,6 +566,7 @@ public class AdminController {
      * @return
      */
     @RequestMapping("/findAdmin")
+    @ResponseBody
     public Result findAdmin(@RequestParam(value = "selectState",required = true) int selectState,
                                     @RequestParam(value = "keywork" , required = true) String keyword,
                                     @RequestParam(value = "page",required = false,defaultValue = "1")int page ,
@@ -577,5 +590,63 @@ public class AdminController {
             return ResultUtil.error("无法查找该指定管理员！");
         }
     }
+
+    /**
+     * 跳到老师认证管理页面
+     * @return
+     */
+    @RequestMapping("/toTeacher")
+    public String toTeacher(){
+        return "admins/pages/Identify/teacher";
+    }
+    /**
+     * 跳到企业认证管理页面
+     * @return
+     */
+    @RequestMapping("/toEnterprise")
+    public String toEnterprise(){
+        return "admins/pages/Identify/enterprise";
+    }
+    /**
+     * 跳到管理员认证管理页面
+     * @return
+     */
+    @RequestMapping("/toAdmin")
+    public String toAdmin(){
+        return "admins/pages/Identify/admin";
+    }
+    /**
+     * 跳到学生管理页面
+     * @return
+     */
+    @RequestMapping("/studentManage")
+    public String studentManage(){
+        return "admins/pages/manage/user/studentManage";
+    }
+    /**
+     * 跳到老师管理页面
+     * @return
+     */
+    @RequestMapping("/teacherManage")
+    public String teacherManage(){
+        return "admins/pages/manage/user/teacherManage";
+    }
+    /**
+     * 跳到企业管理页面
+     * @return
+     */
+    @RequestMapping("/enterpriseManage")
+    public String enterpriseManage(){
+        return "admins/pages/manage/user/enterpriseManage";
+    }
+    /**
+     * 跳到老师认证管理页面
+     * @return
+     */
+    @RequestMapping("/adminManage")
+    public String adminManage(){
+        return "admins/pages/manage/user/adminManage";
+    }
+
 
 }

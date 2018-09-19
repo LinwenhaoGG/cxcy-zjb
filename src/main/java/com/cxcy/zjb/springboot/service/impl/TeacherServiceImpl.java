@@ -65,9 +65,9 @@ public class TeacherServiceImpl implements TeacherService {
                 list.add(teacherIdentification);
             }
         }
-        //存放学生数据和数据总条数的集合
+        //存放数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(teacherList.getTotalPages());
+        resultList.add(teacherList.getTotalElements());
         resultList.add(list);
         return resultList;
     }
@@ -94,7 +94,7 @@ public class TeacherServiceImpl implements TeacherService {
         }
         //存放学生数据和数据总条数的集合
         ArrayList resultList = new ArrayList();
-        resultList.add(teacherList.getTotalPages());
+        resultList.add(teacherList.getTotalElements());
         resultList.add(list);
         return resultList;
     }

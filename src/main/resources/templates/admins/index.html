@@ -13,6 +13,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../../static/lib/Hui-iconfont/1.0.8/iconfont.css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}"/>
     <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/skin/default/skin.css" id="skin" th:href="@{/h-ui.admin/skin/default/skin.css}"/>
     <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/style.css" th:href="@{/h-ui.admin/css/style.css}"/>
+    <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/js/StudentValidate.js}"></script>
+    <link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
     <title>后台管理-学生认证</title>
 </head>
 <body>
@@ -23,87 +27,13 @@
         <span class="c-666">学生认证</span>
     </nav>
     <article class="cl pd-20">
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">学生姓名：张三</span>
-                <span class="mr-30">学号：20151088888</span>
-                <span class="mr-30">手机号码：138001383000</span>
-                <span class="mr-30">所在学院：信息科学与技术学院</span>
-                <span class="mr-30">专业：计算机科学与技术</span>
-                <span class="mr-30">学年：4年制</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="./static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">民族: 汉族</p>
-                    <p class="f-l mr-40">政治面貌: 共青团员</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        个人简介:<textarea class="textarea" class="ml-15" name="" id="" cols="60" rows="6"></textarea>
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
+        <!--学生信息展示-->
+        <div id="content">
+
         </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">学生姓名：张三</span>
-                <span class="mr-30">学号：20151088888</span>
-                <span class="mr-30">手机号码：138001383000</span>
-                <span class="mr-30">所在学院：信息科学与技术学院</span>
-                <span class="mr-30">专业：计算机科学与技术</span>
-                <span class="mr-30">学年：4年制</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="./static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">民族: 汉族</p>
-                    <p class="f-l mr-40">政治面貌: 共青团员</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        个人简介:<textarea class="textarea" class="ml-15" name="" id="" cols="60" rows="6"></textarea>
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">学生姓名：张三</span>
-                <span class="mr-30">学号：20151088888</span>
-                <span class="mr-30">手机号码：138001383000</span>
-                <span class="mr-30">所在学院：信息科学与技术学院</span>
-                <span class="mr-30">专业：计算机科学与技术</span>
-                <span class="mr-30">学年：4年制</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="./static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">民族: 汉族</p>
-                    <p class="f-l mr-40">政治面貌: 共青团员</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        个人简介:<textarea class="textarea" class="ml-15" name="" id="a" cols="60" rows="6"></textarea>
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
-        </div>
+        <!--分页-->
+        <div id="demo2"></div>
+
     </article>
 </section>
 
