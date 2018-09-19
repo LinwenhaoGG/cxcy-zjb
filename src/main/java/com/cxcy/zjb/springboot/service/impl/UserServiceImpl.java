@@ -261,11 +261,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         switch (selectState){
             case 1 :
                 //根据真实姓名来查(可能会有多个用户)
-               userList =  repository.findByNameAndStyleAndState(keyword,1,1,pageRequest);
+               userList =  repository.findByNameContainingAndStyleAndState(keyword,1,1,pageRequest);
                 break;
             case 2 :
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneAndStyleAndState(keyword,1,1,pageRequest) ;
+               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,1,1,pageRequest) ;
                 break;
             case 3 :
                 //根据用户账号来查(肯定会是单一的用户)
@@ -283,6 +283,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
         //获取学生的全部信息
         if (selectState != 3 && userList!= null) {  if (userList != null){
+            resultList.add(userList.getTotalElements());
             for (User user: userList
                     ) {
                 UserIdentification userIdentification = new UserIdentification();
@@ -312,11 +313,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         switch (selectState){
             case 1 :
                 //根据真实姓名来查(可能会有多个用户)
-               userList =  repository.findByNameAndStyleAndState(keyword,2,1,pageRequest);
+               userList =  repository.findByNameContainingAndStyleAndState(keyword,2,1,pageRequest);
                 break;
             case 2 :
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneAndStyleAndState(keyword,2,1,pageRequest) ;
+               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,2,1,pageRequest) ;
                 break;
             case 3 :
                 //根据用户账号来查(肯定会是单一的用户)
@@ -334,6 +335,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
         //获取学生的全部信息
         if (selectState != 3 && userList!= null) {  if (userList != null){
+            resultList.add(userList.getTotalElements());
            for (User user : userList
                     ) {
                 TeacherIdentification teacherIdentification = new TeacherIdentification();
@@ -362,7 +364,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         switch (selectState){
             case 1 :
                 //根据企业名称来查
-               List<Company>  companyList =  companyRepository.findByName(keyword);
+               List<Company>  companyList =  companyRepository.findByNameContaining(keyword);
                Set<Long> idSet = new HashSet<Long>();
                 for (Company company: companyList
                      ) {
@@ -390,7 +392,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
                 break;
             case 2 :
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneAndStyleAndState(keyword,3,1,pageRequest) ;
+               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,3,1,pageRequest) ;
                 break;
             case 3 :
                 //根据企业社会代号来查(肯定会是单一的用户)
@@ -423,6 +425,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
         //获取学生的全部信息
         if (selectState== 2 && userList!= null) {  if (userList != null){
+            resultList.add(userList.getTotalElements());
            for (User user : userList
                     ) {
                 CompanyIdentification companyIdentification = new CompanyIdentification();
@@ -475,11 +478,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         switch (selectState){
             case 1 :
                 //根据真实姓名来查(可能会有多个用户)
-               userList =  repository.findByNameAndStyleAndState(keyword,4,1,pageRequest);
+               userList =  repository.findByNameContainingAndStyleAndState(keyword,4,1,pageRequest);
                 break;
             case 2 :
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneAndStyleAndState(keyword,4,1,pageRequest) ;
+               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,4,1,pageRequest) ;
                 break;
             case 3 :
                 //根据用户账号来查(肯定会是单一的用户)
@@ -493,6 +496,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
         //获取学生的全部信息
         if (selectState != 3 && userList!= null) {  if (userList != null){
+            resultList.add(userList.getTotalElements());
             for (User user: userList
                     ) {
                 BriefUser briefUser = new BriefUser();

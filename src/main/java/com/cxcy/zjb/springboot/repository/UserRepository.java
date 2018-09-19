@@ -64,11 +64,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param name
      * @return
      */
-    public Page<User> findByNameAndStyleAndState(@Param("name") String name,@Param("style")int style,@Param("state")int state, Pageable pageable);
-    /**
+    public Page<User> findByNameContainingAndStyleAndState(@Param("name") String name,@Param("style")int style,@Param("state")int state, Pageable pageable);
+
+     /**
      *根据手机号码查询用户
      */
-    public Page<User> findByTelephoneAndStyleAndState(@Param("telephone") String telephone,@Param("style")int style,@Param("state")int state, Pageable pageable);
+    public Page<User> findByTelephoneContainingAndStyleAndState(@Param("telephone") String telephone,@Param("style")int style,@Param("state")int state, Pageable pageable);
     /**
      * 根据用户账号，查找是否存在已认证成功的用户
      */

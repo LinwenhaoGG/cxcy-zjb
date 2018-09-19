@@ -8,6 +8,10 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
+    <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/js/enterpriseManage.js}"></script>
+    <link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
     <title>后台管理</title>
 </head>
 <body>
@@ -20,47 +24,46 @@
         <span class="c-666">企业管理</span>
     </nav>
     <article class="cl pd-20">
-        <div class="searchUser">
-            <span class="ml-30">查询条件：</span>
-            <span class="select-box">
-                <select class="select" size="1" name="searchLimit">
-                    <option value="name" selected>企业(公司)名称</option>
-                    <option value="phone">手机号码</option>
-                    <option value="account">企业社会代码</option>
-                </select>
-            </span>
-            <input type="text" class="input-text" placeholder="请输入查询关键字...">
-            <input class="btn btn-primary radius" type="button" value="查询">
+
+        <!--企业信息展示-->
+        <div>
+            <div class="searchUser">
+                <span class="ml-30">查询条件：</span>
+                <span class="select-box">
+                    <select class="select" size="1" name="searchLimit">
+                        <option value="1" selected>企业(公司)名称</option>
+                        <option value="2">手机号码</option>
+                        <option value="3">企业社会代码</option>
+                    </select>
+                </span>
+                <input type="text" class="input-text" id="keywork"  placeholder="请输入查询关键字...">
+                <input class="btn btn-primary radius" id="findId" type="button" value="查询">
+            </div>
+            <div class="searchResult mt-20">
+                <!--头像、邮箱、真实姓名、认证状态、账号名、手机号码、公司名称、企业社会代码、企业法定代表人、公司类型、联系人、联系电话、营业执照图片-->
+                <table class="table table-border table-bg">
+                    <thead>
+                    <tr>
+                        <th>企业(公司)名称</th>
+                        <th>头像</th>
+                        <th>企业社会代码</th>
+                        <th>公司类型</th>
+                        <th>联系人</th>
+                        <th>联系电话</th>
+                        <th>认证状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="content">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="searchResult mt-20">
-            <!--头像、邮箱、真实姓名、认证状态、账号名、手机号码、公司名称、企业社会代码、企业法定代表人、公司类型、联系人、联系电话、营业执照图片-->
-            <table class="table table-border table-bg">
-                <thead>
-                <tr>
-                    <th>企业(公司)名称</th>
-                    <th>头像</th>
-                    <th>企业社会代码</th>
-                    <th>公司类型</th>
-                    <th>联系人</th>
-                    <th>联系电话</th>
-                    <th>认证状态</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>XXX企业</td>
-                    <td><img src="../../../static/head.jpg" alt="" style="width: 80px;height: 80px;"></td>
-                    <th>232656</th>
-                    <th>小型公司</th>
-                    <th>王五</th>
-                    <th>138001383000</th>
-                    <th>已认证</th>
-                    <th><a href="./alter/enterpriseAlter.html">修改</a></th>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+
+        <!--分页-->
+        <div id="demo2"></div>
+
     </article>
 </section>
 

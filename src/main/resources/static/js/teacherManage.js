@@ -1,23 +1,20 @@
-function modaldemo(){
-    $("#modal-demo").modal("show")
-}
 $(function () {
     //数据总条数
     var totalPage = 0;
     //每页条数
     // var limitNum = 5;
-    findCertifiedStudent(1);
+    certifiedTeacher(1);
     page();
-    //查询已认证学生
+    //查询已认证老师
     find();
 })
-//查询已认证学生,带关键字
+//查询已认证老师,带关键字
  function  find(){
     $("#findId").click(function () {
         var selectState =  $("select option:selected").val();
         var keywork = $("#keywork").val();
         $.ajax({
-            url:"/admins/findStudent",
+            url:"/admins/findTeacher",
             data:{
                "selectState":selectState,
                 "keywork":keywork
@@ -39,16 +36,17 @@ $(function () {
                 $("#content").html("");
                 for (var i = 1 ; i < data.length ; i++){
                     var arr = data[i];
-                    var name = arr.name;//用户真实姓名
+                    var name = arr.name;//教师姓名
                     var avatar = arr.avatar; //头像
-                    var number = arr.number;//学号
+                    var number = arr.number;//教师工号
                     var telephone = arr.telephone; // 手机号码
-                    var college = arr.college; //学院信息
+                    var school = arr.school; //在职学校
+                    var college = arr.college; //所在学院
                     var state = '已认证'; //账号状态
                     var id = arr.id; //id
 
                     var content = "<tr><td class='id' style='display:none'>"+id+"</td><td>"+name+"</td><td><img src='/img/"+avatar+"' alt='' style='width: 80px;height: 80px;'></td><th>"+number+"</th>"+
-                                "<th>"+telephone+"</th><th>"+college+"</th><th>"+state+"</th><th><a href='/admins/toAlterStudent?id="+id+"' th:href='@{/admins/toAlterStudent?id="+id+"}'>修改</a></th></tr>";
+                                "<th>"+telephone+"</th><th>"+school+"</th><th>"+college+"</th><th>"+state+"</th><th><a href='/admins/toAlterTeacher?id="+id+"' th:href='@{/admins/toAlterTeacher?id="+id+"}'>修改</a></th></tr>";
 
                     $("#content").append(content);
                 }
@@ -82,19 +80,19 @@ function page() {
                     if(!first){
                         // 查询对应页的数据
                         $("#content").html("");
-                        findCertifiedStudent(obj.curr);
+                        certifiedTeacher(obj.curr);
                         // page();
                     }
                   }
 				});
 	});
 }
-//查询已认证学生列表，不带关键字
-function findCertifiedStudent(data) {
+//查询已认证老师列表，不带关键字
+function certifiedTeacher(data) {
     var page = data;
     var size = 5;
     $.ajax({
-        url:"/admins/certifiedStudent",
+        url:"/admins/certifiedTeacher",
         data:{
             "page":page,
             "size":size
@@ -110,16 +108,17 @@ function findCertifiedStudent(data) {
             var data = data[1];
             for (var i = 0 ; i < data.length ; i++){
                 var arr = data[i];
-                var name = arr.name;//用户真实姓名
+                var name = arr.name;//教师姓名
                 var avatar = arr.avatar; //头像
-                var number = arr.number;//学号
+                var number = arr.number;//教师工号
                 var telephone = arr.telephone; // 手机号码
-                var college = arr.college; //学院信息
+                var school = arr.school; //在职学校
+                var college = arr.college; //所在学院
                 var state = '已认证'; //账号状态
                 var id = arr.id; //id
 
                 var content = "<tr><td class='id' style='display:none'>"+id+"</td><td>"+name+"</td><td><img src='/img/"+avatar+"' alt='' style='width: 80px;height: 80px;'></td><th>"+number+"</th>"+
-                            "<th>"+telephone+"</th><th>"+college+"</th><th>"+state+"</th><th><a href='/admins/toAlterStudent?id="+id+"' th:href='@{/admins/toAlterStudent?id="+id+"}'>修改</a></th></tr>";
+                            "<th>"+telephone+"</th><th>"+school+"</th><th>"+college+"</th><th>"+state+"</th><th><a href='/admins/toAlterTeacher?id="+id+"' th:href='@{/admins/toAlterTeacher?id="+id+"}'>修改</a></th></tr>";
 
                 $("#content").append(content);
 

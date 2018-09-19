@@ -404,7 +404,7 @@ public class AdminController {
     @RequestMapping("/findStudent")
     @ResponseBody
     public Result findSingleStudent(@RequestParam(value = "selectState",required = true) int selectState,
-                                    @RequestParam(value = "keywork" , required = true) String keyword,
+                                    @RequestParam(value = "keywork" , required = true ) String keyword,
                                     @RequestParam(value = "page",required = false,defaultValue = "1")int page ,
                                     @RequestParam(value = "size",required = false,defaultValue = "5") int size
                                     ){
@@ -413,8 +413,8 @@ public class AdminController {
          try {
            //1，根据关键字查找指定用户
             PageRequest pageRequest = new PageRequest(page - 1,size);
-            ArrayList list = userService.findSingleStudent(selectState,keyword,pageRequest);
-
+            ArrayList list  = new ArrayList();
+            list = userService.findSingleStudent(selectState,keyword,pageRequest);
             if (list!=null){
                 return ResultUtil.success(list);
             }else {
@@ -478,7 +478,6 @@ public class AdminController {
             e.printStackTrace();
             return ResultUtil.error("暂时无法查找指定老师！");
         }
-
     }
 
      /**
@@ -518,8 +517,6 @@ public class AdminController {
                                     @RequestParam(value = "size",required = false,defaultValue = "5") int size
                                     )
     {
-
-
          try {
             //1，根据关键字查找指定企业用户
             PageRequest pageRequest = new PageRequest(page - 1,size);
@@ -648,5 +645,38 @@ public class AdminController {
         return "admins/pages/manage/user/adminManage";
     }
 
-
+    /**
+     * 跳到学生管理页面
+     * @return
+     */
+    @RequestMapping("/toAlterStudent")
+    public String toAlterStudent(@RequestParam("id") Long id,Model model){
+        model.addAttribute("id",id);
+        System.out.println("id:"+id);
+        return "admins/pages/manage/user/alter/studentAlter";
+    }
+    /**
+     * 跳到老师管理页面
+     * @return
+     */
+    @RequestMapping("/toAlterTeacher")
+    public String toAlterTeacher(){
+        return "admins/pages/manage/user/alter/teacherAlter";
+    }
+    /**
+     * 跳到企业管理页面
+     * @return
+     */
+    @RequestMapping("/toAlterEnterprise")
+    public String toAlterEnterprise(){
+        return "admins/pages/manage/user/alter/enterpriseAlter";
+    }
+    /**
+     * 跳到管理员管理页面
+     * @return
+     */
+    @RequestMapping("/toAlterAdmin")
+    public String toAlterAdmin(){
+        return "admins/pages/manage/user/alter/adminAlter";
+    }
 }

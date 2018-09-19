@@ -2,7 +2,7 @@ $(function () {
     //数据总条数
     var totalPage = 0;
     //每页条数
-    // var limitNum = 2;
+    // var limitNum = 3;
     adminIdentification(1);
     pass();
     refuse();
@@ -18,7 +18,7 @@ function page() {
 				laypage.render({
 					elem: 'demo2',
 					count: totalPage,
-					limit: 2,
+					limit: 3,
 					theme: '#1E9FFF',
                     jump: function(obj, first){
                     //obj包含了当前分页的所有参数，比如：
@@ -39,7 +39,7 @@ function page() {
 //查询未认证企业列表
 function adminIdentification(data) {
     var page = data;
-    var size = 2;
+    var size = 3;
     $.ajax({
         url:"/admins/adminIdentification",
         data:{

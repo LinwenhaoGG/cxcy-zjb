@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * @since 1.0.0
  */
 public interface CompanyRepository extends JpaRepository<Company,Long> {
-   public ArrayList<Company>  findByName(@Param("name") String name);
+   public ArrayList<Company>  findByNameContaining(@Param("name") String name);
 
    public ArrayList<Company> findByNumber(@Param("number")String number);
 
