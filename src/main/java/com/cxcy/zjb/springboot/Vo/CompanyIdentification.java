@@ -49,4 +49,6 @@ public class CompanyIdentification {
 
     private String phone; //联系电话
 
+    private int state;//认证状态
+
 }

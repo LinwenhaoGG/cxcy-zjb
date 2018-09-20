@@ -51,5 +51,5 @@ public class TeacherIdentification {
 
     private String avatar = "611.jpg"; // 默认头像图片地址
 
-
+    private int state;//认证状态
 }

@@ -13,15 +13,6 @@ package com.cxcy.zjb.springboot.service.impl;
 import com.cxcy.zjb.springboot.Vo.*;
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.repository.*;
-
-import com.cxcy.zjb.springboot.Vo.UserMessage;
-import com.cxcy.zjb.springboot.domain.Inmessage;
-import com.cxcy.zjb.springboot.domain.Student;
-import com.cxcy.zjb.springboot.domain.User;
-import com.cxcy.zjb.springboot.repository.InMessageRepository;
-import com.cxcy.zjb.springboot.repository.StudentRepository;
-
-import com.cxcy.zjb.springboot.repository.UserRepository;
 import com.cxcy.zjb.springboot.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +27,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈用户service实现层〉
  *
  * @author KOLO
@@ -45,7 +37,7 @@ import java.util.Set;
  * @since 1.0.0
  */
 @Service
-public class UserServiceImpl implements UserService,UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepository repository;
     @Autowired
@@ -59,7 +51,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Override
     public User findUser(User user) {
-        return repository.findByUsernameAndPassword(user.getUsername(),user.getPassword());
+        return repository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
 
     @Override
@@ -73,28 +65,28 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         ArrayList<Inmessage> list = inMessageRepository.findByReceiverIdAndIsReadOrderByInsertTime(userId, 0);
         //2,有几个人的消息未查阅
         Set<String> UserIdSet = new HashSet<>();
-        for (Inmessage inmessage:
-             list) {
+        for (Inmessage inmessage :
+                list) {
             UserIdSet.add(inmessage.getSenderId());
         }
         //3,遍历set
-        ArrayList<UserMessage> messageArrayList  = new ArrayList<UserMessage>();
+        ArrayList<UserMessage> messageArrayList = new ArrayList<UserMessage>();
 
-        for (String senderId:UserIdSet
-             ) {
+        for (String senderId : UserIdSet
+                ) {
             int num = 0;
             User user = repository.findOne(Long.parseLong(senderId));
 
-            for (Inmessage inmessage:list
-                 ) {
-                if (inmessage.getSenderId().equalsIgnoreCase(senderId)){
+            for (Inmessage inmessage : list
+                    ) {
+                if (inmessage.getSenderId().equalsIgnoreCase(senderId)) {
                     num++;
                 }
 
             }
             UserMessage userMessage = new UserMessage();
             userMessage.setMessageNum(num);
-            userMessage.setUserId(user.getId()+"");
+            userMessage.setUserId(user.getId() + "");
             userMessage.setUserImage(user.getAvatar());
             userMessage.setUserName(user.getUsername());
             messageArrayList.add(userMessage);
@@ -116,6 +108,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     /**
      * 根据用户账号来查询用户信息
+     *
      * @param uName
      * @return
      */
@@ -126,7 +119,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Override
     public User findUserInfoByNameAndPwd(String username, String pwd) {
-        return repository.findByUsernameAndPassword(username,pwd);
+        return repository.findByUsernameAndPassword(username, pwd);
     }
 
 
@@ -142,6 +135,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     /**
      * //学生认证：查看未认证的学生信息
+     *
      * @param pageRequest
      * @return
      */
@@ -172,6 +166,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     /**
      * 管理员：查看未认证的管理员信息
+     *
      * @param pageRequest
      * @return
      */
@@ -180,11 +175,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         Page<User> userList = repository.findByStateAndStyle(2, 4, pageRequest);
         //遍历集合，将其管理员详细信息查询出来
         ArrayList<AdminIdentification> list = new ArrayList<AdminIdentification>();
-        if (userList != null){
-            for (User user: userList
+        if (userList != null) {
+            for (User user : userList
                     ) {
                 AdminIdentification adminIdentification = new AdminIdentification();
-                BeanUtils.copyProperties(user,adminIdentification);
+                BeanUtils.copyProperties(user, adminIdentification);
                 list.add(adminIdentification);
             }
         }
@@ -197,6 +192,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     /**
      * 管理员通过认证功能
+     *
      * @param id
      * @return
      */
@@ -207,14 +203,16 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         user.setState(1);
         return repository.save(user);
     }
-     /**
+
+    /**
      * 管理员拒绝通过用户认证功能
+     *
      * @param id
      * @return
      */
     @Override
     public User rejectPassUserIdentification(Long id) {
-       User user = repository.findOne(id);
+        User user = repository.findOne(id);
         //通过认证
         user.setState(3);
         return repository.save(user);
@@ -225,17 +223,17 @@ public class UserServiceImpl implements UserService,UserDetailsService {
      */
     @Override
     public ArrayList findCertifiedStudent(PageRequest pageRequest) {
-      Page<User> userList = repository.findByStateAndStyle(1, 1, pageRequest);
+        Page<User> userList = repository.findByStateAndStyle(1, 1, pageRequest);
         //遍历集合，将其学生详细信息查询出来
         ArrayList<UserIdentification> list = new ArrayList<UserIdentification>();
-        if (userList != null){
-            for (User user: userList
+        if (userList != null) {
+            for (User user : userList
                     ) {
                 UserIdentification userIdentification = new UserIdentification();
-                BeanUtils.copyProperties(user,userIdentification);
+                BeanUtils.copyProperties(user, userIdentification);
                 Long studentId = user.getStudent();
                 Student student = studentRepository.findOne(studentId);
-                BeanUtils.copyProperties(student,userIdentification);
+                BeanUtils.copyProperties(student, userIdentification);
                 userIdentification.setId(user.getId());
                 list.add(userIdentification);
             }
@@ -249,95 +247,83 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     /**
      * 根据关键字查找指定用户
+     *
      * @param selectState
      * @param keyword
      * @return
      */
     @Override
-    public ArrayList findSingleStudent(int selectState, String keyword,PageRequest pageRequest) {
+    public ArrayList findSingleStudent(int selectState, String keyword, PageRequest pageRequest) {
         //根据selectState
         Page<User> userList = null;
-        ArrayList resultList  = new ArrayList();
-        switch (selectState){
-            case 1 :
+        ArrayList resultList = new ArrayList();
+        switch (selectState) {
+            case 1:
                 //根据真实姓名来查(可能会有多个用户)
-               userList =  repository.findByNameContainingAndStyleAndState(keyword,1,1,pageRequest);
+                userList = repository.findByNameContainingAndStyleAndState(keyword, 1, 1, pageRequest);
                 break;
-            case 2 :
+            case 2:
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,1,1,pageRequest) ;
+                userList = repository.findByTelephoneContainingAndStyleAndState(keyword, 1, 1, pageRequest);
                 break;
-            case 3 :
+            case 3:
                 //根据用户账号来查(肯定会是单一的用户)
-               User user = repository.findByUsernameAndState(keyword,1);
-               resultList.add(1);
-                   UserIdentification userIdentification = new UserIdentification();
-                    BeanUtils.copyProperties(user,userIdentification);
-                    Long studentId = user.getStudent();
-                    Student student = studentRepository.findOne(studentId);
-                    BeanUtils.copyProperties(student,userIdentification);
-                    userIdentification.setId(user.getId());
-               resultList.add(userIdentification);
+                User user = repository.findByUsernameAndState(keyword, 1);
+                resultList.add(1);
+                UserIdentification userIdentification = new UserIdentification();
+                BeanUtils.copyProperties(user, userIdentification);
+                Long studentId = user.getStudent();
+                Student student = studentRepository.findOne(studentId);
+                BeanUtils.copyProperties(student, userIdentification);
+                userIdentification.setId(user.getId());
+                resultList.add(userIdentification);
                 break;
         }
 
         //获取学生的全部信息
-        if (selectState != 3 && userList!= null) {  if (userList != null){
-            resultList.add(userList.getTotalElements());
-            for (User user: userList
-                    ) {
-                UserIdentification userIdentification = new UserIdentification();
-                BeanUtils.copyProperties(user,userIdentification);
-                Long studentId = user.getStudent();
-                Student student = studentRepository.findOne(studentId);
-                BeanUtils.copyProperties(student,userIdentification);
-                userIdentification.setId(user.getId());
-                resultList.add(userIdentification);
+        if (selectState != 3 && userList != null) {
+            if (userList != null) {
+                resultList.add(userList.getTotalElements());
+                for (User user : userList
+                        ) {
+                    UserIdentification userIdentification = new UserIdentification();
+                    BeanUtils.copyProperties(user, userIdentification);
+                    Long studentId = user.getStudent();
+                    Student student = studentRepository.findOne(studentId);
+                    BeanUtils.copyProperties(student, userIdentification);
+                    userIdentification.setId(user.getId());
+                    resultList.add(userIdentification);
+                }
             }
-            }
-         }
-         return resultList;
+        }
+        return resultList;
     }
 
     /**
      * 根据关键字查找指定老师
+     *
      * @param selectState
      * @param keyword
      * @return
      */
     @Override
     public ArrayList findTeacher(int selectState, String keyword, PageRequest pageRequest) {
-         //根据selectState
+        //根据selectState
         Page<User> userList = null;
-        ArrayList resultList  = new ArrayList();
-        switch (selectState){
-            case 1 :
+        ArrayList resultList = new ArrayList();
+        switch (selectState) {
+            case 1:
                 //根据真实姓名来查(可能会有多个用户)
-               userList =  repository.findByNameContainingAndStyleAndState(keyword,2,1,pageRequest);
+                userList = repository.findByNameContainingAndStyleAndState(keyword, 2, 1, pageRequest);
                 break;
-            case 2 :
+            case 2:
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,2,1,pageRequest) ;
+                userList = repository.findByTelephoneContainingAndStyleAndState(keyword, 2, 1, pageRequest);
                 break;
-            case 3 :
+            case 3:
                 //根据用户账号来查(肯定会是单一的用户)
-               User user = repository.findByUsernameAndState(keyword,1);
-               resultList.add(1);
-                   TeacherIdentification teacherIdentification = new TeacherIdentification();
-                    BeanUtils.copyProperties(user,teacherIdentification);
-                    Long teacherId = user.getTeacher();
-                    Teacher teacher = teacherRepository.findOne(teacherId);
-                    BeanUtils.copyProperties(teacher,teacherIdentification);
-                    teacherIdentification.setId(user.getId());
-               resultList.add(teacherIdentification);
-                break;
-        }
-
-        //获取学生的全部信息
-        if (selectState != 3 && userList!= null) {  if (userList != null){
-            resultList.add(userList.getTotalElements());
-           for (User user : userList
-                    ) {
+                User user = repository.findByUsernameAndState(keyword, 1);
+                resultList.add(1);
                 TeacherIdentification teacherIdentification = new TeacherIdentification();
                 BeanUtils.copyProperties(user, teacherIdentification);
                 Long teacherId = user.getTeacher();
@@ -345,89 +331,59 @@ public class UserServiceImpl implements UserService,UserDetailsService {
                 BeanUtils.copyProperties(teacher, teacherIdentification);
                 teacherIdentification.setId(user.getId());
                 resultList.add(teacherIdentification);
+                break;
+        }
+
+        //获取学生的全部信息
+        if (selectState != 3 && userList != null) {
+            if (userList != null) {
+                resultList.add(userList.getTotalElements());
+                for (User user : userList
+                        ) {
+                    TeacherIdentification teacherIdentification = new TeacherIdentification();
+                    BeanUtils.copyProperties(user, teacherIdentification);
+                    Long teacherId = user.getTeacher();
+                    Teacher teacher = teacherRepository.findOne(teacherId);
+                    BeanUtils.copyProperties(teacher, teacherIdentification);
+                    teacherIdentification.setId(user.getId());
+                    resultList.add(teacherIdentification);
+                }
             }
-            }
-         }
-         return resultList;
+        }
+        return resultList;
     }
+
     /**
      * 根据关键字查找指定企业
+     *
      * @param selectState
      * @param keyword
      * @return
      */
     @Override
     public ArrayList findCompany(int selectState, String keyword, PageRequest pageRequest) {
-      //根据selectState
+        //根据selectState
         Page<User> userList = null;
-        ArrayList resultList  = new ArrayList();
-        switch (selectState){
-            case 1 :
+        ArrayList resultList = new ArrayList();
+        switch (selectState) {
+            case 1:
                 //根据企业名称来查
-               List<Company>  companyList =  companyRepository.findByNameContaining(keyword);
-               Set<Long> idSet = new HashSet<Long>();
-                for (Company company: companyList
-                     ) {
+                List<Company> companyList = companyRepository.findByNameContaining(keyword);
+                Set<Long> idSet = new HashSet<Long>();
+                for (Company company : companyList
+                        ) {
                     idSet.add(company.getId());
                 }
                 //寻找该用户其他信息
                 User user = null;
-                for (Long id: idSet
-                     ) {
-                    user = repository.findByStyleAndStateAndCompany(3,1,id);
-                    if (user!=null){
-                        break;
-                    }
-                }
-               resultList.add(1);
-                   CompanyIdentification companyIdentification = new CompanyIdentification();
-                    BeanUtils.copyProperties(user,companyIdentification);
-                    Long companyId = user.getCompany();
-                    Company company = companyRepository.findOne(companyId);
-                    BeanUtils.copyProperties(company,companyIdentification);
-                    companyIdentification.setId(user.getId());
-                    companyIdentification.setName(user.getName());
-                    companyIdentification.setCompanyName(company.getName());
-               resultList.add(companyIdentification);
-                break;
-            case 2 :
-                //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,3,1,pageRequest) ;
-                break;
-            case 3 :
-                //根据企业社会代号来查(肯定会是单一的用户)
-                ArrayList<Company> companyList1 = companyRepository.findByNumber(keyword);
-                Set<Long> idSet1 = new HashSet<Long>();
-                for (Company company1: companyList1
-                     ) {
-                    idSet1.add(company1.getId());
-                }
-                User user1 = null;
-                for (Long id: idSet1
-                     ) {
-                    user1 = repository.findByStyleAndStateAndCompany(3,1,id);
-                    if (user1!=null){
+                for (Long id : idSet
+                        ) {
+                    user = repository.findByStyleAndStateAndCompany(3, 1, id);
+                    if (user != null) {
                         break;
                     }
                 }
                 resultList.add(1);
-                   CompanyIdentification companyIdentification1 = new CompanyIdentification();
-                    BeanUtils.copyProperties(user1,companyIdentification1);
-                    Long companyId1 = user1.getCompany();
-                    Company company1 = companyRepository.findOne(companyId1);
-                    BeanUtils.copyProperties(company1,companyIdentification1);
-                    companyIdentification1.setId(user1.getId());
-                    companyIdentification1.setName(user1.getName());
-                    companyIdentification1.setCompanyName(company1.getName());
-               resultList.add(companyIdentification1);
-                break;
-        }
-
-        //获取学生的全部信息
-        if (selectState== 2 && userList!= null) {  if (userList != null){
-            resultList.add(userList.getTotalElements());
-           for (User user : userList
-                    ) {
                 CompanyIdentification companyIdentification = new CompanyIdentification();
                 BeanUtils.copyProperties(user, companyIdentification);
                 Long companyId = user.getCompany();
@@ -437,12 +393,62 @@ public class UserServiceImpl implements UserService,UserDetailsService {
                 companyIdentification.setName(user.getName());
                 companyIdentification.setCompanyName(company.getName());
                 resultList.add(companyIdentification);
+                break;
+            case 2:
+                //根据手机号码来查(可能会有多个用户)
+                userList = repository.findByTelephoneContainingAndStyleAndState(keyword, 3, 1, pageRequest);
+                break;
+            case 3:
+                //根据企业社会代号来查(肯定会是单一的用户)
+                ArrayList<Company> companyList1 = companyRepository.findByNumber(keyword);
+                Set<Long> idSet1 = new HashSet<Long>();
+                for (Company company1 : companyList1
+                        ) {
+                    idSet1.add(company1.getId());
+                }
+                User user1 = null;
+                for (Long id : idSet1
+                        ) {
+                    user1 = repository.findByStyleAndStateAndCompany(3, 1, id);
+                    if (user1 != null) {
+                        break;
+                    }
+                }
+                resultList.add(1);
+                CompanyIdentification companyIdentification1 = new CompanyIdentification();
+                BeanUtils.copyProperties(user1, companyIdentification1);
+                Long companyId1 = user1.getCompany();
+                Company company1 = companyRepository.findOne(companyId1);
+                BeanUtils.copyProperties(company1, companyIdentification1);
+                companyIdentification1.setId(user1.getId());
+                companyIdentification1.setName(user1.getName());
+                companyIdentification1.setCompanyName(company1.getName());
+                resultList.add(companyIdentification1);
+                break;
+        }
+
+        //获取学生的全部信息
+        if (selectState == 2 && userList != null) {
+            if (userList != null) {
+                resultList.add(userList.getTotalElements());
+                for (User user : userList
+                        ) {
+                    CompanyIdentification companyIdentification = new CompanyIdentification();
+                    BeanUtils.copyProperties(user, companyIdentification);
+                    Long companyId = user.getCompany();
+                    Company company = companyRepository.findOne(companyId);
+                    BeanUtils.copyProperties(company, companyIdentification);
+                    companyIdentification.setId(user.getId());
+                    companyIdentification.setName(user.getName());
+                    companyIdentification.setCompanyName(company.getName());
+                    resultList.add(companyIdentification);
+                }
             }
-            }
-         }
-         return resultList;
+        }
+        return resultList;
     }
-     /**
+
+    /**
      * 管理员管理：查找已认证管理员list集合
      */
     @Override
@@ -450,11 +456,11 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         Page<User> userList = repository.findByStateAndStyle(1, 4, pageRequest);
         //遍历集合，将其学生详细信息查询出来
         ArrayList<BriefUser> list = new ArrayList<BriefUser>();
-        if (userList != null){
-            for (User user: userList
+        if (userList != null) {
+            for (User user : userList
                     ) {
                 BriefUser briefUser = new BriefUser();
-                BeanUtils.copyProperties(user,briefUser);
+                BeanUtils.copyProperties(user, briefUser);
                 list.add(briefUser);
             }
         }
@@ -467,45 +473,47 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     /**
      * 根据关键字查找指定管理员
+     *
      * @param selectState
      * @return
      */
     @Override
     public ArrayList findAdmin(int selectState, String keyword, PageRequest pageRequest) {
-       //根据selectState
+        //根据selectState
         Page<User> userList = null;
-        ArrayList resultList  = new ArrayList();
-        switch (selectState){
-            case 1 :
+        ArrayList resultList = new ArrayList();
+        switch (selectState) {
+            case 1:
                 //根据真实姓名来查(可能会有多个用户)
-               userList =  repository.findByNameContainingAndStyleAndState(keyword,4,1,pageRequest);
+                userList = repository.findByNameContainingAndStyleAndState(keyword, 4, 1, pageRequest);
                 break;
-            case 2 :
+            case 2:
                 //根据手机号码来查(可能会有多个用户)
-               userList =  repository.findByTelephoneContainingAndStyleAndState(keyword,4,1,pageRequest) ;
+                userList = repository.findByTelephoneContainingAndStyleAndState(keyword, 4, 1, pageRequest);
                 break;
-            case 3 :
+            case 3:
                 //根据用户账号来查(肯定会是单一的用户)
-               User user = repository.findByUsernameAndState(keyword,1);
-               resultList.add(1);
-                    BriefUser briefUser = new BriefUser();
-                    BeanUtils.copyProperties(user,briefUser);
-               resultList.add(briefUser);
+                User user = repository.findByUsernameAndState(keyword, 1);
+                resultList.add(1);
+                BriefUser briefUser = new BriefUser();
+                BeanUtils.copyProperties(user, briefUser);
+                resultList.add(briefUser);
                 break;
         }
 
         //获取学生的全部信息
-        if (selectState != 3 && userList!= null) {  if (userList != null){
-            resultList.add(userList.getTotalElements());
-            for (User user: userList
-                    ) {
-                BriefUser briefUser = new BriefUser();
-                BeanUtils.copyProperties(user,briefUser);
-                resultList.add(briefUser);
+        if (selectState != 3 && userList != null) {
+            if (userList != null) {
+                resultList.add(userList.getTotalElements());
+                for (User user : userList
+                        ) {
+                    BriefUser briefUser = new BriefUser();
+                    BeanUtils.copyProperties(user, briefUser);
+                    resultList.add(briefUser);
+                }
             }
-            }
-         }
-         return resultList;
+        }
+        return resultList;
     }
 
     @Override
@@ -513,5 +521,121 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         return repository.findByUsername(username);
     }
 
+    /**
+     * 更新用户信息
+     *
+     * @param userIdentification
+     * @return
+     */
+    @Override
+    public void updateStudent(UserIdentification userIdentification) {
+        //查找用户信息
+        User mainUser = repository.findOne(userIdentification.getId());
 
+        User user = new User();
+        BeanUtils.copyProperties(userIdentification, user);
+        List<Authority> authorities = new ArrayList<>();
+        user.setUsername(mainUser.getUsername());
+        user.setPassword(mainUser.getPassword());
+        user.setAuthorities(authorities);
+        user.setStudent(mainUser.getStudent());
+        user.setStyle(mainUser.getStyle());
+        System.out.println(user);
+        user.setState(1);
+        //更新用户的在user表中的信息
+        repository.save(user);
+
+        //更新用户在student表中的信息
+        Student student = new Student();
+//        Student mainStudent = studentRepository.findOne(mainUser.getStudent());
+        BeanUtils.copyProperties(userIdentification, student);
+        student.setId(mainUser.getStudent());
+        studentRepository.save(student);
+
+    }
+
+    /**
+     * 修改老师信息
+     *
+     * @param teacherIdentification
+     * @return
+     */
+    @Override
+    public void updateTeacher(TeacherIdentification teacherIdentification) {
+        //查找用户信息
+        User mainUser = repository.findOne(teacherIdentification.getId());
+
+        User user = new User();
+        BeanUtils.copyProperties(teacherIdentification, user);
+        List<Authority> authorities = new ArrayList<>();
+        user.setUsername(mainUser.getUsername());
+        user.setPassword(mainUser.getPassword());
+        user.setAuthorities(authorities);
+        user.setTeacher(mainUser.getTeacher());
+        user.setStyle(mainUser.getStyle());
+        user.setState(1);
+        System.out.println(user);
+        //更新用户的在user表中的信息
+        repository.save(user);
+
+        //更新用户在student表中的信息
+        Teacher teacher = new Teacher();
+//        Student mainStudent = studentRepository.findOne(mainUser.getStudent());
+        BeanUtils.copyProperties(teacherIdentification, teacher);
+        teacher.setId(mainUser.getTeacher());
+        teacherRepository.save(teacher);
+
+
+    }
+
+    @Override
+    public void updateCompany(CompanyIdentification companyIdentification) {
+        //查找用户信息
+        User mainUser = repository.findOne(companyIdentification.getId());
+
+        User user = new User();
+        BeanUtils.copyProperties(companyIdentification, user);
+        List<Authority> authorities = new ArrayList<>();
+        user.setUsername(mainUser.getUsername());
+        user.setPassword(mainUser.getPassword());
+        user.setAuthorities(authorities);
+        user.setCompany(mainUser.getCompany());
+        user.setStyle(3);
+        user.setState(1);
+        user.setTelephone(mainUser.getTelephone());
+        user.setName(mainUser.getName());
+        System.out.println(user);
+        //更新用户的在user表中的信息
+        repository.save(user);
+
+        //更新用户在student表中的信息
+        Company company = new Company();
+        BeanUtils.copyProperties(companyIdentification, company);
+        company.setId(mainUser.getCompany());
+        company.setName(companyIdentification.getCompanyName());
+        companyRepository.save(company);
+
+    }
+
+    /**
+     * 修改管理员信息
+     * @param adminIdentification
+     */
+    @Override
+    public void updateAdmin(AdminIdentification adminIdentification) {
+        //查找用户信息
+        User mainUser = repository.findOne(adminIdentification.getId());
+
+        User user = new User();
+        BeanUtils.copyProperties(adminIdentification, user);
+        List<Authority> authorities = new ArrayList<>();
+        user.setPassword(mainUser.getPassword());
+        user.setAuthorities(authorities);
+        user.setStyle(4);
+        user.setState(1);
+        System.out.println(user);
+        //更新用户的在user表中的信息
+        repository.save(user);
+
+    }
 }

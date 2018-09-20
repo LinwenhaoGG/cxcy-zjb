@@ -1,7 +1,6 @@
 package com.cxcy.zjb.springboot.controller;
 
-import com.cxcy.zjb.springboot.Vo.Response;
-import com.cxcy.zjb.springboot.Vo.Result;
+import com.cxcy.zjb.springboot.Vo.*;
 import com.cxcy.zjb.springboot.domain.Information;
 import com.cxcy.zjb.springboot.domain.InformationCategory;
 import com.cxcy.zjb.springboot.domain.Matchs;
@@ -652,7 +651,7 @@ public class AdminController {
     @RequestMapping("/toAlterStudent")
     public String toAlterStudent(@RequestParam("id") Long id,Model model){
         model.addAttribute("id",id);
-        System.out.println("id:"+id);
+
         return "admins/pages/manage/user/alter/studentAlter";
     }
     /**
@@ -678,5 +677,61 @@ public class AdminController {
     @RequestMapping("/toAlterAdmin")
     public String toAlterAdmin(){
         return "admins/pages/manage/user/alter/adminAlter";
+    }
+
+    /**
+     * 修改学生信息
+     * @param userIdentification
+     * @return
+     */
+    @RequestMapping("/updateStudent")
+    @ResponseBody
+    public Result updateStudent(UserIdentification userIdentification){
+
+        userService.updateStudent(userIdentification);
+
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改老师信息
+     * @param teacherIdentification
+     * @return
+     */
+    @RequestMapping("/updateTeacher")
+    @ResponseBody
+    public Result updateTeacher(TeacherIdentification teacherIdentification){
+
+        userService.updateTeacher(teacherIdentification);
+
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改企业信息
+     * @param companyIdentification
+     * @return
+     */
+    @RequestMapping("/updateCompany")
+    @ResponseBody
+    public Result updateTeacher(CompanyIdentification companyIdentification){
+
+        userService.updateCompany(companyIdentification);
+
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改管理员信息
+     * @param adminIdentification
+     * @return
+     */
+    @RequestMapping("/updateAdmin")
+    @ResponseBody
+    public Result updateAdmin(AdminIdentification adminIdentification){
+
+        userService.updateAdmin(adminIdentification);
+
+        return ResultUtil.success();
     }
 }

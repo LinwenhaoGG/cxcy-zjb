@@ -10,7 +10,7 @@
  */
 package com.cxcy.zjb.springboot.service;
 
-import com.cxcy.zjb.springboot.Vo.UserMessage;
+import com.cxcy.zjb.springboot.Vo.*;
 import com.cxcy.zjb.springboot.domain.User;
 import org.springframework.data.domain.PageRequest;
 
@@ -157,4 +157,32 @@ public interface UserService {
      * @return
      */
     public ArrayList findAdmin(int selectState,String keyword,PageRequest pageRequest);
+
+    /**
+     * 更新学生信息
+     * @param userIdentification
+     * @return
+     */
+    public void updateStudent(UserIdentification userIdentification);
+
+     /**
+     * 修改老师信息
+     * @param teacherIdentification
+     * @return
+     */
+    public void updateTeacher(TeacherIdentification teacherIdentification);
+
+    /**
+     * 修改企业信息
+     * @param companyIdentification
+     * @return
+     */
+    public void updateCompany(CompanyIdentification companyIdentification);
+
+    /**
+     * 修改管理员信息
+     * @param adminIdentification
+     * @return
+     */
+    public void updateAdmin(AdminIdentification adminIdentification);
 }
