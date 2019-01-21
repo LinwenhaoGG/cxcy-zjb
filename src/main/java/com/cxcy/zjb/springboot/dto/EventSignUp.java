@@ -4,6 +4,7 @@ import com.cxcy.zjb.springboot.domain.Event;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * 小组报名项目列表包装
@@ -20,6 +21,8 @@ public class EventSignUp {
     private String name;  //小组名称
 
     private Timestamp signtime; //报名时间
+
+    private Date lastsubmittime;   //截止提交时间
 
     private double achievement=0.00;//成绩
 

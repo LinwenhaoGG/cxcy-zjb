@@ -25,6 +25,8 @@ public class MatchGroup2EventSignUp {
         eventSignUp.setName(matchGroup.getName());
         eventSignUp.setSigntime(matchGroup.getSigntime());
         eventSignUp.setAchievement(matchGroup.getAchievement());
+        eventSignUp.setLastsubmittime(matchGroup.getSigntime());
+
         //event数据封装到eventSignUp
         eventSignUp.setEvent(event);
         return eventSignUp;
