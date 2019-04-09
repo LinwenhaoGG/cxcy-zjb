@@ -138,7 +138,7 @@ public class MatchController {
      */
     @GetMapping("/list")
     public ModelAndView listMatchs(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
-                                   @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                                   @RequestParam(value = "size", defaultValue = "6") Integer size,//一页个数
                                    Map map) {
         //根据开始时间排序
         Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");

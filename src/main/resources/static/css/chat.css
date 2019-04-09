@@ -1,16 +1,22 @@
+body,html{
+	width: 100%;
+	height: 100%;
+}
 body{
 	margin: 0px;
 	padding: 0px; 
-	width: 1528px;
-	height: 720px;
+	/*width: 1528px;*/
+	/*height: 720px;*/
 }
 /*<!--背景div-->*/
 #backgroundDiv{
 	/*聊天背景图片*/
-	background-image: url(/img/background.jpg);
+	/*background-image: url(/img/background.jpg);*/
+	background-image: url("/images/iamges/timg.jpg");
 	width: 100%;
 	height: 100%;
-	
+	padding-top:90px;
+	/*background: #d8d8d8;*/
 }
 /*<!--聊天div-->*/
 #chatDiv{
@@ -19,7 +25,8 @@ body{
 	float: left;
 	margin-left: 20%;
 	margin-top: 40px;
-	background-color: ghostwhite;
+	background-color:#fff ;
+	opacity: .8;
 }
 /*聊天窗口*/
 .chatHtml{
@@ -31,43 +38,149 @@ body{
 }
 /*聊天体*/
 #bodyDiv{  
-	height: 60%;  
+	height: 60%;
+	/*border-top:1px solid #ccc;*/
+	border-bottom:1px solid #ccc;
 }
-/*填写信息div*/
+#bodyDiv::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+}
+	/*填写信息div*/
 #messageDiv{  
 	height: 20%;   
 	
 }
 #imgId{
-	margin-top: 10px;
-	width:80px;
-	height: 100%;
+	/*margin-top: 10px;*/
+	width:50px;
+	height: 50px;
+	border-radius: 50%;
 }
 #inputDiv{
 	margin: 0px;
-	padding: 0px; 
+	padding: 0px;
+	position: relative;
+	background: #fff;
 }
 hr{
 	margin: 0;
 	padding: 0;
 }
-#inputDiv input{ 
+#inputDiv textarea{
 	background-color:transparent;
 	border:0;
 	width: 100%;
-	height: 60px;
+	/*height: 57%;*/
+	box-sizing: border-box;
 	border-style:none none solid none;
 	outline: none;
 	margin: 0;
 	padding: 10px;
-} 
+}
+#inputDiv textarea::-webkit-scrollbar {
+	width: 8px;
+	/*height: 60px;*/
+	/*background: #0a6999;*/
+}
+#inputDiv textarea::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;: 10px;
+	background:#c1c1c1 ;
+	/*height: 30px;*/
+}
 #submitComment{ 
-	margin-right: 10px;
-	margin-bottom: 10px;
+	margin-right: 15px;
+	/*margin-bottom: 10px;*/
 	float: right;
 }
 #scrollDiv{
 	width:100%;
 	height:100%;
-	overflow: auto;
+	overflow-y: scroll;
+}
+#scrollDiv::-webkit-scrollbar {
+	width: 8px;
+	height: 60px;
+	/*background: #0a6999;*/
+}
+#scrollDiv::-webkit-scrollbar-thumb{
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;: 10px;
+	background:#c1c1c1 ;
+	/*height: 30px;*/
+}
+tr>td{
+	/*padding-bottom:10px;*/
+	padding:10px;
+}
+
+tr td span{
+    padding:10px;
+	display: inline-block;
+	background: #e3e8ee;
+	border-radius: 4px;
+	word-wrap: break-word;
+	word-break: normal;
+	max-width: 350px;
+	position: relative;
+	text-align: left;
+}
+/*tr td span::after{*/
+	/*position: absolute;*/
+	/*content: "";*/
+	/*width:0;*/
+	/*height:0;*/
+	/*border-top: 10px solid transparent;*/
+	/*border-bottom: 10px solid transparent;*/
+	/*border-right: 10px solid #e3e8ee;*/
+	/*top: 40%;*/
+	/*left: -10px;*/
+/*}*/
+/*td img{*/
+	/*position: relative;*/
+/*}*/
+/*td img::before{*/
+	/*position: absolute;*/
+	/*content: "";*/
+	/*width:0;*/
+	/*height:0;*/
+	/*border-top: 10px solid transparent;*/
+	/*border-bottom: 10px solid transparent;*/
+	/*border-right: 10px solid #e3e8ee;*/
+	/*top: 40%;*/
+	/*left: -10px;*/
+/*}*/
+.send{
+	background: #9eea6a;
+	position: relative;
+}
+.send::after{
+	display: none;
+}
+.send::before{
+	position: absolute;
+	content: "";
+	width:0;
+	height:0;
+	border-top:10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #9eea6a;
+	top: 40%;
+	right: -10px;
+}
+hr{
+	margin-top:0px;
+	margin-bottom:0px;
+}
+.UL{
+	overflow: hidden;
+	height: 80px;
+}
+.UL li{
+	float: left;
+	margin-left:10px;
+	height: 100%;
+	line-height: 80px;
 }

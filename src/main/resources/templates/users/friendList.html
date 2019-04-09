@@ -3,6 +3,7 @@
        xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_1062799_b3e2cczrt7.css">
 	<link rel="stylesheet" href="../css/friendList.css" th:href="@{/css/friendList.css}"/>
 	<script src="../jq/jquery-1.11.0.min.js" th:src="@{/js/jquery-1.11.0.min.js}"></script>
 	<script src="../js/friendList.js" th:src="@{/js/friendList.js}"></script>
@@ -10,17 +11,18 @@
 </head>
 <body>
 <div th:replace="top::html"></div>
-	<div><h1>请选择需要沟通的朋友</h1></div>
+	<div style="padding-top:90px"><span id="h_2" style="color: #9d8ca8;"><i class="iconfont icon-friends ifs"></i>请选择需要沟通的朋友</span></div>
 	<br />
-	<div class="outsideDiv">
-		<span class="innerspan">
+<div style="display: flex;padding-left:120px">
+    <div class="outsideDiv" style="flex: 1">
+        <span class="innerspan" >
             <a href="chat.html?userId=1" th:href="'/user/inchat?userId=1'">
                 <img src="../img/611.jpg" class="imgClass">
                 <span>kolo</span>
              </a>
         </span>
-	</div>
-    <div class="outsideDiv">
+    </div>
+    <div class="outsideDiv" style="flex: 1;">
 		<span class="innerspan">
             <a href="chat.html?userId=1" th:href="'/user/inchat?userId=2'">
                 <img src="../img/612.jpg" class="imgClass">
@@ -28,7 +30,7 @@
              </a>
         </span>
     </div>
-    <div class="outsideDiv">
+    <div class="outsideDiv" style="flex: 1">
 		<span class="innerspan">
            <a href="chat.html?userId=1" th:href="'/user/inchat?userId=3'">
                 <img src="../img/613.jpg" class="imgClass">
@@ -36,12 +38,12 @@
              </a>
         </span>
     </div>
-    <hr>
-	<div><h1>未读消息:</h1></div>
-    未读消息:<span style="color: red;" id="totalRedDot"></span>条
+</div>
+    <!--<hr>-->
+	<div style="padding-top:90px"><span  id="h_2" style="color: #9d8ca8;position: relative;font-style: 24px;"><i class="iconfont icon-xinxi ifs"></i><span class=" noread">16</span>未读消息:</span></div>
+    <!--<div style="padding-left:20px">未读:<span style="color: red;" id="totalRedDot"></span>条</div>-->
 	<br />
-	<div class="outsideDiv" id="showmessage">
-
+	<div class="outsideDiv" id="showmessage" style="padding-left:120px">
     </div>
 </body>
 </html>

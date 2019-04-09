@@ -5,120 +5,310 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/animate.min.css}">
+    <link rel="stylesheet" th:href="@{/css/swiper.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script src="../js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/js/swiper.min.js}"></script>
     <script src="../js/toastr.min.js" th:src="@{/js/toastr.min.js}"></script>
-    <style>
-        .columnBox{
-            float: left;
-            width: 600px;
-            height: 320px;
-            border: 1px solid #00aaaa;
-            margin: 5px 7px 5px 5px;
-        }
-        .columnBox >ul > li >a{
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .columnBox .columnBoxLeft > p{
-            margin-top: 10px;
-        }
-        .columnBox .columnBoxRight > p{
-            margin-top: 10px;
-            text-align: right;
-            margin-right: 25px;
-        }
-        .columnBoxLeft{
-            float: left;
-            width: 30%;
-            height: 40px;
-            border: solid 1px #00aaaa;
-            background-color: #00aaaa;
-            color: #ffffff;
-            text-align: center;
-            font-size: 18px;
-        }
-        .columnBoxRight{
-            float: right;
-            width: 70%;
-            height: 40px;
-            border-bottom: solid 1px #00aaaa;
-            /*background-color: #ffffff;*/
-            color: #00aaaa;
-            text-align: center;
-            font-size: 18px;
-        }
-
-    </style>
-</head>
+    <head>
 <body>
-    <div th:replace="top::html"></div>
-
-    <!--<div id="informationShow">-->
-        <!--<div class="card my-4" id="informationShowByCategory">-->
-            <!--<a href="/information/showAllNotice" class="card-header">通知公告-->
-                <!--<span>更多>></span>-->
-            <!--</a>-->
-
-            <!--<ul class="list-group" th:each="information : ${informationList}" th:object="${information}">-->
-                <!--<div id="informationList" class="oneInformation">-->
-                    <!--<a th:href="'/information/showOneInformation/'+*{id}"  class="showOneInformation">-->
-                        <!--<span th:text="*{title}">"+arr.title+"</span>-->
-                        <!--<span th:text="*{createTime}">"+time+"</span>-->
-                    <!--</a>-->
-                <!--</div>-->
+<div th:replace="top::html"></div>
+<div class="Container">
+    <!--<div th:replace="top::html"></div>-->
+    <!--<header class="header animated fadeIn">-->
+        <!--<div class="header-left ">-->
+            <!--<img th:src="@{/images/iamges/logot.png}" class="logo">-->
+            <!--<h4 class="header-title">创新创业</h4>-->
+        <!--</div>-->
+        <!--<div class="header-middle">-->
+            <!--<ul class="linkTo">-->
+                <!--<li><a href="/" style="color:#8f8ca8;text-decoration: none">首页&nbsp;&nbsp;&nbsp;&nbsp;</a></li>-->
+                <!--<li><a href="/information/showAllNotice" style="color:#8f8ca8;text-decoration: none">新闻资讯</a></li>-->
+                <!--<li><a href="/match/list" style="color:#8f8ca8;text-decoration: none">比赛项目</a></li>-->
+                <!--<li><a href="/browse/recommend" style="color:#8f8ca8;text-decoration: none">业余作品</a></li>-->
             <!--</ul>-->
         <!--</div>-->
+        <!--<div class="header-right">-->
+            <!--<a href="/register"><div class="register">注册</div></a>-->
+            <!--<a href="/login"> <div class="login">登录</div></a>-->
+        <!--</div>-->
+    <!--</header>-->
+    <!--<div id="informationShow">-->
+    <!--<div class="columnBox" style="margin-top: 10px" id="informationShowByCategory">-->
+        <!--<div class="columnBoxLeft"><p>新闻动态</p></div>-->
+        <!--<div class="columnBoxRight"><p><a style="color: #00aaaa" href="/information/showAllNotice">查看更多</a></p></div>-->
+
+        <!--<ul class="news" style="margin: 60px 50px 50px 0;line-height: 30px;color: #7f7f7f" >-->
+            <!--<li th:each="information : ${informationList}" th:object="${information}"><a th:href="'/information/showOneInformation/'+*{id}" target="_blank" style="text-decoration: none;color: #7f7f7f">-->
+                <!--<span style="float: left" th:text="*{title}"></span><span style="float: right" th:text="*{#dates.format(createTime, 'yyyy-MM-dd')}"></span></a></li>-->
+        <!--</ul>-->
     <!--</div>-->
-    <div id="informationShow">
-    <div class="columnBox" style="margin-top: 10px" id="informationShowByCategory">
-        <div class="columnBoxLeft"><p>新闻动态</p></div>
-        <div class="columnBoxRight"><p><a style="color: #00aaaa" href="/information/showAllNotice">查看更多</a></p></div>
+    <!--</div>-->
+
+    <div class="swiperContainer ">
+        <div class="imgwrapper">
+            <img class="tp-kbimg" th:src="@{/images/iamges/bg-img.jpg}" width="1920" height="600">
+        </div>
+        <div class="swiper-container animated slideInRight" id="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"   th:style="'background:url('+ @{/images/iamges/toop1.jpg}+') no-repeat'" ></div>
+                <div class="swiper-slide" th:style="'background:url('+ @{/images/iamges/toop2.jpg}+') no-repeat'" ></div>
+                <div class="swiper-slide" th:style="'background:url('+ @{/images/iamges/toop3.jpg}+') no-repeat'"></div>
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+
+            <!-- 如果需要导航按钮 -->
+            <!-- <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div> -->
+            <!-- <div class="swiper-scrollbar"></div> -->
+        </div>
+    </div>
+    <!-- 新闻资讯 -->
+    <div class="newContainer animated slideInUp ">
+        <div class="Titlewrapper">
+            <h2 class="containerTitle">新闻资讯</h2>
+            <span class="more">MORE >></span>
+        </div>
+        <div class="newWrapper">
+            <ul class="newList">
+                <li class="new_item">
+                    <div class="item_time">2019-03-19</div>
+                    <div class="item_info">
+                        <h3 class="item_info_title" ><a href="">
+                            <span class="title_logo" th:style="'background:url('+ @{/images/iamges/hot.gif}+') no-repeat'"></span>
+                            <span class="text">新闻标题</span>
+                        </a></h3>
+                        <p class="item_info_intro">
+                            新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
+                            新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
+                        </p>
+                    </div>
+                </li>
+
+                <li class="new_item">
+                    <div class="item_time">2019-03-19</div>
+                    <div class="item_info">
+                        <h3 class="item_info_title"><a href="">
+                            <span class="title_logo"  th:style="'background:url('+ @{/images/iamges/hot.gif}+') no-repeat'"></span>
+                            <span class="text">新闻标题</span>
+                        </a></h3>
+                        <p class="item_info_intro">
+                            新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
+                            新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
+                        </p>
+                    </div>
+                </li>
 
         <ul class="news" style="margin: 60px 50px 50px 0;line-height: 30px;color: #7f7f7f" >
             <li th:each="information : ${informationList}" th:object="${information}"><a th:href="'/information/showOneInformation/'+*{id}" target="_blank" style="text-decoration: none;color: #7f7f7f">
-                <span style=" float: left" th:text="*{title}"></span><span style="float: right" th:text="*{#dates.format(createTime, 'yyyy-MM-dd')}"></span></a></li>
+                <span style="float: left" th:text="*{title}"></span><span style="float: right" th:text="*{#dates.format(createTime, 'yyyy-MM-dd')}"></span></a></li>
         </ul>
     </div>
     </div>
 
+    <!-- 比赛项目 -->
+    <div class="matchContainer"  th:style="'background:url('+ @{/images/iamges/bgm.png}+') no-repeat'">
+        <div class="matchTitlewrapper">
+            <h2 class="matchTitle">比赛项目</h2>
+        </div>
+        <div class="matchWrapper">
+            <ul class="matchList animated">
+                <li class="match_item">
+                    <div>
+                        <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
+                    </div>
+                    <p class="match_title">中国软件设计大赛</p>
+                    <div class="match_container">
+                        <div class="match_info">
+                            <p>开始报名时间：2018-09-02 00:00:00</p>
+                            <p>截止报名时间：2018-09-02 00:00:00</p>
+                            <p>公布成绩时间：2018-09-02 00:00:00</p>
+                        </div>
+                        <div class="match_button">
+                            <button class="btn btn-primary">查看比赛</button>
+                            <button class="btn btn-danger">查看成绩</button>
+                        </div>
+                    </div>
+                </li>
 
-</body>
+                <li class="match_item">
+                    <div>
+                        <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
+                    </div>
+                    <p class="match_title">IT文化节</p>
+                    <div class="match_container">
+                        <div class="match_info">
+                            <p>开始报名时间：2018-09-02 00:00:00</p>
+                            <p>截止报名时间：2018-09-02 00:00:00</p>
+                            <p>公布成绩时间：2018-09-02 00:00:00</p>
+                        </div>
+                        <div class="match_button">
+                            <button class="btn btn-primary">查看比赛</button>
+                            <button class="btn btn-danger">查看成绩</button>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="match_item">
+                    <div>
+                        <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
+                    </div>
+                    <p class="match_title">蓝桥杯省级大赛</p>
+                    <div class="match_container">
+                        <div class="match_info">
+                            <p>开始报名时间：2018-09-02 00:00:00</p>
+                            <p>截止报名时间：2018-09-02 00:00:00</p>
+                            <p>公布成绩时间：2018-09-02 00:00:00</p>
+                        </div>
+                        <div class="match_button">
+                            <button class="btn btn-primary">查看比赛</button>
+                            <button class="btn btn-danger">查看成绩</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <span class="matchmore">MORE >></span>
+    </div>
+
+    <!-- 业余作品 -->
+    <div class="worksContainer">
+        <div class="worksHeader">
+            <img th:src="@{/images/iamges/pro_title.png}" class="works_title_img">
+        </div>
+        <div class="worksWrapper">
+            <ul class="worksList ">
+                <li class="work_item  animated">
+                    <div class="work_item_img">
+                        <img th:src="@{/images/iamges/pro_icon.png}" class="pro_logo">
+                    </div>
+                    <div class="work_item_info">
+                        <p class="work_tname">个人作品的名字</p>
+                        <p class="work_info">这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介</p>
+                        <div class="work_info_bottom">
+                            <span class="work_time">2019-03-22</span>
+                            <span class="readNum">阅读数 <span>1110<span></span>
+                                    <span class="commentsNum">评论数 <span>99</span></span>
+                        </div>
+                    </div>
+                </li>
+                <li class="work_item">
+                    <div class="work_item_img">
+                        <img th:src="@{/images/iamges/pro_icon.png}" class="pro_logo">
+                    </div>
+                    <div class="work_item_info">
+                        <p class="work_tname">个人作品的名字</p>
+                        <p class="work_info">这品的简这品的简介这介</p>
+                        <div class="work_info_bottom">
+                            <span class="work_time">2019-03-22</span>
+                            <span class="readNum">阅读数 <span>1110<span></span>
+                                        <span class="commentsNum">评论数 <span>99</span></span>
+                        </div>
+                    </div>
+                </li>
+                <li class="work_item">
+                    <div class="work_item_img">
+                        <img th:src="@{/images/iamges/pro_icon.png}" class="pro_logo">
+                    </div>
+                    <div class="work_item_info">
+                        <p class="work_tname">个人作品的名字</p>
+                        <p class="work_info">这品的简这品的简介这介</p>
+                        <div class="work_info_bottom">
+                            <span class="work_time">2019-03-22</span>
+                            <span class="readNum">阅读数 <span>1110<span></span>
+                                <span class="commentsNum">评论数 <span>99</span></span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <footer style="width:100%">
+        到底啦 ! ! !  ∑(°Д°ノ)ノ
+    </footer>
+</div>
 <script>
 
     $(function () {
+        function getTop8Information() {
+            $.ajax({
+                url: '/information/showTop8',
+                type: 'GET',
+                // dataType:"json",
+                success: function (data) {
+                    // for (var i = 0 ; i <= data.length ; i++){
+                    //     var arr = data[i];
+                    //     var value = arr.createTime;
+                    //     var time  = new Date(value).toLocaleString();
+                    //     $("#informationList").append("<a href='/information/showOneInformation/'  class=\"showOneInformation\">\n" +
+                    //          "                        <span th:text=\"*{title}\">"+arr.title+"</span>\n" +
+                    //          "                        <span th:text=\"*{createTime}\">"+time+"</span>\n" +
+                    //          "                    </a>");
+                    //
+                    //
+                    // }
+                    console.log(data);
+                    $("#informationShow").html(data);
+                },
+                error: function () {
+                    toastr.error("error");
+                }
+            })
+        }
+    });
+    var mySwiper = new Swiper ('.swiper-container', {
+        effect:'coverflow',
+        direction: 'horizontal',
+        slidesPerView: 3,
+        loop: true, // 循环模式选项
+        autoplay:{
+            stopOnLastSlide:true
+        },
+        centeredSlides:true,
+        coverflowEffect:{
+            rotate:30, //滑动时旋转角度
+            stretch:10, //聚合宽度
+            depth:150, //最深
+            modifier:1, //覆盖叠加层数
+            shadows:true, //是否阴影
+            slideShadows:true
+        },
+        // 如果需要分页器
+        pagination: {
+            el: '.swiper-pagination'
+        },
 
-
-
-        function getTop8Information(){
-
-                $.ajax({
-                    url: '/information/showTop8',
-                    type: 'GET',
-                    // dataType:"json",
-                    success: function (data) {
-                        // for (var i = 0 ; i <= data.length ; i++){
-                        //     var arr = data[i];
-                        //     var value = arr.createTime;
-                        //     var time  = new Date(value).toLocaleString();
-                        //     $("#informationList").append("<a href='/information/showOneInformation/'  class=\"showOneInformation\">\n" +
-                        //          "                        <span th:text=\"*{title}\">"+arr.title+"</span>\n" +
-                        //          "                        <span th:text=\"*{createTime}\">"+time+"</span>\n" +
-                        //          "                    </a>");
-                        //
-                        //
-                        // }
-                        $("#informationShow").html(data);
-                    },
-                    error: function () {
-                        toastr.error("error");
-                    }
-                });
+        // 如果需要前进后退按钮
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
         }
 
-        getTop8Information();
-
+        // // 如果需要滚动条
+        // scrollbar: {
+        // el: '.swiper-scrollbar',
+        // }
     })
+    window.onscroll = function(){
+            var clienth = document.documentElement.clientHeight;  //屏幕高度
+            var scrollt = document.documentElement.scrollTop + document.body.scrollTop; //滚动条滚动高度
+            var h = clienth + scrollt;
+            var matchList = $(".matchList");
+            var worksList = $('.work_item');
+            if(h>=1050){
+                matchList.addClass('zoomIn');
+            }else if(h>=2600){
+                worksList.addClass('jackInTheBox');
+            }
 
+        }
 </script>
+
+</body>
+
 </html>
 

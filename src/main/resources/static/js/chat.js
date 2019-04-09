@@ -8,6 +8,15 @@ $(function () {
         sendMessage();
     });
     updateMessage();
+    $("#submitComment").mouseenter(function(){
+        $("#submitComment").removeClass("layui-btn-primary")
+    });
+    $("#submitComment").mouseleave(function(){
+        $("#submitComment").addClass("layui-btn-primary")
+    });
+    $("#messageDiv").click(function(){
+        $("#content").focus();
+    })
 })
 //更新信息
 function updateMessage() {
@@ -122,7 +131,7 @@ function sendMessage(){
         var senderId = $("#senderId").val();
         var receiverId = $("#receiverId").val();
         var image = $("#senderImage")[0].src;
-        $("#tableId").append("<tr><td></td><td style=\"text-align:right\"><span>" + content + "</span></td><td style=\"width:1%\"><img src=" + image + " style=\"width: 40px;height: 40px;\" class=\"sender\"/></td></tr>");
+        $("#tableId").append("<tr><td></td><td style=\"text-align:right\" ><span class='send'>" + content + "</span></td><td style=\"width:1%\"><img src=" + image + " style=\"width: 40px;height: 40px;\" class=\"sender\"/></td></tr>");
         $("#content").val("");
         stompClient.send("/app/user/single/chat", {},
             JSON.stringify({'content': content, 'senderId': senderId, 'receiverId': receiverId}));

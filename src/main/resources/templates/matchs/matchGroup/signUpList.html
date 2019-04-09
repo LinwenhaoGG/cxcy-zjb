@@ -4,42 +4,156 @@
     <meta charset="UTF-8">
     <title>查看</title>
     <style>
+        body,html{
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            position: relative;
+            background: url("/images/iamges/match_center.png") no-repeat;
+            background-position: -520px 12px;
+        }
         ul{
             list-style: none;
+        }
+        a{
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+        .thumbnails li{
+            margin-left:80px;
+            width: 790px;
+            border:5px solid #00d6b5;
+            display: flex;
+            padding:20px 23px;
+            margin-top:20px;
+        }
+        .column{
+            position: absolute;
+            bottom:0px;
+            right: 10px;
+        }
+        .caption_btn{
+            width: 160px;
+
+        }
+        .caption_info{
+            flex: 1;
+            padding-right: 20px;
+        }
+        .tit{
+            position: relative;
+            padding-left:76px;
+            margin-top:0;
+        }
+        .tit-tip{
+            position: absolute;
+            top:5px;
+            left:0;
+            color:#00d6b5;
+            font-weight: 600;
+            font-size: 14px;
+            padding-right: 30px;
+        }
+        .btnA:hover,.btnB:hover,.btnC:hover{
+            text-decoration: none;
+            color:#fff;
+        }
+        .teamItem{
+            font-size: 14px;
+            color: #aaa;
+            line-height: 23px;
+        }
+        .item-tip{
+            font-weight: 600;
+            padding-right: 18px;
+        }
+        .btnA,.btnB,.btnC{
+            display: inline-block;
+            line-height: 48px;
+            height: 48px;
+            padding: 0;
+            width: 158px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            background: #e58e8b;
+            color: #fff;
+            border-radius: 3px;
+        }
+        .btnB{
+            background-color:#5bc0de;
+            margin-top:20px;
+        }
+        .btnC{
+            background-color:#00d6b5;
+        }
+        .top-title{
+            position: absolute;
+            right: 100px;
+            top:73px;
         }
     </style>
 </head>
 <body>
 <div th:replace="top::html"></div>
-<div class="container-fluid">
+<div class="container-fluid" style="padding-top:90px">
     <div class="row-fluid">
         <div class="span12">
             <ul class="thumbnails">
-                <h1 align="center" style="color: dodgerblue">参与的比赛</h1>
+                <div align="center" class="top-title"><img src="/images/iamges/top-title.png" alt=""></div>
                 <li class="span6"th:if="${isnull} eq 1 ">
-                    <div class="thumbnail">
+                    <div class="thumbnail" >
                         <div class="caption" >
                         <h3 style="color: red">暂无参赛信息</h3>
                         </div>
                 </div>
                 </li>
                 <li class="span4" th:each="eventSignUp : ${eventSignUpList}" >
-                    <div class="thumbnail">
-                        <div class="caption" >
-                            <h3 th:text="'报名的比赛项目名为：'+${eventSignUp.event.name}"></h3>
-                            <h4 th:text="'参赛小队名称为:'+${eventSignUp.name}"></h4>
-                            <p th:text="'报名时间为为:'+ ${#dates.format(eventSignUp.signtime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p th:text="'截止提交时间为为:'+ ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p style="text-align: right">
-                                <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" class="btn btn-primary" th:href="'/group/submit?gid='+ ${eventSignUp.id}" href="#">提交作品</a>
-                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">提交作品时间已到</button>
-                                <a id="modal-102974" href="#modal-container-102974"  th:onclick="'show_achevemtnt('+${eventSignUp.achievement}+')'"  role="button" class="btn btn-info" data-toggle="modal">查询比赛成绩</a>
+                    <div class="caption_info">
+                        <h3 class="tit">
+                            <span class="tit-tip">已报名</span>
+                            <a  class="link" href="/" th:text="${eventSignUp.event.name}" style="color:#666666;text-decoration: none;font-weight: 600">2019年第九届MathorCup高校数学建模挑战赛</a>
+                        </h3>
+                        <p class="teamItem">
+                            <span class="item-tip">参赛队名</span>
+                            <span class="team-name" th:text="${eventSignUp.name}">不管对不队</span>
+                        </p>
+                        <p class="teamItem">
+                            <span class="item-tip">报名时间</span>
+                            <span class="team-time" th:text=" ${#dates.format(eventSignUp.signtime, 'yyyy-MM-dd HH:mm:ss')}">2019-3-16 01:41</span>
+                        </p>
+                        <p class="teamItem">
+                            <span class="item-tip">提交截止</span>
+                            <span class="team-tiem"  th:text="${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}">2019-3-16 01:41</span>
+                        </p>
+                    </div>
+                    <div class="caption_btn">
+                        <a href="" class="btnC" th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" th:href="'/group/submit?gid='+ ${eventSignUp.id}">提交作品</a>
+                        <a  class="btnA" th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}">提交截止</a>
+                        <a href="" class="btnB" id="modal-102974" href="#modal-container-102974"  th:onclick="'show_achevemtnt('+${eventSignUp.achievement}+')'"  role="button"  data-toggle="modal">查看成绩</a>
+                        <!-- <button class="btn btn-danger">提交作品</button>
+                        <button class="btn btn-info">查询成绩</button> -->
+                    </div>
+                    <!--<div class="thumbnail" style="border:none">-->
+                        <!--<div class="caption" >-->
+                            <!--<h3 th:text="'报名的比赛项目名为：'+${eventSignUp.event.name}"></h3>-->
+                            <!--<h4 th:text="'参赛小队名称为:'+${eventSignUp.name}"></h4>-->
+                            <!--<p th:text="'报名时间为为:'+ ${#dates.format(eventSignUp.signtime, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+                            <!--<p th:text="'截止提交时间为为:'+ ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+                            <!--<p style="text-align: right">-->
+                                <!--<a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" class="btn btn-primary" th:href="'/group/submit?gid='+ ${eventSignUp.id}" href="#">提交作品</a>-->
+                                <!--<button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(eventSignUp.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">提交作品时间已到</button>-->
+                                <!--<a id="modal-102974" href="#modal-container-102974"  th:onclick="'show_achevemtnt('+${eventSignUp.achievement}+')'"  role="button" class="btn btn-info" data-toggle="modal">查询比赛成绩</a>-->
                                 <!--<a id="modal-102974"  href="#modal-container-102974"  role="button" class="btn btn-info" data-toggle="modal">查询比赛成绩</a>-->
 
-                            </p>
+                            <!--</p>-->
 
-                        </div>
-                    </div>
+                        <!--</div>-->
+                    <!--</div>-->
                 </li>
                 <!--  别  -->
                 <div class="modal fade" id="modal-container-102974" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -68,7 +182,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12 column" th:if="${isnull} ne 1">
+<div class=" column" th:if="${isnull} ne 1">
     <ul class="pagination pull-right">
         <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${matchGroupPage.getTotalPages()}+' 页'"></a></li>
         <li class="disabled" th:if="${page} eq '1'" ><a>首页</a></li>
