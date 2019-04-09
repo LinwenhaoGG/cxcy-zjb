@@ -39,13 +39,13 @@ public class GrowthServiceImpl implements GrowthService {
     }
 
     /**
-     * 根据用户的id查找到对应的成长对象
-     * @param uId
+     * 根据学生的id查找到对应的成长对象
+     * @param sId
      * @return
      */
     @Override
-    public Growth findByUser(Long uId) {
-        return growthRepository.findByUser(uId);
+    public Growth findByUser(Long sId) {
+        return growthRepository.findByUser(sId);
     }
 
     /**

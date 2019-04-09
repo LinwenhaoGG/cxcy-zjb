@@ -11,6 +11,7 @@ public enum ResultEnum {
     SUCCESS(0,"成功"),
     PARAM_ERROR(1,"参数不正确"),
     NO_PRODUCTION(2,"没有此类作品"),
+    ID_ISNULL(3,"抱歉，id不能为空哦"),
     ;
 
 

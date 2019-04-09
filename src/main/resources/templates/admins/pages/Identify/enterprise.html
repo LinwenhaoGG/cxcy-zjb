@@ -1,6 +1,6 @@
 <!--_meta 作为公共模版分离出去-->
 <!DOCTYPE HTML>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -9,92 +9,101 @@
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
     <title>后台管理</title>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <!-- 嵌入导航栏 -->
 <div th:replace="admins/nav::html"></div>
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../index.html" class="maincolor">用户认证</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <span class="c-666">用户认证</span>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">企业认证</span>
     </nav>
+    <div style="text-align: center"  th:if="${isnull} eq 1"><h1 style="color: #00a8c6">暂无企业认证消息</h1></div>
     <article class="cl pd-20">
-        <div class="panel panel-primary mb-30">
+        <div class="panel panel-primary mb-30" th:each="company:${pages}" th:id="'company'+${company.id}">
             <div class="panel-header">
-                <span class="mr-30">企业(公司)名称：XXX企业</span>
-                <span class="mr-30">企业法定代表人：王五</span>
-                <span class="mr-30">联系人：王五</span>
-                <span class="mr-30">联系电话：138001383000</span>
-                <span class="mr-30">企业社会代码：562546</span>
+                <span class="mr-30" th:text="'企业(公司)名称： ' + ${company.companyName}">企业(公司)名称：XXX企业</span>
+                <span class="mr-30" th:text="'企业法定代表人： ' + ${company.boss}">企业法定代表人：王五</span>
+                <span class="mr-30" th:text="'联系人： ' + ${company.contacts}">联系人：王五</span>
+                <span class="mr-30" th:text="'联系电话： ' + ${company.phone}">联系电话：138001383000</span>
+                <span class="mr-30" th:text="'企业社会代码： ' + ${company.boss}">企业社会代码：562546</span>
             </div>
             <div class="panel-body clearfix">
                 <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="../../static/head.jpg">
+                    <img class="avatar size-XXXL radius" src="../../static/head.jpg" th:src="${company.avatar}">
                 </div>
                 <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">企业(公司)邮箱: 11272658@qq.com</p>
+                    <p class="f-l mr-40" th:text="'账号名: ' + ${company.username}">账号名: 11272658@qq.com</p>
+                    <p class="f-l mr-40" th:text="'企业(公司)邮箱: ' + ${company.email}">企业(公司)邮箱: 11272658@qq.com</p>
                     <p class="f-l mr-40">认证状态: 待认证</p>
                     <div class="mt-20">
-                        <img src="../../static/yyzz.jpg" alt="" style="width: 600px;height: 400px;">
+                        <p class="f-l mr-40">营业执照：</p>
+                        <img src="../../static/yyzz.jpg" alt="" style="width: 240px;height: 360px;" th:src="${company.license}">
                     </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
                 </div>
-            </div>
-        </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">企业(公司)名称：XXX企业</span>
-                <span class="mr-30">企业法定代表人：王五</span>
-                <span class="mr-30">联系人：王五</span>
-                <span class="mr-30">联系电话：138001383000</span>
-                <span class="mr-30">企业社会代码：562546</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">企业(公司)邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        <img src="../../static/yyzz.jpg" alt="" style="width: 600px;height: 400px;">
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">企业(公司)名称：XXX企业</span>
-                <span class="mr-30">企业法定代表人：王五</span>
-                <span class="mr-30">联系人：王五</span>
-                <span class="mr-30">联系电话：138001383000</span>
-                <span class="mr-30">企业社会代码：562546</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">企业(公司)邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">企业(公司)类型: 小型公司</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        <img src="../../static/yyzz.jpg" alt="" style="width: 600px;height: 400px;">
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
+                <div style="position: relative;top: 330px;">
+                    <input class="btn btn-success radius f-r ml-30" type="button" th:onclick="'acceptCompany('+${company.id}+')'" value="通过认证">
+                    <input class="btn btn-default radius f-r" type="button" th:onclick="'refuse('+${company.id}+')'" value="拒绝通过">
                 </div>
             </div>
         </div>
     </article>
+    <div class="col-md-12 column" th:if="${isnull} ne 1" style="display: inline">
+        <ul class="pagination pull-right">
+            <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${pages.getTotalPages()}+' 页'"></a></li>
+            <li class="disabled" th:if="${page} eq '1'" ><a >首页</a></li>
+            <li th:if="${page} ne '1'"><a th:href="'/admins/checkCompanyList?page=1'+'&&size='+${size}">首页</a></li>
+            <li class="disabled" th:if="${page} le '1'"><a >上一页</a></li>
+            <li th:if="${page} gt '1'"><a th:href="'/admins/checkCompanyList?page='+${page-1}+'&&size='+${size}">上一页</a></li>
+            <li th:each="pageNo : ${#numbers.sequence(1, pages.getTotalPages())}">
+                <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+                <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/admins/checkCompanyList?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
+            </li>
+            <li th:if="${page} lt ${pages.getTotalPages()}"><a th:href="'/admins/checkCompanyList?page='+${page+1}+'&&size='+${size}">下一页</a></li>
+            <li class="disabled" th:if="${page} ge ${pages.getTotalPages()}"><a >下一页</a></li>
+            <li class="disabled" th:if="${page} eq ${pages.getTotalPages()}"><a >尾页</a></li>
+            <li th:if="${page} ne ${pages.getTotalPages()}"><a th:href="'/admins/checkCompanyList?page='+${pages.getTotalPages()}+'&&size='+${size}">尾页</a></li>
+        </ul>
+    </div>
 </section>
 
 </body>
+<script>
+    function acceptCompany(id) {
+        if(confirm("你确定要通过该企业的认证吗？")){
+            $.ajax({
+                url: "/user/passCompany",
+                type:'POST',
+                data:{id:id},
+                success:function () {
+                    alert("通过认证成功!");
+                    $('#company'+id).remove();
+                },
+                error:function (result) {
+                    alert("通过认证失败!"+result.msg);
+                }
+            })
+        }
+    };
+
+    function refuse(id) {
+        if(confirm("你确定要拒绝该用户的认证吗？")){
+            $.ajax({
+                url: "/user/refuseUser",
+                type:'POST',
+                data:{id:id},
+                success:function () {
+                    alert("拒绝认证成功!");
+                    $('#company'+id).remove();
+                },
+                error:function (result) {
+                    alert("拒绝认证失败!"+result.msg);
+                }
+            })
+        }
+    };
+
+</script>
 </html>

@@ -1,6 +1,7 @@
 <!--_meta 作为公共模版分离出去-->
 <!DOCTYPE HTML>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" data-th-fragment="header">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -8,67 +9,140 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui/css/H-ui.min.css" th:href="@{/h-ui/css/H-ui.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/H-ui.admin.css" th:href="@{/h-ui.admin/css/H-ui.admin.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/lib/Hui-iconfont/1.0.8/iconfont.css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/skin/default/skin.css" id="skin" th:href="@{/h-ui.admin/skin/default/skin.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/style.css" th:href="@{/h-ui.admin/css/style.css}"/>
     <title>后台管理</title>
 </head>
 <body>
 <!-- 嵌入导航栏 -->
-<div th:replace="admins/nav::html"></div>
+<!--<div th:replace="admins/nav::html"></div>-->
 
-<section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../../../index.html" class="maincolor">后台管理首页</a>
-        <span class="c-999 en">&gt;</span>
-        <span class="c-666">修改学生信息</span>
-    </nav>
-    <article class="cl pd-20">
-        <div class="alter-detail">
-            <form action="?" method="post" enctype="multipart/form-data">
-                <!--头像、邮箱、真实姓名、认证状态、账号名、手机号码、学号、学年、所在学院、专业、民族、政治面貌、个人简介-->
-                <div class="form-item">
-                    <span>学生头像：</span>
-                    <img src="../../../../static/head.jpg" alt="" style="width: 120px;height: 120px;">
-                    <input type="file" name="userLogo">
+<article class="cl pd-20">
+        <form action="/user/updateStudentMsg" method="post" class="form form-horizontal" id="form-member-add">
+            <input id="id" name="id" th:value="${student.sId}" type="hidden">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学生姓名：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text"  placeholder="" th:value="${student.name}" disabled="disabled">
                 </div>
-                <div class="form-item">
-                     <span>学生姓名：</span><input type="text" class="input-text radius size-M" name="name">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>电子邮箱：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" type="email" th:value="${student.email}" disabled="disabled" >
                 </div>
-                <div class="form-item">
-                    <span>电子邮箱：</span><input type="email" class="input-text radius size-M" name="mail">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text"  th:value="${student.telephone}" disabled="disabled">
                 </div>
-                <div class="form-item">
-                    <span>手机号码：</span><input type="tel" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">学号：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" id="number" name="number" th:value="${student.number}">
                 </div>
-                <div class="form-item">
-                    <span>学号：</span><input type="text" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">学年：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" id="edu" name="edu" th:value="${student.edu}">
                 </div>
-                <div class="form-item">
-                    <span>学年：</span><input type="text" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">所在学院：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" id="college" name="college" th:value="${student.college}">
                 </div>
-                <div class="form-item">
-                    <span>所在学院：</span><input type="text" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">专业：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" id="classes" name="classes" th:value="${student.classes}">
                 </div>
-                <div class="form-item">
-                    <span>专业：</span><input type="text" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">民族：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" id="nation" name="nation" th:value="${student.nation}">
                 </div>
-                <div class="form-item">
-                    <span>民族：</span><input type="text" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">政治面貌：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" id="politicsstatus" name="politicsstatus" th:value="${student.politicsstatus}">
                 </div>
-                <div class="form-item">
-                    <span>政治面貌：</span><input type="text" class="input-text radius size-M" name="">
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">备注：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea name="credential" th:text="${student.credential}" id="credential"  cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" ></textarea>
+                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
                 </div>
-                <div>
-                    个人简介：<textarea name="introduct" id="" cols="50" rows="6"></textarea>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
                 </div>
-                <div class="mt-10 mb-10">
-                    认证状态：已认证
-                </div>
-                <div>
-                    <input class="btn btn-primary radius" type="submit" value="提交更改">
-                </div>
-            </form>
-        </div>
-    </article>
-</section>
+            </div>
+        </form>
+</article>
+<script type="text/javascript" src="../../../../static/lib/jquery/1.9.1/jquery.min.js" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script>
+<script type="text/javascript" src="../../../../../static/lib/layer/2.4/layer.js" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" src="../../../../../static/h-ui/js/H-ui.js" th:src="@{/h-ui/js/H-ui.js}"></script>
+<script type="text/javascript" src="../../../../../static/h-ui.admin/js/H-ui.admin.page.js" th:src="@{/h-ui.admin/js/H-ui.admin.page.js}"></script>
 
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js" th:src="@{/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js" th:src="@{/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js" th:src="@{/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js" th:src="@{/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
 
+        $("#form-member-add").validate({
+            rules:{
+                politicsstatus:{
+                    required:true,
+                },
+                nation:{
+                    required:true,
+                },
+                classes:{
+                    required:true,
+                },
+                college:{
+                    required:true,
+                },
+                edu:{
+                    required:true,
+                },
+                number:{
+                    required:true,
+                },
+
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                $(form).ajaxSubmit();
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.$('.btn-refresh').click();
+                alert("修改成功");
+                parent.layer.close(index);
+            }
+        });
+    });
+</script>
 </body>
 </html>

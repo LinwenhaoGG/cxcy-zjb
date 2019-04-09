@@ -10,11 +10,18 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.Vo.UserCompanyVo;
+import com.cxcy.zjb.springboot.Vo.UserTeacherVo;
 import com.cxcy.zjb.springboot.domain.Company;
 import com.cxcy.zjb.springboot.repository.CompanyRepository;
 import com.cxcy.zjb.springboot.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -32,5 +39,23 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company saveCompany(Company company) {
         return repository.save(company);
+    }
+
+    @Override
+    public Page<UserCompanyVo> findUserCompanyByState(Integer state, Pageable pageable) {
+        return repository.findUserCompanyByState(state,pageable);
+    }
+
+    @Override
+    public List<UserCompanyVo> findCompanyListByName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return repository.findCompanyList();
+        }
+        return repository.findCompanyListByName(name);
+    }
+
+    @Override
+    public UserCompanyVo findUserCompanyById(Long id) {
+        return repository.findById(id);
     }
 }

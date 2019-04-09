@@ -62,7 +62,7 @@
 <div th:replace="admins/nav::html"></div>
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/" class="maincolor">后台管理首页</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/checkUserList" class="maincolor">后台管理首页</a>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">业余作品管理</span>
     </nav>
@@ -84,11 +84,17 @@
                 作品标题：<span th:text="${productionModel[1].ptitle}"></span>
             </div>
             <br>
-            <button class="btn btn-success radius f-r" value="0" id="check" th:if="${productionModel[1].pCheck} == 0"  th:onclick="'javascript:clickHandler()'">通过审核</button>
-            <button class="btn btn-success radius f-r" value="2" id="check" th:if="${productionModel[1].pCheck} == 2"  th:onclick="'javascript:clickHandler()'">不通过审核</button>
+            <button class="btn btn-success radius f-r" value="0" id="check" th:if="${productionModel[1].pCheck} == 0"  th:onclick="'javascript:clickHandler()'">不通过审核</button>
+            <button class="btn btn-success radius f-r" value="2" id="check" th:if="${productionModel[1].pCheck} == 2"  th:onclick="'javascript:clickHandler()'">通过审核</button>
             <!-- 作品简介 -->
             <div class="desc">
                 作品简介：<span th:text="${productionModel[1].psummary}"></span>
+            </div>
+            <br>
+            <div class="desc">
+                审核状态：
+                <span th:if="${productionModel[1].pCheck} == 0">已通过审核</span>
+                <span th:if="${productionModel[1].pCheck} == 2">未通过审核</span>
             </div>
             <br>
             <!-- 作品详情 -->

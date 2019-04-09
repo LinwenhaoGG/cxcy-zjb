@@ -1,6 +1,6 @@
 <!--_meta 作为公共模版分离出去-->
 <!DOCTYPE HTML>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -9,103 +9,103 @@
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
     <title>后台管理-教师认证</title>
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <!-- 嵌入导航栏 -->
 <div th:replace="admins/nav::html"></div>
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="../../index.html" class="maincolor">用户认证</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <span class="c-666">用户认证</span>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">教师认证</span>
     </nav>
+    <div style="text-align: center"  th:if="${isnull} eq 1"><h1 style="color: #00a8c6">暂无教师认证消息</h1></div>
     <article class="cl pd-20">
-        <div class="panel panel-primary mb-30">
+        <div class="panel panel-primary mb-30" th:each="teacher:${pages}" th:id="'teacher'+${teacher.id}">
             <div class="panel-header">
-                <span class="mr-30">教师姓名：李四</span>
-                <span class="mr-30">教师工号：1532654652</span>
-                <span class="mr-30">手机号码：138001383000</span>
-                <span class="mr-30">在职学校：仲恺农业工程学院</span>
-                <span class="mr-30">所在学院：信息科学与技术学院</span>
-                <span class="mr-30">专业领域：计算机科学与技术</span>
-                <span class="mr-30">职位：教授</span>
+                <span class="mr-30" th:text="'教师姓名：' + ${teacher.name}">教师姓名：李四</span>
+                <span class="mr-30" th:text="'教师工号：' + ${teacher.number}">教师工号：1532654652</span>
+                <span class="mr-30" th:text="'手机号码：' + ${teacher.telephone}">手机号码：138001383000</span>
+                <span class="mr-30" th:text="'在职学校：' + ${teacher.school}">在职学校：仲恺农业工程学院</span>
+                <span class="mr-30" th:text="'所在学院：' + ${teacher.college}">所在学院：信息科学与技术学院</span>
+                <span class="mr-30" th:text="'专业领域：' + ${teacher.specially}">专业领域：计算机科学与技术</span>
+                <span class="mr-30" th:text="'职位：' + ${teacher.position}">职位：教授</span>
             </div>
             <div class="panel-body clearfix">
                 <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="../../static/head.jpg">
+                    <img class="avatar size-XXXL radius" src="../../static/head.jpg"  th:src="${teacher.avatar}">
                 </div>
                 <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">民族: 汉族</p>
-                    <p class="f-l mr-40">政治面貌: 共青团员</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
+                    <p class="f-l mr-40" th:text="'账号名: ' + ${teacher.username}">账号名: 11272658@qq.com</p>
+                    <p class="f-l mr-40" th:text="'邮箱: ' + ${teacher.email}">邮箱: 11272658@qq.com</p>
+                    <p class="f-l mr-40" th:text="'民族: ' + ${teacher.nation}">民族: 汉族</p>
+                    <p class="f-l mr-40" th:text="'政治面貌: ' + ${teacher.politicsstatus}">政治面貌: 共青团员</p>
+                    <p class="f-l mr-40" >认证状态: 待认证</p>
                     <div class="mt-20">
-                        个人简介:<textarea class="textarea" class="ml-15" name="" id="" cols="60" rows="6"></textarea>
+                        个人简介:<textarea class="textarea" th:text="${teacher.credential}" class="ml-15" name="" id="" cols="60" rows="6"></textarea>
                     </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
                 </div>
-            </div>
-        </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">教师姓名：李四</span>
-                <span class="mr-30">教师工号：1532654652</span>
-                <span class="mr-30">手机号码：138001383000</span>
-                <span class="mr-30">在职学校：仲恺农业工程学院</span>
-                <span class="mr-30">所在学院：信息科学与技术学院</span>
-                <span class="mr-30">专业领域：计算机科学与技术</span>
-                <span class="mr-30">职位：教授</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">民族: 汉族</p>
-                    <p class="f-l mr-40">政治面貌: 共青团员</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        个人简介:<textarea class="textarea" class="ml-15" name="" id="" cols="60" rows="6"></textarea>
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-primary mb-30">
-            <div class="panel-header">
-                <span class="mr-30">教师姓名：李四</span>
-                <span class="mr-30">教师工号：1532654652</span>
-                <span class="mr-30">手机号码：138001383000</span>
-                <span class="mr-30">在职学校：仲恺农业工程学院</span>
-                <span class="mr-30">所在学院：信息科学与技术学院</span>
-                <span class="mr-30">专业领域：计算机科学与技术</span>
-                <span class="mr-30">职位：教授</span>
-            </div>
-            <div class="panel-body clearfix">
-                <div class="head f-l">
-                    <img class="avatar size-XXXL radius" src="../../static/head.jpg">
-                </div>
-                <div class="f-l">
-                    <p class="f-l mr-40">账号名: 11272658@qq.com</p>
-                    <p class="f-l mr-40">邮箱: 11272658@qq.com</p>
-                    <p class="f-l mr-40">民族: 汉族</p>
-                    <p class="f-l mr-40">政治面貌: 共青团员</p>
-                    <p class="f-l mr-40">认证状态: 待认证</p>
-                    <div class="mt-20">
-                        个人简介:<textarea class="textarea" class="ml-15" name="" id="" cols="60" rows="6"></textarea>
-                    </div>
-                    <input class="btn btn-success radius f-r ml-30" type="button" value="通过认证">
-                    <input class="btn btn-default radius f-r" type="button" value="拒绝通过">
+                <div style="position: relative;top: 120px;">
+                    <input class="btn btn-success radius f-r ml-30" th:onclick="'acceptTeacher('+${teacher.id}+')'" type="button" value="通过认证">
+                    <input class="btn btn-default radius f-r" th:onclick="'refuse('+${teacher.id}+')'" type="button" value="拒绝通过">
                 </div>
             </div>
         </div>
     </article>
+    <div class="col-md-12 column" th:if="${isnull} ne 1" style="display: inline">
+        <ul class="pagination pull-right">
+            <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${pages.getTotalPages()}+' 页'"></a></li>
+            <li class="disabled" th:if="${page} eq '1'" ><a >首页</a></li>
+            <li th:if="${page} ne '1'"><a th:href="'/admins/checkTeacherList?page=1'+'&&size='+${size}">首页</a></li>
+            <li class="disabled" th:if="${page} le '1'"><a >上一页</a></li>
+            <li th:if="${page} gt '1'"><a th:href="'/admins/checkTeacherList?page='+${page-1}+'&&size='+${size}">上一页</a></li>
+            <li th:each="pageNo : ${#numbers.sequence(1, pages.getTotalPages())}">
+                <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
+                <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/admins/checkTeacherList?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
+            </li>
+            <li th:if="${page} lt ${pages.getTotalPages()}"><a th:href="'/admins/checkTeacherList?page='+${page+1}+'&&size='+${size}">下一页</a></li>
+            <li class="disabled" th:if="${page} ge ${pages.getTotalPages()}"><a >下一页</a></li>
+            <li class="disabled" th:if="${page} eq ${pages.getTotalPages()}"><a >尾页</a></li>
+            <li th:if="${page} ne ${pages.getTotalPages()}"><a th:href="'/admins/checkTeacherList?page='+${pages.getTotalPages()}+'&&size='+${size}">尾页</a></li>
+        </ul>
+    </div>
 </section>
-
 </body>
+<script>
+    function acceptTeacher(id) {
+        if(confirm("你确定要通过该用户的认证吗？")){
+            $.ajax({
+                url: "/user/passTeacher",
+                type:'POST',
+                data:{id:id},
+                success:function () {
+                    alert("通过认证成功!");
+                    $('#teacher'+id).remove();
+                },
+                error:function (result) {
+                    alert("通过认证失败!"+result.msg);
+                }
+            })
+        }
+    };
+
+    function refuse(id) {
+        if(confirm("你确定要拒绝该用户的认证吗？")){
+            $.ajax({
+                url: "/user/refuseUser",
+                type:'POST',
+                data:{id:id},
+                success:function () {
+                    alert("拒绝认证成功!");
+                    $('#teacher'+id).remove();
+                },
+                error:function (result) {
+                    alert("拒绝认证失败!"+result.msg);
+                }
+            })
+        }
+    };
+
+</script>
 </html>

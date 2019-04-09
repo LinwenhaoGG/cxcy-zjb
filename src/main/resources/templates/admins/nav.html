@@ -8,8 +8,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 	<meta http-equiv="Cache-Control" content="no-siteapp" />
-	<link rel="Bookmark" href="favicon.ico" >
-	<link rel="Shortcut Icon" href="favicon.ico" />
+    <link rel="Bookmark" th:href="@{/img/logo.ico}" type="favicon.ico"/>
+    <link rel="Shortcut Icon" th:href="@{/img/logo.ico}" type="favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui/css/H-ui.min.css" th:href="@{/h-ui/css/H-ui.min.css}"/>
     <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/H-ui.admin.css" th:href="@{/h-ui.admin/css/H-ui.admin.css}"/>
     <link rel="stylesheet" type="text/css" href="../../../../../static/lib/Hui-iconfont/1.0.8/iconfont.css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}"/>
@@ -20,20 +20,20 @@
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/admins/ ">后台管理系统</a>
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/admins/checkUserList">创新创业平台-后台管理系统</a>
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
-					<li>超级管理员</li>
+					<li>欢迎您！超级管理员</li>
 					<li class="dropDown dropDown_hover">
                         <a  class="dropDown_A" ><span sec:authentication="name"></span> <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;">个人信息</a></li>
-							<li><a href="#">切换账户</a></li>
+							<li><a href="javascript:;" onclick="member_show('个人信息','/user/updatePersonalAdmin','800','500')">个人信息</a></li>
+							<li><a href="/logout">切换账户</a></li>
 							<li><a href="/logout">退出</a></li>
 						</ul>
 					</li>
-					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">0</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
 				</ul>
 			</nav>
 		</div>
@@ -42,24 +42,24 @@
 <aside class="Hui-aside" style="position: fixed"><!--这里注意改-->
 	<div class="menu_dropdown bk_2">
 		<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe616;</i> 用户认证<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe60d;</i> 用户认证<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-                    <li><a href="../../../../index.html" th:href="@{/admins/index}" title="学生认证">学生认证</a></li>
-                    <li><a href="../../Identify/teacher.html" th:href="@{/admins/pages/Identify/teacher.html}" title="老师认证">老师认证</a></li>
-                    <li><a href="../../Identify/enterprise.html" th:href="@{/admins/pages/Identify/enterprise.html}" title="企业认证">企业认证</a></li>
-                    <li><a href="../../Identify/admin.html" th:href="@{/admins/pages/Identify/admin.html}" title="管理员认证">管理员认证</a></li>
+                    <li><a href="../../../../index.html" th:href="@{/admins/checkUserList}" title="学生认证">学生认证</a></li>
+                    <li><a href="../../Identify/teacher.html" th:href="@{/admins/checkTeacherList}" title="老师认证">老师认证</a></li>
+                    <li><a href="../../Identify/enterprise.html" th:href="@{/admins/checkCompanyList}" title="企业认证">企业认证</a></li>
+                    <!--<li><a href="../../Identify/admin.html" th:href="@{/admins/pages/Identify/admin.html}" title="管理员认证">管理员认证</a></li>-->
 				</ul>
 	        </dd>
         </dl>
 		<dl id="menu-picture">
-            <dt><i class="Hui-iconfont">&#xe613;</i> 用户认管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe62d;</i>用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="./pages/manage/user/studentManage.html" title="学生管理">学生管理</a></li>
-                    <li><a href="./pages/manage/user/teacherManage.html" title="老师管理">老师管理</a></li>
-                    <li><a href="./pages/manage/user/enterpriseManage.html" title="企业管理">企业管理</a></li>
-                    <li><a href="./pages/manage/user/adminManage.html" title="管理员管理">管理员管理</a></li>
+                    <li><a href="/user/getStudentListByName" th:href="@{/user/getStudentListByName}" title="学生管理">学生管理</a></li>
+                    <li><a href="/user/getTeacherListByName" title="老师管理">老师管理</a></li>
+                    <li><a href="/user/getCompanyListByName" title="企业管理">企业管理</a></li>
+                    <li><a href="/user/getAdminListByName" sec:authorize="hasRole('ROLE_SUPER_ADMIN')" title="管理员管理">管理员管理</a></li>
                 </ul>
             </dd>
         </dl>
@@ -73,7 +73,7 @@
             </dd>
         </dl>
 		<dl id="menu-comments">
-            <dt><i class="Hui-iconfont">&#xe616;</i> 业余作品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe620;</i> 业余作品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
                     <li><a th:href="@{/direction/proClassify}" title="方向、类别管理">方向、类别管理</a></li>
@@ -82,12 +82,27 @@
             </dd>
         </dl>
         <dl>
-            <dt><i class="Hui-iconfont">&#xe616;</i> 资讯后台<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe622;</i> 资讯后台<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
                     <li><a href="/admins/toInformationCategorieList" title="类别管理">类别管理</a></li>
                     <li><a href="/admins/toInformationList" title="资讯管理">资讯管理</a></li>
                     <li><a href="/admins/informationAdd" title="添加资讯">添加资讯</a></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="Hui-iconfont">&#xe61a;</i> 系统统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd >
+                <ul>
+                    <li class="current"><a href="/user/userStatisticsCharts" title="用户统计">用户统计</a></li>
+                    <li class="current"><a href="/information/informationStatisticsCharts" title="资讯统计">资讯统计</a></li>
+                    <!--<li><a href="charts-1.html" title="折线图">折线图</a></li>-->
+                    <!--<li><a href="charts-2.html" title="时间轴折线图">时间轴折线图</a></li>-->
+                    <!--<li><a href="charts-3.html" title="区域图">区域图</a></li>-->
+                    <!--<li><a href="charts-4.html" title="柱状图">柱状图</a></li>-->
+                    <!--<li><a href="charts-5.html" title="饼状图">饼状图</a></li>-->
+                    <!--<li><a href="charts-6.html" title="3D柱状图">3D柱状图</a></li>-->
                 </ul>
             </dd>
         </dl>
@@ -97,7 +112,11 @@
 <script type="text/javascript" src="../../../../../static/lib/layer/2.4/layer.js" th:src="@{/lib/layer/2.4/layer.js}"></script>
 <script type="text/javascript" src="../../../../../static/h-ui/js/H-ui.js" th:src="@{/h-ui/js/H-ui.js}"></script>
 <script type="text/javascript" src="../../../../../static/h-ui.admin/js/H-ui.admin.page.js" th:src="@{/h-ui.admin/js/H-ui.admin.page.js}"></script>
-
-
+<script type="text/javascript">
+    /*用户-查看*/
+    function member_show(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+</script>
 </body>
 </html>

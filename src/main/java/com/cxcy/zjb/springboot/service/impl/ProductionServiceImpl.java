@@ -71,7 +71,7 @@ public class ProductionServiceImpl implements ProductionService {
         //根据uid获取sid
         User user = userService.findUserById(uId);
         Long sId = user.getStudent();
-        //根据用户id查找对应的growth
+        //根据学生id查找对应的growth
         Growth growth = growthService.findByUser(sId);
 
         //添加相应的gid的浏览量+1
@@ -100,7 +100,7 @@ public class ProductionServiceImpl implements ProductionService {
         Comment comment = new Comment(uId, content);//先创建一个评论
         commentService.saveComment(comment);
 
-        //根据用户id查找对应的growth
+        //根据学生id查找对应的growth
         Growth growth = growthService.findByUser(prodcutionUser.getStudent());
 
         //添加相应的gid的评论量+1
@@ -119,7 +119,7 @@ public class ProductionServiceImpl implements ProductionService {
         Long uId = originalProduction.getUser();
         User user = userService.findUserById(uId);
         Long sId = user.getStudent();
-        //根据用户id查找对应的growth
+        //根据学生id查找对应的growth
         Growth growth = growthService.findByUser(sId);
 
         //减少相应的gid的评论量-1
@@ -143,7 +143,7 @@ public class ProductionServiceImpl implements ProductionService {
         Long puId = originalProduction.getUser();
         //获取当前登录用户id
         Long uId = user.getId();
-        //根据用户id查找对应的growth
+        //根据学生id查找对应的growth
         Growth growth = growthService.findByUser(userService.findUserById(puId).getStudent());
 //        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Vote> votes = originalProduction.getVotes();

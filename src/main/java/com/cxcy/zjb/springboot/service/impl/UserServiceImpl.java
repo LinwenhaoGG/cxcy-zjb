@@ -11,43 +11,26 @@
 package com.cxcy.zjb.springboot.service.impl;
 
 
+import com.cxcy.zjb.springboot.Vo.UserChartsVo;
 import com.cxcy.zjb.springboot.Vo.UserMessage;
+import com.cxcy.zjb.springboot.constants.UserContants;
 import com.cxcy.zjb.springboot.domain.Inmessage;
-import com.cxcy.zjb.springboot.domain.Student;
 import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.repository.InMessageRepository;
-import com.cxcy.zjb.springboot.repository.StudentRepository;
-
 import com.cxcy.zjb.springboot.repository.UserRepository;
 import com.cxcy.zjb.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import com.cxcy.zjb.springboot.domain.User;
-import com.cxcy.zjb.springboot.Vo.UserMessage;
-import com.cxcy.zjb.springboot.domain.Inmessage;
-import com.cxcy.zjb.springboot.domain.Student;
-import com.cxcy.zjb.springboot.domain.User;
-import com.cxcy.zjb.springboot.repository.InMessageRepository;
-import com.cxcy.zjb.springboot.repository.StudentRepository;
-import com.cxcy.zjb.springboot.repository.UserRepository;
-import com.cxcy.zjb.springboot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 /**
  * 〈一句话功能简述〉<br> 
  * 〈用户service实现层〉
@@ -62,8 +45,6 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     private UserRepository repository;
     @Autowired
     private InMessageRepository inMessageRepository;
-    @Autowired
-    private StudentRepository studentRepository;
 
     @Override
     public User findUser(User user) {
@@ -107,7 +88,6 @@ public class UserServiceImpl implements UserService,UserDetailsService {
             userMessage.setUserName(user.getUsername());
             messageArrayList.add(userMessage);
         }
-
 
         return messageArrayList;
     }
@@ -153,5 +133,30 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         return repository.findByUsername(username);
     }
 
+    @Override
+    public Page<User> findByStyleAndState(Integer style, Integer state, Pageable pageable) {
+        return repository.findByStyleAndState(style, state, pageable);
+    }
 
+    @Override
+    public void giveUserAuthority(Long userId, Long auId) {
+        repository.giveUserAuthority(userId, auId);
+    }
+
+    @Override
+    public List<UserChartsVo> getUserChartsCount() {
+        List<UserChartsVo> userChartsVos = repository.getUserChartsCount();
+        //如果不为空，将style转换为名称
+        if (null != userChartsVos) {
+            Map<Integer, String> styleMap = new HashMap<>();
+            styleMap.put(UserContants.STYLE_STUDENT, "学生");
+            styleMap.put(UserContants.STYLE_TEACHER, "教师");
+            styleMap.put(UserContants.STYLE_ADMIN, "管理员");
+            styleMap.put(UserContants.STYLE_COMAPNY, "企业");
+            for (UserChartsVo userCharts : userChartsVos) {
+                userCharts.setName(styleMap.get(userCharts.getStyle()));
+            }
+        }
+        return userChartsVos;
+    }
 }

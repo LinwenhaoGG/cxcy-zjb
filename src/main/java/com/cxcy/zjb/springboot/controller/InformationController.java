@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.Vo.ChartsValueCountVo;
 import com.cxcy.zjb.springboot.Vo.Response;
 import com.cxcy.zjb.springboot.Vo.ResultVO;
 import com.cxcy.zjb.springboot.domain.Information;
@@ -25,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolationException;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 资讯控制层
@@ -328,11 +331,64 @@ public class InformationController {
         return ResultUtils.success();
     }
 
+    /**
+     * 编辑资讯内容
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/ShowInformationAdmins")
     public String informationUpdate(@RequestParam("id") Long id,
                                     Model model) {
         Information information = informationService.getInformationById(id);
         model.addAttribute("information", information);
         return "admins/pages/news/news_detail";
+    }
+
+    /**
+     * 用户统计页面
+     * @return
+     */
+    @GetMapping("/informationStatisticsCharts")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String toUserStatisticsCharts(Model model) {
+        return "admins/pages/charts/information_statistics_charts";
+    }
+
+    /**
+     * 按分类统计数据
+     * @return
+     */
+    @RequestMapping("/informationCountByStyle")
+    @ResponseBody
+    public Map<String,Object> informationCountByStyle() {
+        Map<String,Object> map = new HashMap<>();
+        List<ChartsValueCountVo> list = informationService.informationCountByStyle();
+        List<String> nameList = list.stream().map(ChartsValueCountVo -> ChartsValueCountVo.getName()).collect(Collectors.toList());
+        map.put("nameList", nameList);
+        map.put("list", list);
+        map.put("text","创新创业平台资讯分类扇形图");
+        map.put("subtext", "选择时间内分类资讯总量");
+        map.put("unit","资讯数量");
+        return map;
+    }
+
+    /**
+     * 按热度统计数据
+     * @return
+     */
+    @RequestMapping("/informationCountByHot")
+    @ResponseBody
+    public Map<String,Object> informationCountByHot() {
+        Map<String,Object> map = new HashMap<>();
+        Pageable pageable = new PageRequest(0,10);
+        List<ChartsValueCountVo> list = informationService.informationCountByHot(pageable);
+        List<String> nameList = list.stream().map(ChartsValueCountVo -> ChartsValueCountVo.getName()).collect(Collectors.toList());
+        map.put("nameList", nameList);
+        map.put("list", list);
+        map.put("text","创新创业平台资讯热度TOP10扇形图");
+        map.put("subtext", "选择时间内资讯热度");
+        map.put("unit","资讯热度");
+        return map;
     }
 }

@@ -1,20 +1,20 @@
 package com.cxcy.zjb.springboot.controller;
 
-import com.cxcy.zjb.springboot.Vo.Response;
+import com.cxcy.zjb.springboot.Vo.*;
+import com.cxcy.zjb.springboot.constants.UserContants;
 import com.cxcy.zjb.springboot.domain.Information;
 import com.cxcy.zjb.springboot.domain.InformationCategory;
 import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.domain.User;
-import com.cxcy.zjb.springboot.service.InformationCategoryService;
-import com.cxcy.zjb.springboot.service.InformationService;
-import com.cxcy.zjb.springboot.service.MatchService;
-import com.cxcy.zjb.springboot.service.UserService;
+import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
+import com.cxcy.zjb.springboot.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +44,15 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StudentService studentService;
+
+    @Autowired
+    private TeacherService teacherService;
+
+    @Autowired
+    private CompanyService companyService;
 
     /**
      * 管理员查看所有比赛
@@ -129,14 +138,76 @@ public class AdminController {
         return new ModelAndView("admins/pages/manage/competition/competition_release",map);
     }
 
-    @GetMapping("/")
-    public String index() {
+    /**
+     * 管理员认证管理页，显示教师认证信息
+     * @param page
+     * @param size
+     * @param model
+     * @return
+     */
+    @GetMapping("/checkTeacherList")
+    public String checkTeacherList(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                        @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                        Model model) {
+        PageRequest request = new PageRequest(page - 1, size);
+        //通过状态获取对应的用户教师信息
+        Page<UserTeacherVo> userTeacherVoPage = teacherService.findUserTeacherByState(UserContants.STATE_IN_AUDIT, request);
+        model.addAttribute("pages", userTeacherVoPage);
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        if (userTeacherVoPage.getTotalPages() == 0) {
+            model.addAttribute("isnull", 1);
+        }
+        return "admins/pages/Identify/teacher";
+    }
+
+    /**
+     * 管理员认证管理页，显示教师认证信息
+     * @param page
+     * @param size
+     * @param model
+     * @return
+     */
+    @GetMapping("/checkCompanyList")
+    public String checkCompanyList(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                        @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                        Model model) {
+        PageRequest request = new PageRequest(page - 1, size);
+        //通过状态获取对应的用户教师信息
+        Page<UserCompanyVo> userCompanyVos = companyService.findUserCompanyByState(UserContants.STATE_IN_AUDIT, request);
+        model.addAttribute("pages", userCompanyVos);
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        if (userCompanyVos.getTotalPages() == 0) {
+            model.addAttribute("isnull", 1);
+        }
+        return "admins/pages/Identify/enterprise";
+    }
+    /**
+     * 管理员首页，显示学生认证信息
+     * @param page
+     * @param size
+     * @param model
+     * @return
+     */
+    @GetMapping("/checkUserList")
+    public String checkUserList(@RequestParam(value = "page", defaultValue = "1") Integer page, //页数
+                        @RequestParam(value = "size", defaultValue = "5") Integer size,//一页个数
+                        Model model) {
+        PageRequest request = new PageRequest(page - 1, size);
+        Page<UserStudentVo> userStudentVoPage = studentService.getUserStudentVoByStateAndStyle(UserContants.STYLE_STUDENT, UserContants.STATE_IN_AUDIT, request);
+        model.addAttribute("pages", userStudentVoPage);
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        if (userStudentVoPage.getTotalPages() == 0) {
+            model.addAttribute("isnull", 1);
+        }
         return "admins/index";
     }
 
     @GetMapping("/test")
     public String test() {
-        return "admins/test";
+        return "admins/pages/manage/user/change-password";
     }
 
     /**
@@ -227,5 +298,34 @@ public class AdminController {
 
         String redirectUrl = "/admins/toInformationList";
         return ResponseEntity.ok().body(new Response(true, "处理成功", redirectUrl));
+    }
+
+    /**
+     *跳转到新增管理员页面
+     * @return
+     */
+    @GetMapping("/addAdminUser")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")  // 指定角色权限才能操作方法
+    public String addAdminUser() {
+        return "admins/pages/manage/user/alter/adminAdd";
+    }
+
+    /**
+     *新增管理员
+     * @return
+     */
+    @PostMapping("/addAdminUser")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")  // 指定角色权限才能操作方法
+    public Result addAdminUser(User user) {
+        if (null != user) {
+            user.setAvatar("http://localhost:8080/file/upload/b6a273f470b14800bdd1ac29112378a3.jpg"); // 默认头像图片地址
+            user.setIsUse(1);  //启用状态
+            user.setState(UserContants.STATE_IS_ACCEPT);  //已认证
+            user.setStyle(UserContants.STYLE_ADMIN); //设置为管理员状态
+            User newUser = userService.saveUserInfo(user);
+            userService.giveUserAuthority(newUser.getId(), UserContants.ROLE_ADMIN_ID); //给管理新增角色
+        }
+
+        return ResultUtil.success();
     }
 }

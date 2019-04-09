@@ -1,0 +1,90 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="favicon.ico" >
+    <link rel="Shortcut Icon" href="favicon.ico" />
+
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <title>数据统计-资讯统计</title>
+</head>
+<body>
+<!-- 嵌入导航栏 -->
+<div th:replace="admins/nav::html"></div>
+<div class="layui-input-inline" align="center">
+    选择统计的类型：
+    <select name="modules" lay-verify="required" lay-search="" id="countTypeURL">
+        <option value="/information/informationCountByStyle">按分类</option>
+        <option value="/information/informationCountByHot">按热度</option>
+    </select>
+    选择查询的时间：
+    <select name="modules" lay-verify="required" lay-search="" id="countTime">
+        <option value="7">不限</option>
+    </select>
+    <a class="btn btn-primary radius" href="javascript:;" onclick="show_data()"> 统计数据</a>
+</div>
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main" style="width: 600px;height:400px;position:absolute;top:50%;left: 50%;margin-top: -200px;margin-left: -300px;"></div>
+<script src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+<script type="text/javascript">
+    /*展示数据*/
+    function show_data(){
+        var countTypeURL = $("#countTypeURL").val();
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));//main是<div id="main" style="width: 600px;height:400px;"></div>的id
+        $.ajax({
+            type: 'POST',
+            url: countTypeURL,
+            data:{},
+            dataType: 'json',
+            success: function(data){
+                // 指定图表的配置项和数据
+                var option = {
+                    title : {
+                        text: data.text,
+                        subtext: data.subtext,
+                        x:'center'
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'right',
+                        data: data.nameList
+                    },
+                    series : [
+                        {
+                            name: data.unit,
+                            type: 'pie',
+                            radius : '55%',
+                            center: ['50%', '60%'],
+                            data: data.list,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            },
+            error:function(data) {
+                console.log(data.msg);
+            },
+        });
+
+    }
+</script>
+
+</body>
+</html>

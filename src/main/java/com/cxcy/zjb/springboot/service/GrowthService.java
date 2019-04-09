@@ -28,7 +28,7 @@ public interface GrowthService {
     public Growth saveGrowth(Growth growth);
 
 
-    Growth findByUser(Long uId);
+    Growth findByUser(Long sId);
 
     Growth save(Growth growth);
 

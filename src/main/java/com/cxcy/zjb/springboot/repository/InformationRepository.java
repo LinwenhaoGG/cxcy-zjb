@@ -1,10 +1,12 @@
 package com.cxcy.zjb.springboot.repository;
 
+import com.cxcy.zjb.springboot.Vo.ChartsValueCountVo;
 import com.cxcy.zjb.springboot.domain.Information;
 import com.cxcy.zjb.springboot.domain.InformationCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -58,4 +60,21 @@ public interface InformationRepository extends JpaRepository<Information,Long> {
      * @return
      */
     List<Information> findByTitleLike(String string);
+
+    /**
+     * 获取分类统计类型
+     * @return
+     */
+    @Query(value = "select new com.cxcy.zjb.springboot.Vo.ChartsValueCountVo(infcat.name, count(infor.id))" +
+            "from com.cxcy.zjb.springboot.domain.InformationCategory infcat , Information infor " +
+            "where infcat.id = infor.informationCategory GROUP BY infcat.name")
+    List<ChartsValueCountVo> informationCountByStyle();
+
+    /**
+     * 获取分类统计类型
+     * @return
+     */
+    @Query(value = "select new com.cxcy.zjb.springboot.Vo.ChartsValueCountVo(infor.title, infor.readSize)" +
+            "from Information infor ORDER BY infor.readSize desc")
+    List<ChartsValueCountVo> informationCountByHot(Pageable pageable);
  }

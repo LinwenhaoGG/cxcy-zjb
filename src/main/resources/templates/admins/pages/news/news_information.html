@@ -9,7 +9,7 @@
 <div th:replace="admins/nav::html"></div>
 
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/" class="maincolor">后台管理首页</a>
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/checkUserList" class="maincolor">后台管理首页</a>
         <span class="c-999 en">&gt;</span>
         <span class="c-666">资讯管理</span>
     </nav>
@@ -55,11 +55,11 @@
 <script type="text/javascript">
     $(function(){
         $('.table-sort').dataTable({
-            "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+            "aaSorting": [[ 3, "asc" ]],//默认第几个排序
             "bStateSave": true,//状态保存
             "aoColumnDefs": [
                 //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable":false,"aTargets":[0]}// 制定列不参与排序
+                {"orderable":false,"aTargets":[5]}// 制定列不参与排序
             ]
         });
 

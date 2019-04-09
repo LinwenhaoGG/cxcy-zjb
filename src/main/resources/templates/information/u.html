@@ -8,9 +8,7 @@
     <title>Title</title>
 
     <script src="../../js/jquery-3.1.1.min.js"  th:src="@{/js/jquery-3.1.1.min.js}"></script>
-
     <script src="../../js/toastr.min.js"  th:src="@{/js/toastr.min.js}"></script>
-
     <script src="../../js/thymeleaf-bootstrap-paginator.js"  th:src="@{/js/thymeleaf-bootstrap-paginator.js}"></script>
 
 </head>
@@ -27,7 +25,7 @@
                 <div class="col-md-12">
                     <span>
 
-                        <img style="height: 120px;width: 120px" th:src="${user.avatar} == null ? '/images/avatar-defualt.jpg' : '/img/'+${user.avatar} ">
+                        <img style="height: 120px;width: 120px" th:src="${user.avatar} == null ? '/images/avatar-defualt.jpg' : ${user.avatar} ">
 
                     </span>
 

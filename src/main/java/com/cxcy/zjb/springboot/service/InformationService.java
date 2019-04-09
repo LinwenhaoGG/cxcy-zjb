@@ -10,6 +10,7 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.Vo.ChartsValueCountVo;
 import com.cxcy.zjb.springboot.domain.Information;
 import com.cxcy.zjb.springboot.domain.InformationCategory;
 import org.springframework.data.domain.Page;
@@ -110,4 +111,17 @@ public interface InformationService {
      * @return
      */
     List<Information> findByTitleLike(String string);
+
+    /**
+     * 按分类统计数据
+     * @return
+     */
+    List<ChartsValueCountVo> informationCountByStyle();
+
+    /**
+     * 按热度统计数据
+     * @param pageable
+     * @return
+     */
+    List<ChartsValueCountVo> informationCountByHot(Pageable pageable);
 }

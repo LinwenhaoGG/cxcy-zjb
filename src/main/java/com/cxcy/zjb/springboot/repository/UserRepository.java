@@ -1,10 +1,14 @@
 package com.cxcy.zjb.springboot.repository;
 
+import com.cxcy.zjb.springboot.Vo.UserChartsVo;
 import com.cxcy.zjb.springboot.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,5 +54,30 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     public User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
+    /**
+     * 根据类型和审核状态查询出用户列表
+     * @param style
+     * @param state
+     * @return
+     */
+    Page<User> findByStyleAndState(Integer style, Integer state, Pageable pageable);
 
+ /**
+  * 给用户增加角色
+  * @param userId
+  * @param auId
+  */
+ @Transactional
+ @Modifying
+ @Query(value = "INSERT INTO user_authority VALUES(?1,?2)", nativeQuery = true)
+    int giveUserAuthority(Long userId, Long auId);
+
+
+ /**
+  * 获取用户统计类型
+  * @return
+  */
+ @Query(value = "select new com.cxcy.zjb.springboot.Vo.UserChartsVo(u.style, count(u.id))" +
+         "from User u GROUP BY u.style")
+ List<UserChartsVo> getUserChartsCount();
 }

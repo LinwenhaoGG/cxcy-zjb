@@ -12,25 +12,37 @@ package com.cxcy.zjb.springboot.controller;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.cxcy.zjb.springboot.Vo.*;
+import com.cxcy.zjb.springboot.constants.UserContants;
 import com.cxcy.zjb.springboot.domain.*;
+import com.cxcy.zjb.springboot.enums.ResultEnum;
 import com.cxcy.zjb.springboot.service.*;
+import com.cxcy.zjb.springboot.utils.MD5Utils;
 import com.cxcy.zjb.springboot.utils.ResultUtil;
 import com.cxcy.zjb.springboot.utils.SendSmsUtil;
 import com.cxcy.zjb.springboot.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import sun.security.provider.MD5;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -169,7 +181,7 @@ public class UserController {
             userInfo.setName(teacherVo.getName());
             userInfo.setTeacher(saveTeacher.getId());
             //设置状态为认证中
-            userInfo.setState(2);
+            userInfo.setState(UserContants.STATE_IN_AUDIT);
             userService.saveUserInfo(userInfo);
 //        }catch (Exception e){
 //            log.info("【出错啦】web中没有user登录");
@@ -277,35 +289,9 @@ public class UserController {
     }
 
     /**
-     * 通过用户的信息认证
-     * @param id
+     * 获取聊天列表
      * @return
      */
-    @RequestMapping("/pass")
-    @ResponseBody
-    public Result passUserIdentification(@RequestParam("id") String  id){
-        if (id.trim()==""){
-            System.out.println("【用户认证】出错了，id不能为空");
-            return ResultUtil.error("id不能为空");
-        }
-        //修改用户的认证状态
-        User user = userService.findUserbyUserId(id);
-        user.setState(1);
-        User saveUserInfo = userService.saveUserInfo(user);
-        if (saveUserInfo==null){
-            return ResultUtil.error("【用户认证】出错了，修改用户的认证状态失败！");
-        }
-        //在growth表增加学生信息
-        Growth growth = new Growth();
-        growth.setUser(saveUserInfo.getStudent());
-        Growth saveGrowth = growthService.saveGrowth(growth);
-        if (saveGrowth == null){
-             return ResultUtil.error("【用户认证】出错了，在growth表增加学生信息失败！");
-        }
-
-        return ResultUtil.success();
-    }
-
     @GetMapping("/friendList")
     public String friendList() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
@@ -348,6 +334,13 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 验证注册
+     * @param register
+     * @param bindingResult
+     * @param session
+     * @return
+     */
     @RequestMapping("/register")
     @ResponseBody
     public Result register(@Valid UserRegister register, BindingResult bindingResult, HttpSession session){
@@ -400,5 +393,501 @@ public class UserController {
         return result;
     }
 
+        //------------------------------------------------
+      //            管理员端接口
+    //------------------------------------------
+
+    /**
+     * 通过学生用户的信息认证
+     * @param id
+     * @return
+     */
+    @RequestMapping("/passStudent")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    @Transactional
+    public Result passUserStudent(@RequestParam("id") String id){
+        if (StringUtils.isEmpty(id)){
+            System.out.println("【用户认证】出错了，id不能为空");
+            return ResultUtil.error("id不能为空");
+        }
+        //修改用户的认证状态
+        User user = userService.findUserbyUserId(id);
+        if (user == null){
+            return ResultUtil.error("【用户认证】出错了，修改用户的认证状态失败！");
+        }
+        user.setState(UserContants.STATE_IS_ACCEPT);
+        User saveUserInfo = userService.saveUserInfo(user);
+        userService.giveUserAuthority(user.getId(), UserContants.ROLE_STUDENT_ID);
+        //在growth表增加学生信息
+        Growth growth = new Growth();
+        growth.setUser(saveUserInfo.getStudent());
+        Growth saveGrowth = growthService.saveGrowth(growth);
+        if (saveGrowth == null){
+            return ResultUtil.error("【用户认证】出错了，在growth表增加学生信息失败！");
+        }
+        return ResultUtil.success();
+    }
+
+    /**
+     * 通过教师用户的信息认证
+     * @param id
+     * @return
+     */
+    @RequestMapping("/passTeacher")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    @Transactional
+    public Result passUserTeacher(@RequestParam("id") String id){
+        if (StringUtils.isEmpty(id)){
+            System.out.println("【用户认证】出错了，id不能为空");
+            return ResultUtil.error("id不能为空");
+        }
+        //修改用户的认证状态
+        User user = userService.findUserbyUserId(id);
+        if (user == null){
+            return ResultUtil.error("【用户认证】出错了，修改用户的认证状态失败！");
+        }
+        user.setState(UserContants.STATE_IS_ACCEPT);
+        User saveUserInfo = userService.saveUserInfo(user);
+        userService.giveUserAuthority(user.getId(), UserContants.ROLE_TEACHER_ID);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 通过公司用户的信息认证
+     * @param id
+     * @return
+     */
+    @RequestMapping("/passCompany")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    @Transactional
+    public Result passCompany(@RequestParam("id") String id){
+        if (StringUtils.isEmpty(id)){
+            System.out.println("【用户认证】出错了，id不能为空");
+            return ResultUtil.error("id不能为空");
+        }
+        //修改用户的认证状态
+        User user = userService.findUserbyUserId(id);
+        if (user == null){
+            return ResultUtil.error("【用户认证】出错了，修改用户的认证状态失败！");
+        }
+        user.setState(UserContants.STATE_IS_ACCEPT);
+        User saveUserInfo = userService.saveUserInfo(user);
+        userService.giveUserAuthority(user.getId(), UserContants.ROLE_COMPANY_ID);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 拒绝用户的信息认证
+     * @param id
+     * @return
+     */
+    @RequestMapping("/refuseUser")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result refuseUserIdentification(@RequestParam("id") String  id){
+        if (StringUtils.isEmpty(id)){
+            System.out.println("【用户认证】出错了，id不能为空");
+            return ResultUtil.error("id不能为空");
+        }
+        //修改用户的认证状态
+        User user = userService.findUserbyUserId(id);
+        if (user == null){
+            return ResultUtil.error("【用户认证】出错了，修改用户的信息不存在！");
+        }
+        user.setState(UserContants.STATE_IS_REFUSE);
+        User saveUserInfo = userService.saveUserInfo(user);
+
+        if (saveUserInfo == null){
+            return ResultUtil.error("【用户认证】出错了，在修改用户认证状态时出错了！");
+        }
+        return ResultUtil.success();
+    }
+
+    /**
+     * 显示学生的基本信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getStudentMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String getUserMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        UserStudentVo userStudentVo = studentService.findById(id);
+        model.addAttribute("student", userStudentVo);
+        return "admins/pages/manage/user/show/student-show";
+    }
+
+    /**
+     * 显示教师的基本信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getTeacherMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String getTeacherMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        UserTeacherVo userTeacherVo = teacherService.findTeacherById(id);
+        model.addAttribute("teacher", userTeacherVo);
+        return "admins/pages/manage/user/show/teacher-show";
+    }
+
+    /**
+     * 显示公司的基本信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getCompanyMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String getCompanyMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        UserCompanyVo userCompanyVo = companyService.findUserCompanyById(id);
+        model.addAttribute("company", userCompanyVo);
+        return "admins/pages/manage/user/show/company-show";
+    }
+
+    /**
+     * 显示学生列表，可根据学生姓名
+     * @param keyword  学生姓名关键字
+     * @return
+     */
+    @RequestMapping("/getStudentListByName")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String getUserStudentListByPersonName(String keyword, Model model) {
+        List<UserStudentVo> userStudentVos = studentService.findStudentList(keyword);
+        model.addAttribute("studentList", userStudentVos);
+        model.addAttribute("keyword", keyword);
+        return "admins/pages/manage/user/studentManage";
+    }
+
+    /**
+     * 显示教师列表，可根据教师姓名
+     * @param keyword  教师姓名关键字
+     * @return
+     */
+    @RequestMapping("/getTeacherListByName")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String getTeacherListByName(String keyword, Model model) {
+        List<UserTeacherVo> userTeacherVos = teacherService.findTeacherListByName(keyword);
+        model.addAttribute("teacherList", userTeacherVos);
+        model.addAttribute("keyword", keyword);
+        return "admins/pages/manage/user/teacherManage";
+    }
+
+    /**
+     * 显示公司列表，可根据公司名称
+     * @param keyword  公司名称关键字
+     * @return
+     */
+    @RequestMapping("/getCompanyListByName")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String getCompanyListByName(String keyword, Model model) {
+        List<UserCompanyVo> userCompanyVos = companyService.findCompanyListByName(keyword);
+        model.addAttribute("companyList", userCompanyVos);
+        model.addAttribute("keyword", keyword);
+        return "admins/pages/manage/user/companyManage";
+    }
+
+    /**
+     * 显示管理员列表，可根据管理员名称
+     * @param keyword  公司名称关键字
+     * @return
+     */
+    @RequestMapping("/getAdminListByName")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")  // 指定角色权限才能操作方法
+    public String getAdminListByName(String keyword, Model model) {
+        List<User> userList = userService.findUserListByStyle(4);  //根据管理员类型查找出对应的信息
+        model.addAttribute("adminList", userList);
+        model.addAttribute("keyword", keyword);
+        return "admins/pages/manage/user/adminManage";
+    }
+
+    /**
+     * 修改页面显示学生的基本信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/updateStudentMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String updateStudentMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        UserStudentVo userStudentVo = studentService.findById(id);
+        model.addAttribute("student", userStudentVo);
+        return "admins/pages/manage/user/alter/studentAlter";
+    }
+
+    /**
+     * 修改页面保存学生的基本信息
+     * @return
+     */
+    @PostMapping("/updateStudentMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updateStudent(Student student) {
+
+        studentService.saveStudent(student);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改页面显示教师的基本信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/updateTeacherMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String updateTeacherMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        UserTeacherVo userTeacherVo = teacherService.findTeacherById(id);
+        model.addAttribute("teacher", userTeacherVo);
+        return "admins/pages/manage/user/alter/teacherAlter";
+    }
+
+    /**
+     * 修改页面保存教师的基本信息
+     * @return
+     */
+    @PostMapping("/updateTeacherMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updateTeacher(Teacher teacher) {
+
+        teacherService.saveTeacher(teacher);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改页面显示公司的基本信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/updateCompanyMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String updateCompanyMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        UserCompanyVo userCompanyVo = companyService.findUserCompanyById(id);
+        model.addAttribute("company", userCompanyVo);
+        return "admins/pages/manage/user/alter/companyAlter";
+    }
+
+    /**
+     * 修改页面保存公司的基本信息
+     * @return
+     */
+    @PostMapping("/updateCompanyMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updateCompany(Company company) {
+
+        companyService.saveCompany(company);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改页面显示管理员的基本信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/updateAdminMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")  // 指定角色权限才能操作方法
+    public String updateAdminMsg(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        User user = userService.findUserById(id);
+        model.addAttribute("admin", user);
+        return "admins/pages/manage/user/alter/adminAlter";
+    }
+
+    /**
+     * 修改页面保存管理员的基本信息
+     * @return
+     */
+    @PostMapping("/updateAdminMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updateAdmin(User user) {
+        if (null != user && user.getId() != null) {
+            User oldUser = userService.findUserById(user.getId());
+            oldUser.setSex(user.getSex());
+            oldUser.setName(user.getName());
+            userService.saveUserInfo(oldUser);
+        }
+        return ResultUtil.success();
+    }
+
+    /**
+     * 跳转到修改管理员个人信息页面
+     * @return
+     */
+    @GetMapping("/updatePersonalAdmin")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")  // 指定角色权限才能操作方法
+    public String toUpdatePersonalAdmin(Model model) {
+        //判断是否已经登录
+        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+            User UserInfo = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            model.addAttribute("admin", UserInfo);
+            return "admins/adminInformation";
+        }
+        return "/login";
+    }
+
+    /**
+     * 管理员修改个人信息
+     * @return
+     */
+    @PostMapping("/updatePersonalAdmin")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updatePersonalAdmin(User user) {
+
+        if (null != user && user.getId() != null) {
+            //判断是否已经登录
+            if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                    && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+                User UserInfo = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                if (!UserInfo.getId().equals(user.getId())) {  //如果当前的用户与修改的管理员用户不是同一个
+                    return ResultUtil.error();
+                }
+                User oldUser = userService.findUserById(user.getId());
+                oldUser.setSex(user.getSex());
+                oldUser.setName(user.getName());
+                oldUser.setPassword(MD5Utils.MD5Encode(user.getPassword()));
+
+                userService.saveUserInfo(oldUser);
+            }
+        }
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改用户密码页面
+     * @param id
+     * @return
+     */
+    @GetMapping("/updateUserPassword")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String toUpdateStudentPassword(Long id, Model model) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            model.addAttribute("errMsg", ResultEnum.ID_ISNULL.getMessage());
+        }
+        User user = userService.findUserById(id);
+        model.addAttribute("id", id);
+        model.addAttribute("name", user.getName());
+        return "admins/pages/manage/user/change-password";
+    }
+
+    /**
+     * 修改用户的密码
+     * @param id
+     * @return
+     */
+    @PostMapping("/updateUserPassword")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updateUserPassword(Long id, String newpassword) {
+        //id为空则跳转到错误页面
+        if (null == id || StringUtils.isEmpty(newpassword)) {
+            return ResultUtil.error();
+        }
+        User user = userService.findUserById(id);
+        if (null != user) {
+            user.setPassword(MD5Utils.MD5Encode(newpassword));
+            userService.saveUserInfo(user);
+        }
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改用户的启用状态
+     * @param id
+     * @return
+     */
+    @PostMapping("/updateIsUse")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result updateIsUse(Long id) {
+        //id为空则跳转到错误页面
+        if (null == id) {
+            return ResultUtil.error();
+        }
+        User user = userService.findUserById(id);
+        if (null != user) {
+            if (1 == user.getIsUse()) { //如果为启用状态，则设置为禁用状态
+                user.setIsUse(0);
+            } else {
+                user.setIsUse(1);
+            }
+            userService.saveUserInfo(user);
+            return ResultUtil.success();
+        }
+        return ResultUtil.error();
+    }
+
+    /**
+     * 用户统计页面
+     * @return
+     */
+    @GetMapping("/userStatisticsCharts")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    public String toUserStatisticsCharts(Model model) {
+        return "admins/pages/charts/user_statistics_charts";
+    }
+
+    /**
+     * 用户统计数据
+     * @return
+     */
+    @PostMapping("/userStatisticsCharts")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Map userStatisticsCharts() {
+        Map<String,Object> map = new HashMap<>();
+        String title = "用户类型扇形图";
+        String type = "用户个数";
+        List<UserChartsVo> userChartsVos = userService.getUserChartsCount();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        List<String> styleNameList = new ArrayList<>();
+        List<Long> countList = new ArrayList<>();
+        if (null != userChartsVos) {
+            for (UserChartsVo userChartsVo : userChartsVos) {
+                Map<String, Object> map1 = new HashMap<>();
+                map1.put("name", userChartsVo.getName());
+                map1.put("y", userChartsVo.getCount());
+                mapList.add(map1);
+                styleNameList.add(userChartsVo.getName());
+                countList.add(userChartsVo.getCount());
+            }
+        }
+        map.put("title", title);
+        map.put("type", type);
+        map.put("list",mapList);
+        map.put("nameList", styleNameList);
+        map.put("countList", countList);
+        return map;
+    }
 }
 

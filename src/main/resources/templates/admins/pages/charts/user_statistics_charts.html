@@ -1,0 +1,111 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="favicon.ico" >
+    <link rel="Shortcut Icon" href="favicon.ico" />
+
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <script th:src="@{/editormd/js/editormd.js}" src="/editormd/js/editormd.js"></script>
+    <script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
+    <title>数据统计-用户统计</title>
+</head>
+<body>
+<!-- 嵌入导航栏 -->
+<div th:replace="admins/nav::html"></div>
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统统计 <span class="c-gray en">&gt;</span> 用户统计 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="Hui-article">
+        <article class="cl pd-20">
+            <div class="f-14 c-error">欢迎使用本创新创业平台的用户统计功能。</div>
+            <div id="container" style="min-width:700px;height:400px;position:absolute;top:50%;left: 45%;margin-top: -200px;margin-right: -300px;"></div>
+            <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+            <div id="main" style="width: 600px;height:400px;position:absolute;top:50%;left: 5%;margin-top: -200px;margin-left: 0px;"></div>
+        </article>
+        <!--<article class="cl pd-20">-->
+            <!--&lt;!&ndash; 为 ECharts 准备一个具备大小（宽高）的 DOM &ndash;&gt;-->
+            <!--<div id="main" style="width: 600px;height:400px;position:absolute;top:50%;left: 50%;margin-top: -200px;margin-left: -300px;"></div>-->
+        <!--</article>-->
+    </div>
+</section>
+
+<script type="text/javascript" src="lib/hcharts/Highcharts/5.0.6/js/highcharts.js" th:src="@{/lib/hcharts/Highcharts/5.0.6/js/highcharts.js}"></script>
+<script type="text/javascript" src="lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js" th:src="@{/lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js}"></script>
+<script type="text/javascript" src="lib/hcharts/Highcharts/5.0.6/js/highcharts-3d.js" th:src="@{/lib/hcharts/Highcharts/5.0.6/js/highcharts-3d.js}"></script>
+<script src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        var myChart = echarts.init(document.getElementById('main'));//main是<div id="main" style="width: 600px;height:400px;"></div>的id
+        $.ajax({
+            type: 'POST',
+            url: '/user/userStatisticsCharts',
+            data:{},
+            dataType: 'json',
+            success: function(data){
+                $('#container').highcharts({
+                    chart: {
+                        type: 'pie',
+                        options3d: {
+                            enabled: true,
+                            alpha: 45,
+                            beta: 0
+                        }
+                    },
+                    title: {
+                        text: data.title
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            depth: 35,
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}'
+                            }
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: data.type,
+                        data:data.list,
+                    }]
+                });
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '平台用户类型分布图'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data:['用户个数']
+                    },
+                    xAxis: {
+                        data: data.nameList
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '用户个数',
+                        type: 'bar',
+                        data: data.countList
+                    }]
+                };
+                myChart.setOption(option);
+            },
+            error:function(data) {
+                console.log(data.msg);
+            },
+        });
+    });
+</script>
+</body>
+</html>

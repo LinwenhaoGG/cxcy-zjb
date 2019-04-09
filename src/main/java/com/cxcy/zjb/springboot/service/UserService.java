@@ -10,8 +10,12 @@
  */
 package com.cxcy.zjb.springboot.service;
 
+import com.cxcy.zjb.springboot.Vo.UserChartsVo;
 import com.cxcy.zjb.springboot.Vo.UserMessage;
+import com.cxcy.zjb.springboot.Vo.UserStudentVo;
 import com.cxcy.zjb.springboot.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,5 +93,24 @@ public interface UserService {
      */
     public User findUserInfoByNameAndPwd(String username, String pwd);
 
+    /**
+     * 根据类型和审核状态查询出用户列表
+     * @param style
+     * @param state
+     * @return
+     */
+    Page<User> findByStyleAndState(Integer style, Integer state, Pageable pageable);
 
+    /**
+     * 给用户添加对应的角色
+     * @param userId
+     * @param auId
+     */
+    public void giveUserAuthority(Long userId, Long auId);
+
+    /**
+     * 获取用户统计类型
+     * @return
+     */
+    List<UserChartsVo> getUserChartsCount();
 }

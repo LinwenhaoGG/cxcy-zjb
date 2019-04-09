@@ -23,7 +23,7 @@ public class Company implements Serializable {
     @NotEmpty(message = "公司名称不能为空")
     @Size(min=2, max=30)
     @Column(nullable = false) // 映射为字段，值不能为空
-    private String name; //公司名称
+    private String companyName; //公司名称
 
     @NotEmpty(message = "企业社会代码不能为空")
     @Column(nullable = false) // 映射为字段，值不能为空

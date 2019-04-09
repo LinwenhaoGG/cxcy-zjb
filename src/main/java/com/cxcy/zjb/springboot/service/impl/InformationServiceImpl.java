@@ -10,6 +10,7 @@
  */
 package com.cxcy.zjb.springboot.service.impl;
 
+import com.cxcy.zjb.springboot.Vo.ChartsValueCountVo;
 import com.cxcy.zjb.springboot.domain.Information;
 import com.cxcy.zjb.springboot.domain.InformationCategory;
 import com.cxcy.zjb.springboot.repository.InformationRepository;
@@ -138,5 +139,15 @@ import java.util.List;
     public List<Information> findByTitleLike(String string) {
         string = "%" + string + "%";
         return informationRepository.findByTitleLike(string);
+    }
+
+    @Override
+    public List<ChartsValueCountVo> informationCountByStyle() {
+        return informationRepository.informationCountByStyle();
+    }
+
+    @Override
+    public List<ChartsValueCountVo> informationCountByHot(Pageable pageable) {
+        return informationRepository.informationCountByHot(pageable);
     }
 }

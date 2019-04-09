@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui/css/H-ui.min.css" th:href="@{/h-ui/css/H-ui.min.css}"/>
+  <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/H-ui.admin.css" th:href="@{/h-ui.admin/css/H-ui.admin.css}"/>
+  <link rel="stylesheet" type="text/css" href="../../../../../static/lib/Hui-iconfont/1.0.8/iconfont.css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}"/>
+  <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/skin/default/skin.css" id="skin" th:href="@{/h-ui.admin/skin/default/skin.css}"/>
+  <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/style.css" th:href="@{/h-ui.admin/css/style.css}"/>
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<title>用户查看</title>
+</head>
+<body>
+<div class="cl pd-20" style=" background-color:#5bacb6">
+  <img class="avatar size-XL l" th:src="${student.avatar}" src="static/h-ui/images/user.png">
+  <dl style="margin-left:80px; color:#fff">
+    <dt><span class="f-18" th:text="${student.name}">张三</span> <span class="pl-10 f-12" th:text="'学号： '+${student.number}">学号：40</span></dt>
+    <dd class="pt-10 f-12" style="margin-left:0" th:text="${student.credential}">这家伙很懒，什么也没有留下</dd>
+  </dl>
+</div>
+<div class="pd-20">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th class="text-r" width="80">性别：</th>
+        <td th:if="${student.sex}">男</td>
+        <td th:unless="${student.sex}">女</td>
+      </tr>
+      <tr>
+        <th class="text-r" width="80">民族：</th>
+        <td th:text="${student.nation}">汉</td>
+      </tr>
+      <tr>
+        <th class="text-r" >政治面貌：</th>
+        <td th:text="${student.politicsstatus}">共产党员</td>
+      </tr>
+      <tr>
+        <th class="text-r">手机：</th>
+        <td th:text="${student.telephone}">13000000000</td>
+      </tr>
+      <tr>
+        <th class="text-r">邮箱：</th>
+        <td th:text="${student.email}">admin@mail.com</td>
+      </tr>
+      <tr>
+        <th class="text-r">学院：</th>
+        <td th:text="${student.college}">信息科学与技术学院</td>
+      </tr>
+      <tr>
+        <th class="text-r">班级：</th>
+        <td th:text="${student.classes}">计算机156班</td>
+      </tr>
+      <tr>
+        <th class="text-r">年级：</th>
+        <td th:text="${student.edu} + '届'">2019届</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="../../../../static/lib/jquery/1.9.1/jquery.min.js" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script>
+<script type="text/javascript" src="../../../../../static/lib/layer/2.4/layer.js" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" src="../../../../../static/h-ui/js/H-ui.js" th:src="@{/h-ui/js/H-ui.js}"></script>
+<script type="text/javascript" src="../../../../../static/h-ui.admin/js/H-ui.admin.page.js" th:src="@{/h-ui.admin/js/H-ui.admin.page.js}"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+</body>
+</html>

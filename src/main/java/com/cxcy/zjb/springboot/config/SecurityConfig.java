@@ -1,5 +1,6 @@
 package com.cxcy.zjb.springboot.config;
 
+import com.cxcy.zjb.springboot.handler.MyAuthenticationFailHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,6 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MyAuthenticationFailHandler authenticationFailHandler;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -57,7 +61,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .formLogin()   //基于 Form 表单登录验证
-                .loginPage("/login").defaultSuccessUrl("/login-success").failureUrl("/login-error") // 自定义登录界面
+                .loginPage("/login").defaultSuccessUrl("/login-success")// 自定义登录后界面
+                .failureUrl("/login-error")
+//                .failureHandler(authenticationFailHandler)
                 .and().rememberMe().key(KEY) // 启用 remember me
                 .and().exceptionHandling().accessDeniedPage("/403")  // 处理异常，拒绝访问就重定向到 403 页面
                 .and()

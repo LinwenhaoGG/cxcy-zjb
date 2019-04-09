@@ -55,13 +55,19 @@ public class User implements Serializable,UserDetails {  //
     private String password; // 登录时密码
 
     @Column(length = 200)
-    private String avatar = "611.jpg"; // 默认头像图片地址
+    private String avatar = "http://localhost:8080/file/upload/b6a273f470b14800bdd1ac29112378a3.jpg"; // 默认头像图片地址
+
+    @Column(name = "sex", nullable = false, columnDefinition = "tinyint(2)")
+    private Integer sex = 1;  //性别，0为女生，1为男生；
 
     @Column(name = "state", nullable = false, columnDefinition = "tinyint(2)")
     private Integer state=0;  //账号状态，0为未认证，1为已认证，2为审核中，3为认证失败
 
     @Column(name = "style", nullable = false, columnDefinition = "tinyint(2)")
     private Integer style=0;  //账号类型，0为未确定身份，1为学生，2为老师，3为企业，4为管理员
+
+    @Column(name = "is_use", nullable = false, columnDefinition = "tinyint(2)")
+    private Integer isUse = 1;  //是否可用,1可用，0不可用
 
     @Column(name="s_id")
     private Long student;   //认证的学生

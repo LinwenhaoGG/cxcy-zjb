@@ -97,13 +97,13 @@ function getUserMessage(){
         success:function(data){
             //请求成功函数内容
             // console.info(data.msg);
-            $("#imgId").prop("src","/img/"+data.object[0].avatar);
+            $("#imgId").prop("src",data.object[0].avatar);
             $("b").html(data.object[0].username);
             $("#receiverId").val(data.object[0].id);
-            $("#receiverImage").prop("src","/img/"+data.object[0].avatar);
+            $("#receiverImage").prop("src",data.object[0].avatar);
 
             $("#senderId").val(data.object[1].id);
-            $("#senderImage").prop("src","/img/"+data.object[1].avatar);
+            $("#senderImage").prop("src",+data.object[1].avatar);
 
         },
         error:function(jqXHR){
