@@ -9,87 +9,172 @@
 		<script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
 		<script type="text/javascript" src="../js/validate.js" th:src="@{/js/validate.js}"></script>
 		<title>验证身份</title>
+		<style>
+			body{
+				padding:10px 100px 0 100px;
+				overflow-x: hidden;
+			}
+			.layui-input-block{
+				width: 380px;
+			}
+			.layui-form-selected dl{
+				height: 160px;
+				overflow-x:visible;
+			}
+			.layui-form-item .layui-input-inline{
+				width: 300px;
+			}
+			.tip-text{
+				vertical-align: top;
+			}
+            .upload{
+				padding: 8px 10px;
+				height: 25px;
+				line-height: 37px;
+				position: relative;
+				border: 1px solid #fff;
+				text-decoration: none;
+				color: #fff;
+				background: #009688;
+				cursor:pointer;
+            }
+			.upload:hover{
+				color:#fff;
+			}
+            #file{
+                opacity: 0;
+				position: absolute;
+				overflow: hidden;
+				right: 0;
+				top: 0;
+				opacity: 0;
+				cursor:pointer;
+            }
+		</style>
 	</head>
 
 	<body>
+	<fieldset class="layui-elem-field ">
+		<legend>用户身份审核</legend>
+		<div class="layui-field-box">
 	<input type="hidden" th:value="${model.uStyle}" id="uStyle">
 		<div class="layui-container">
+			<!--<h1>用户身份审核</h1>-->
 			<!--标题栏-->
-			<div class="layui-row">
-				<b style="font-style: italic;font-size: 50px;">创新创业平台</b>
-			</div>
+			<!--<div class="layui-row">-->
+				<!--<b style="font-style: italic;font-size: 50px;">创新创业平台</b>-->
+			<!--</div>-->
 
-			<!--分割线-->
-			<hr class="layui-bg-gray">
 
 			<!--进度条-->
-			<div class="layui-row">
-				<div style="font-family: '宋体';font-size: 30px;">用户身份审核:</div>
-				<div style="text-align: center;">
-					<span style="color: #FF5722;">----------填写信息----------|</span>
-					<span>----------等待管理员审核----------</span>
+			<div class="layui-row"  style="margin-bottom: 30px;maring-top:20px">
+				<!-- 时间线 -->
+				<div class="timeLine">
+					<ul class="text-center">
+						<li class="tt"><span></span>填写信息</li>
+						<li><span></span>等待管理员验证</li>
+					</ul>
 				</div>
 			</div>
 
-			<!--分割线-->
-			<hr class="layui-bg-gray">
+			<!--&lt;!&ndash;分割线&ndash;&gt;-->
+					<!--<hr class="layui-bg-gray">-->
 
 			<!--填写信息：学生-->
 			<div class="layui-row hiddenElement" id="student">
 				<form class="layui-form">
 					<div class="layui-form-item">
-						<label class="layui-form-label">学号</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>学号</label>
+						<div class="layui-input-inline " >
 							<input type="text" id="number" name="number" required lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input">
 						</div>
+						<div id="number1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="number2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">真实姓名</label>
-                        <div class="layui-input-block">
+                        <label class="layui-form-label"><span class="need">* </span>真实姓名</label>
+                        <div class="layui-input-inline ">
                             <input type="text" id="name" name="name" required 0lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                         </div>
+						<div id="name1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="name2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
                     </div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">学年</label>
-						<div class="layui-input-block">
-							<input type="text" id="edu" name="edu" required lay-verify="required" placeholder="请输入学年，如2017年" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span>学年</label>
+						<div class="layui-input-inline">
+							<input type="text" id="edu" name="edu" required lay-verify="required" placeholder="请选择入学学年" autocomplete="off" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">所在学院</label>
-						<div class="layui-input-block">
-							<input type="text" id="college" name="college" required lay-verify="required" placeholder="请输入所在学院" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span>所在学院</label>
+						<div class="layui-input-inline">
+							<select name="college" lay-verify="required"  id="college">
+								<!--<option value="">请选择所在学院</option>-->
+								<option value="农业与生物学院">农业与生物学院</option>
+								<option value="园艺园林学院">园艺园林学院</option>
+								<option value="经贸学院">经贸学院</option>
+								<option value="管理学院">管理学院</option>
+								<option value="信息科学与技术学院" selected>信息科学与技术学院</option>
+								<option value="自动化学院">自动化学院</option>
+								<option value="轻工食品学院">轻工食品学院</option>
+								<option value="机电工程学院">机电工程学院</option>
+								<option value="化学化工学院">化学化工学院</option>
+								<option value="环境科学与工程学院">环境科学与工程学院</option>
+								<option value="何香凝艺术设计学院">何香凝艺术设计学院</option>
+								<option value="外国语学院">外国语学院</option>
+								<option value="城乡建设学院">城乡建设学院</option>
+								<option value="计算科学学院">计算科学学院</option>
+								<option value="人文与社会科学学院">人文与社会科学学院</option>
+								<option value="动物科技学院">动物科技学院</option>
+								<option value="马克思主义学院">马克思主义学院</option>
+								<option value="创新创业教育学院">创新创业教育学院</option>
+								<option value="体育部">体育部</option>
+							</select>
+							<!--<input type="text" id="college" name="college" required lay-verify="required" placeholder="请输入所在学院" autocomplete="off" class="layui-input">-->
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">专业</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>专业</label>
+						<div class="layui-input-inline">
 							<input type="text" id="classes" name="classes" required lay-verify="required" placeholder="请输入专业" autocomplete="off" class="layui-input">
 						</div>
+                        <div id="class1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+                        <div id="class2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">民族</label>
-						<div class="layui-input-block">
-							<input type="text" id="nation" name="nation" required lay-verify="required" placeholder="请输入民族" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span>民族</label>
+						<div class="layui-input-inline">
+							<select name="nation" lay-verify="required"  id="nation">
+								<!--<option value="">请选择民族</option>-->
+							</select>
+							<!--<input type="text" id="nation" name="nation" required lay-verify="required" placeholder="请输入民族" autocomplete="off" class="layui-input">-->
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">政治面貌</label>
-						<div class="layui-input-block">
-							<input type="text" id="politicsstatus" name="politicsstatus" required lay-verify="required" placeholder="请输入政治面貌" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span> 政治面貌</label>
+						<div class="layui-input-inline">
+							<select name="politicsstatus" id="politicsstatus" lay-verify="required" class="dropup">
+								<!--<option value="">请选择政治面貌</option>-->
+								<option value="群众">群众</option>
+								<option value="团员">团员</option>
+								<option value="党员">党员</option>
+							</select>
+							<!--<input type="text" id="politicsstatus" name="politicsstatus" required lay-verify="required" placeholder="请输入政治面貌" autocomplete="off" class="layui-input">-->
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">个人简介</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>个人简介</label>
+						<div class="layui-input-inline">
 							<input type="text" id="credential" name="credential" required lay-verify="required" placeholder="请输入个人简介" autocomplete="off" class="layui-input">
 						</div>
+						<div id="cred1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="cred2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 
 					<div class="layui-form-item">
-						<div class="layui-input-block">
+						<div class="layui-input-inline">
 							<div class="layui-btn" id="studentSubmit">立即提交</div>
-							<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+							<button type="reset" class="layui-btn layui-btn-primary" id="resetBtn">重置</button>
 						</div>
 					</div>
 				</form>
@@ -99,64 +184,87 @@
 			<div class="layui-row hiddenElement" id="teacher">
 				<form class="layui-form">
 					<div class="layui-form-item">
-						<label class="layui-form-label">教师工号</label>
-						<div class="layui-input-block">
-							<input type="text" id="Tnumber" name="number" required lay-verify="required" placeholder="请输入教师工号" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span>教师工号</label>
+						<div class="layui-input-inline">
+							<input type="text" id="Tnumber" name="number" required lay-verify="required" placeholder="请输入教师工号(字数2~50之内)" autocomplete="off" class="layui-input">
 						</div>
+						<div id="Tnumber1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tnumber2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">真实姓名</label>
-                        <div class="layui-input-block">
+                        <label class="layui-form-label"><span class="need">* </span>真实姓名</label>
+                        <div class="layui-input-inline">
                             <input type="text" id="Tname" name="name" required lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                         </div>
+						<div id="Tname1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tname2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
                     </div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">在职学校</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>在职学校</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Tschool"  name="school" required lay-verify="required" placeholder="请输入在职学校" autocomplete="off" class="layui-input">
 						</div>
+						<div id="Tschool1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tschool2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">所在学院</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>所在学院</label>
+						<div class="layui-input-inline">
 							<input type="text"  id="Tcollege" name="college" required lay-verify="required" placeholder="请输入所在学院" autocomplete="off" class="layui-input">
 						</div>
+						<div id="Tcollege1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tcollege2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">专业领域</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>专业领域</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Tspecially"  name="specially" required lay-verify="required" placeholder="请输入专业领域" autocomplete="off" class="layui-input">
 						</div>
+						<div id="Tspecial1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tspecial2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">职位</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>职位</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Tposition" name="position" required lay-verify="required" placeholder="请输入职位" autocomplete="off" class="layui-input">
 						</div>
+						<div id="Tpos1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tpos2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">民族</label>
-						<div class="layui-input-block">
-							<input type="text" id="Tnation" name="nation" required lay-verify="required" placeholder="请输入民族" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span>民族</label>
+						<div class="layui-input-inline">
+							<select name="nation" id="Tnation" lay-verify="required">
+
+							</select>
+							<!--<input type="text" id="Tnation" name="nation" required lay-verify="required" placeholder="请输入民族" autocomplete="off" class="layui-input">-->
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">政治面貌</label>
-						<div class="layui-input-block">
-							<input type="text" id="Tpoliticsstatus" name="politicsstatus" required lay-verify="required" placeholder="请输入政治面貌" autocomplete="off" class="layui-input">
+						<label class="layui-form-label"><span class="need">* </span>政治面貌</label>
+						<div class="layui-input-inline">
+							<select name="politicsstatus" id="Tpoliticsstatus" lay-verify="required" class="dropup">
+								<!--<option value="">请选择政治面貌</option>-->
+								<option value="群众">群众</option>
+								<option value="团员">团员</option>
+								<option value="党员">党员</option>
+							</select>
+							<!--<input type="text" id="Tpoliticsstatus" name="politicsstatus" required lay-verify="required" placeholder="请输入政治面貌" autocomplete="off" class="layui-input">-->
 						</div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">个人简介</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>个人简介</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Tcredential" name="credential" required lay-verify="required" placeholder="请输入个人简介" autocomplete="off" class="layui-input">
 						</div>
+						<div id="Tcred1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Tcred2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 
 					<div class="layui-form-item">
 						<div class="layui-input-block">
 							<div class="layui-btn" id="teacherSubmit">立即提交</div>
-							<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+							<button type="reset" class="layui-btn layui-btn-primary" id="TresetBtn">重置</button>
 						</div>
 					</div>
 				</form>
@@ -164,65 +272,83 @@
 
 			<!--填写信息：企业-->
 			<div class="layui-row hiddenElement" id="company">
-				<div class="layui-form">
+				<form class="layui-form">
 					<div class="layui-form-item">
-						<label class="layui-form-label">公司名称</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>公司名称</label>
+						<div class="layui-input-inline">
 							<input type="text" id="companyName" name="name" required lay-verify="required" placeholder="请输入公司名称" autocomplete="off" class="layui-input">
 						</div>
+						<div id="cname1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="cname2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">企业社会代码</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>企业社会代码</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Cnumber" name="number" required lay-verify="required" placeholder="请输入企业社会代码" autocomplete="off" class="layui-input">
 						</div>
+						<div id="cnumber1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="cnumber2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">企业法定代表人</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>企业法定代表人</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Cboss" name="boss" required lay-verify="required" placeholder="请输入企业法定代表人" autocomplete="off" class="layui-input">
 						</div>
+						<div id="cboss1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="cboss2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">公司类型</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>公司类型</label>
+						<div class="layui-input-inline">
 							<input type="text"  id="Ctype" name="type" required lay-verify="required" placeholder="请输入公司类型" autocomplete="off" class="layui-input">
 						</div>
+						<div id="ctype1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="ctype2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">联系人</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>联系人</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Ccontacts" name="contacts" required lay-verify="required" placeholder="请输入联系人" autocomplete="off" class="layui-input">
 						</div>
+						<div id="ccontact1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="ccontact2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">真实姓名</label>
-                        <div class="layui-input-block">
+                        <label class="layui-form-label"><span class="need">* </span>真实姓名</label>
+                        <div class="layui-input-inline">
                             <input type="text" id="Cname" name="name" required lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                         </div>
+						<div id="Cname1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="Cname2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
                     </div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">联系电话</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>联系手机号</label>
+						<div class="layui-input-inline">
 							<input type="text" id="Cphone" name="phone" required lay-verify="required" placeholder="请输入联系电话" autocomplete="off" class="layui-input">
 						</div>
+						<div id="cphone1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text phone-tip" style="color: #FF5722;"></span></div>
+						<div id="cphone2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
-						<label class="layui-form-label">营业执照</label>
-						<div class="layui-input-block">
+						<label class="layui-form-label"><span class="need">* </span>营业执照</label>
+						<div class="layui-input-inline">
                             <form id="imageUpload"  method="post" enctype="multipart/form-data">
-							    <input  type="file" id="file" name="file"  autocomplete="off" class="layui-input">
+								<a href="javascript:;" class="upload">选择文件
+									<input  type="file" id="file" name="file"  autocomplete="off" class="layui-input">
+								</a>
                                 <span class="hiddenElement" id="imageShow"><img style="width: 200px;height: 200px;" src="" id="spanImg"></span>
                             </form>
 						</div>
+						<div id="file1" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #FF5722;">&#x1006;</i><span class="tip-text" style="color: #FF5722;">必填</span></div>
+						<div id="file2" class="hiddenElement layui-form-mid layui-word-aux"><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe605;</i></div>
 					</div>
 					<div class="layui-form-item">
 						<div class="layui-input-block">
 							<div class="layui-btn" id="companySubmit">立即提交</div>
-							<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+							<button type="reset" class="layui-btn layui-btn-primary" id="brestBtn">重置</button>
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 
 			<!--填写信息：管理员-->
@@ -247,8 +373,10 @@
 
 			</div>
 		</div>
-	</body>
-
+		</div>
+		<img th:src="@{/images/iamges/tip.jpg}" class="tip-img">
+		<img th:src="@{/images/iamges/title.png}" class="title-img">
+	</fieldset>
 	</body>
 
 </html>

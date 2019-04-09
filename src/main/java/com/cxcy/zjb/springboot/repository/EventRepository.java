@@ -18,7 +18,7 @@ public interface EventRepository extends JpaRepository<Event,Long> {
      * @param uid
      * @return
      */
-    @Query(value = "SELECT * FROM Event WHERE id IN " +
+    @Query(value = "SELECT * FROM event WHERE id IN " +
             "(SELECT e_id FROM event_leader WHERE user_id =?1) " +
             "ORDER BY id DESC LIMIT ?2,?3 ",nativeQuery = true)
     public List<Event> getEventByUid(Long uid,Integer page,Integer size);
@@ -29,7 +29,7 @@ public interface EventRepository extends JpaRepository<Event,Long> {
 
      * @return
      */
-    @Query(value = "SELECT count(*) FROM Event WHERE id IN " +
+    @Query(value = "SELECT count(*) FROM event WHERE id IN " +
             "(SELECT e_id FROM event_leader WHERE user_id =?1)  ",nativeQuery = true)
     public Integer getEventCountByUid(Long uid);
 

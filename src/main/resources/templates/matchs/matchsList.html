@@ -3,33 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <title>查看</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/animate.min.css}">
     <style>
+        body{
+            /*background: url("/images/iamges/home_bg1.png") no-repeat;*/
+            /*background-size: 100% 100%;*/
+            /*background-color: #eff3f6;*/
+        }
         ul{
             list-style: none;
+        }
+        .container-fluid{
+            padding-top:60px;
+        }
+        .matchList{
+            flex-wrap: wrap;
+            padding-left:50px;
+            padding-right:50px;
+        }
+        .match_item{
+            margin-bottom:40px;
         }
     </style>
 </head>
 <body>
 <div th:replace="top::html"></div>
-<div class="container-fluid">
+<div class="container-fluid" style="background-color: #eff3f6;">
     <div class="row-fluid">
         <div class="span12">
+            <h2 style="background: #e3e8ee;;color:#fff;letter-spacing: 1px;padding-top:10px;padding-bottom:10px" align="center" class="animated flip-X">比 赛 列 表</h2>
             <ul class="thumbnails">
-                <h2 style="color: #e78c45" align="center">比赛列表</h2>
                 <div class="thumbnail" th:if="${isnull} eq 1"><h3>暂无比赛信息</h3></div>
-                <li class="span6" th:each="matchs : ${matchsPage.content}">
+                <div class="matchWrapper">
+                    <ul class="matchList animated slideInUp">
+                        <li class="match_item" th:each="matchs : ${matchsPage.content}">
+                            <div>
+                                <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
+                            </div>
+                            <p class="match_title" th:text="${matchs.name}">中国软件设计大赛</p>
+                            <div class="match_container">
+                                <div class="match_info">
+                                    <p th:text="'开始报名时间:'+${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}">开始报名时间：2018-09-02 00:00:00</p>
+                                    <p th:text="'截止报名时间:'+${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')}">截止报名时间：2018-09-02 00:00:00</p>
+                                    <p th:text="'发布成绩时间:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}">公布成绩时间：2018-09-02 00:00:00</p>
+                                </div>
+                                <div class="match_button">
+                                    <a th:href="'/match/preview/'+ ${matchs.id}" href="#"><button class="btn btn-primary">查看比赛</button></a>
+                                    <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default btn-danger disabled" >成绩未发布</button>
+                                    <a th:href="'/match/matchAchievement/'+ ${matchs.id}" th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} ">
+                                        <button class="btn btn-danger">查看成绩</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+               <!-- <li class="span6" th:each="matchs : ${matchsPage.content}">
                     <div class="thumbnail" >
                         <div class="caption" >
                             <h3 th:text="${matchs.name}"></h3>
-                            <p th:text="'比赛开始报名时间为:'+${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}">
-                                也称普林斯顿结构，是一种将程序指令存储器和数据存储器合并在一起的存储器结构。程序指令存储地址和数据存储地址指向同一个存储器的不同物理位置。
-                            </p>
-                            <p th:text="'比赛截止报名时间为:'+${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')}">
-                                也称普林斯顿结构，是一种将程序指令存储器和数据存储器合并在一起的存储器结构。程序指令存储地址和数据存储地址指向同一个存储器的不同物理位置。
-                            </p>
-                            <p th:text="'比赛发布成绩时间为:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}">
-                                也称普林斯顿结构，是一种将程序指令存储器和数据存储器合并在一起的存储器结构。程序指令存储地址和数据存储地址指向同一个存储器的不同物理位置。
-                            </p>
+                            <p th:text="'比赛开始报名时间为:'+${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <p th:text="'比赛截止报名时间为:'+${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <p th:text="'比赛发布成绩时间为:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             <p style="text-align: right">
                                 <a class="btn btn-primary" th:href="'/match/preview/'+ ${matchs.id}" href="#">查看比赛</a>
                                 <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default btn-danger disabled" >成绩未发布</button>
@@ -37,7 +75,7 @@
                             </p>
                         </div>
                     </div>
-                </li>
+                </li>-->
             </ul>
         </div>
     </div>

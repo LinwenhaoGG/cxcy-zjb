@@ -1,3 +1,6 @@
+body{
+	background: url("/images/iamges/home_bg1.png");
+}
 .outsideDiv{
 	width: 100%;
 }
@@ -9,4 +12,29 @@
 .imgClass{
 	width: 100px;
 	height: 100px;
+}
+.ifs{
+	display: inline-block;
+	font-size: 28px;
+	margin-left:30px;
+	padding-right:20px;
+	color: #9d8ca8;
+}
+.noread{
+	position: absolute;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border:1px solid red;
+	top:-2px;
+	left:50px;
+	background: red;
+	color:#fff;
+	font-size: 12px;
+	line-height: 20px;
+	text-align: center;
+}
+#h_1,#h_2{
+	font-size: 24px;
 }

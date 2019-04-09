@@ -4,6 +4,67 @@
     <meta charset="UTF-8">
     <title>看什么看</title>
     <link rel="stylesheet" th:href="@{/css/layui.css}" href="/res.layui.com/layui/dist/css/layui.css"  media="all">
+    <link rel="stylesheet" th:href="@{/css/animate.min.css}">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_1062799_08mhyk957oz4.css">
+    <style>
+        @font-face {
+            font-family: 'iconfont';  /* project id 1062799 */
+            src: url('//at.alicdn.com/t/font_1062799_08mhyk957oz4.eot');
+            src: url('//at.alicdn.com/t/font_1062799_08mhyk957oz4.eot?#iefix') format('embedded-opentype'),
+            url('//at.alicdn.com/t/font_1062799_08mhyk957oz4.woff2') format('woff2'),
+            url('//at.alicdn.com/t/font_1062799_08mhyk957oz4.woff') format('woff'),
+            url('//at.alicdn.com/t/font_1062799_08mhyk957oz4.ttf') format('truetype'),
+            url('//at.alicdn.com/t/font_1062799_08mhyk957oz4.svg#iconfont') format('svg');
+        }
+        body,html{
+            width: 100%;
+
+            min-height: 100%;
+        }
+        body{
+            background: url("/images/iamges/bgm.png") no-repeat;
+            background-size: 100% 100%;
+            overflow-x: hidden;
+        }
+        .contentBox{
+            padding-top:90px;
+            padding-left:120px;
+            padding-right: 120px;
+        }
+        .match_title{
+            height: 50px;
+            line-height: 50px;
+            font-size: 26px;
+            color: #333;
+            font-weight: 700;
+            overflow: hidden;
+            letter-spacing: 2px;
+        }
+        .matchItem{
+            padding-bottom:20px;
+            margin-bottom:20px;
+            border:1px solid #ebebeb;
+            margin-top:20px;
+            -webkit-box-shadow: inset 0px 0px 18px -1px rgba(143,140,168,1);
+            -moz-box-shadow: inset 0px 0px 18px -1px rgba(143,140,168,1);
+            box-shadow: inset 0px 0px 18px -1px rgba(143,140,168,1);
+            background: #fff;
+
+        }
+        .iconfont{
+            font-size: 40px;
+
+        }
+        .title_text{
+            font-size: 26px;
+            vertical-align: super;
+            margin-left:10px;
+        }
+        .time>p{
+            color:#ff0000;
+            font-weight: 700;
+        }
+    </style>
 </head>
 <body >
 <!--<div class="container">-->
@@ -18,23 +79,42 @@
     <!--</div>-->
 <!--</div>-->
 <div th:replace="top::html"></div>
-<div class="layui-col-md12">
-    <div class="layui-card">
-        <div class="layui-card-header" th:align="center" th:text="'比赛名称'+${matchs.name}">标题</div>
-        <div class="layui-card-header" th:align="center" th:text="'比赛开始报名时间为：'+${matchs.startTime}">开始报名时间</div>
-        <div class="layui-card-header" th:align="center" th:text="'比赛最终结束时间为：'+${matchs.overTime}">最终结束时间</div>
-        <div class="layui-card-header" th:align="center" th:text="'比赛截止报名时间为：'+${matchs.lastsigntime}">截止报名时间</div>
-        <div class="layui-card-header" th:align="center" th:text="'比赛截止提交时间为：'+${matchs.lastsubmittime}">截止提交时间</div>
-        <div class="layui-card-body" th:align="left" th:utext="${matchs.htmlContent}">
-            内容
+<div class="layui-col-md12 contentBox">
+    <div class="bread" style="color:#fff">当前位置：
+        <a th:href="@{/index}">首页</a> >
+        <a th:href="@{/match/list}">比赛项目</a> >
+        <a href="#">比赛详情</a>
+    </div>
+
+    <div class=" matchItem">
+
+            <!--<img src="/images/iamges/match_title.png">-->
+            <h4 th:align="center" th:text="'比赛名称'+${matchs.name}" class="match_title  animated flipInX">标题</h4>
+
+        <div class="time animated bounce" style="  padding-left:60px;padding-right: 60px; ">
+            <h4><i class="iconfont icon-shijianfenlei"></i><span class="title_text">时间详情</span></h4>
+            <p  th:text="'开始报名时间：'+${matchs.startTime}"></p>
+            <p  th:text="'最终结束时间：'+${matchs.overTime}"></p>
+            <p  th:text="'截止报名时间：'+${matchs.lastsigntime}"></p>
+            <p  th:text="'截止提交时间：'+${matchs.lastsubmittime}"></p>
         </div>
+        <!--<div  th:align="center" th:text="'比赛开始报名时间为：'+${matchs.startTime}">开始报名时间</div>-->
+        <!--<div  th:align="center" th:text="'比赛最终结束时间为：'+${matchs.overTime}">最终结束时间</div>-->
+        <!--<div  th:align="center" th:text="'比赛截止报名时间为：'+${matchs.lastsigntime}">截止报名时间</div>-->
+        <!--<div  th:align="center" th:text="'比赛截止提交时间为：'+${matchs.lastsubmittime}">截止提交时间</div>-->
+        <div style="  padding-left:60px;padding-right: 60px;" class=" animated bounce">
+            <h4><i class="iconfont icon-xiangqingye"></i><span class="title_text">具体详情</span></h4>
+            <div  th:align="left" th:utext="${matchs.htmlContent}">内容</div>
+        </div>
+        <div th:align="right" style="  padding-left:60px;padding-right: 60px;">
+            <a th:href="'/group/signUp/'+*{matchs.id}" href="matchGroup/EventsignUp.html"
+               th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')} ">
+                <button type="button" class="btn btn-default btn-primary">报名</button></a>
+            <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛报名已截止</button>
+        </div>
+
     </div>
 </div>
-<div class="col-md-12 column" th:align="right">
-    <a th:href="'/group/signUp/'+*{matchs.id}" href="matchGroup/EventsignUp.html"
-       th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')} ">
-        <button type="button" class="btn btn-default btn-primary">报名</button></a>
-    <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛报名已截止</button>
-</div>
+
 </body>
 </html>

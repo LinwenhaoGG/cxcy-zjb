@@ -5,18 +5,23 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<link rel="stylesheet" href="https://at.alicdn.com/t/font_1062799_bgf7jd1h5iw.css">
+	<link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
 	<link rel="stylesheet" type="text/css" href="../../static/css/showProduction.css" th:href="@{/css/showProduction.css}" />
+	<script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
 	<script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 	<link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">
 	<script src="../../static/js/show.js" th:src="@{/js/show.js}"></script>
 	<style>
 		body{
-			background-color:#f5f6f7;
+			/*background-color:#f5f6f7;*/
+			background: url("/images/iamges/pro_img.png");
+			background-size: 100%;
 		}
 		.showPage{
 			background-color: #fff;
-			margin-left: 100px;
-			margin-right: 100px;
+			margin-left: 120px;
+			margin-right: 120px;
 			border-radius: 5px;
 			margin-top: 20px;
 			margin-bottom: 10px;
@@ -26,6 +31,7 @@
 		}
 		.work_title{
 			border-bottom: 1px solid #eee;
+			margin:20px;
 		}
 		.title_content{
 			font-size: 24px;
@@ -35,6 +41,12 @@
 		.work_data{
 			font-size: 14px;
 			color: #858585;
+			padding-top:16px;
+			width: 100%;
+			height: auto;
+			word-wrap: break-word;
+			word-break: break-all;
+			overflow: hidden;
 		}
 		.work_data .data{
 			margin-right: 20px;
@@ -60,7 +72,8 @@
 			margin-left: 20px;
 		}
 		.desc,.previewBox,.videoDesc{
-			margin-top: 20px;
+			/*margin-top: 20px;*/
+			margin:20px;
 		}
 		.videoDesc{
 			height: 440px;
@@ -74,10 +87,10 @@
 			box-shadow: 0 0 30px skyblue;
 		}
 		.post_comment{
+			margin:20px;
 			margin-top: 60px;
 			height: 200px;
 			position: relative;
-
 		}
 		.comment_box{
 			display: block;
@@ -121,6 +134,11 @@
 		}
 		.details_comment{
 			margin-top: 10px;
+			width: 100%;
+			height: auto;
+			word-wrap: break-word;
+			word-break: break-all;
+			overflow: hidden;
 		}
 		.comment_time{
 			margin-top: 20px;
@@ -149,17 +167,70 @@
 			font-size: 25px;
 			font-family: cursive;
 		}
+		.btn_pro{
+			display: inline-block;
+			width: 80px;
+			height: 45px;
+			border-radius: 5px;
+			padding-right: 10px;
+			/*background-color: rgba(153,153,153,.2);*/
+			/* background-image: url("../iamges/ico-left.png"); */
+			/*background-position: center;*/
+			/*background-repeat:no-repeat;*/
+			transition: all .20s ease-in-out;
+			text-align: center;
+			line-height: 45px;
+			font-size: 30px;
+			cursor: pointer;
+			padding-left:20px;
+			color:#0088cc;;
+			margin-left: 70px;margin-top: 10px
+		}
+		.btn_pro:hover{
+			/*background-color:#009688;*/
+			/*background-color: rgba(153,153,153,.3);*/
+			text-align: left;
+			color:#005580;
+			cursor: pointer;
+			text-decoration: none;
+		}
+		.iconfont{
+
+			font-size: 47px;
+			margin-top:10px;
+		}
+		.btn_pro_right{
+			/*background-color: rgba(153,153,153,.2);*/
+			display: inline-block;
+			width: 80px;
+			height: 45px;
+			transition: all .20s ease-in-out;
+			line-height: 45px;
+			font-size: 30px;
+			cursor: pointer;
+			color:#0088cc;
+			margin-top: 10px;
+		}
+		.btn_pro_right:hover{
+			text-align: center;
+			color:#005580;
+		}
 	</style>
 
 
 </head>
 <body>
-<button class="btn btn-info" style="margin-left: 120px;margin-top: 10px"  type="button" id="aaa" th:onclick="'returnProductionList()'">返回作品列表</button>
-<button class="btn btn-link" type="button" id="returnBut" th:onclick="'returnHtml(\''+*{productionModel[0].userName}+'\')'">作者作品中心</button><br>
+<a class="btn_pro"  id="aaa" th:onclick="'returnProductionList()'"><i class="iconfont icon-zuojiantou1"></i></a><span style="color:#8f8ca8">业余作品</span>
+<div style="float:right;margin-right: 100px">
+	<span style="color:#8f8ca8">个人作品中心</span>
+	<a class=" btn_pro_right" th:onclick="'returnHtml(\''+*{productionModel[0].userName}+'\')'" ><i class="iconfont icon-youjiantou"></i></a>
+</div>
+<!--<button  style="margin-left: 120px;margin-top: 10px"  type="button" id="aaa" th:onclick="'returnProductionList()'">返回作品列表</button>-->
+<!--<button class="btn btn-link" type="button" id="returnBut" th:onclick="'returnHtml(\''+*{productionModel[0].userName}+'\')'">作者作品中心</button><br>-->
 <div class="showPage">
 	<div class="work_title">
 		<!-- 标题 -->
-		<span class="title_content">作品的标题：<span th:text="${productionModel[1].ptitle}"></span></span>
+		<span class="title_content">作品名：<span th:text="${productionModel[1].ptitle}"></span></span>
 		<p class="work_data" th:value="*{productionModel[1].pId}">
 			<!-- 上传时间 -->
 			<span class="data data_time"><span th:text="${#dates.format(productionModel[1].puploadTime, 'yyyy-MM-dd HH:mm:ss')}"></span></span>
@@ -196,7 +267,7 @@
 	<div class="previewBox">
 		<span style="font-size:20px;font-weight:bold;color:#333;">作品详情：</span>
 
-		<a th:href="@{'https://view.officeapps.live.com/op/view.aspx?src=http://cbfx3n.natappfree.cc/'+${productionModel[1].pContent}}" class="btn btn-info preview" target="_blank">	详情预览</a>
+		<a th:href="@{'https://view.officeapps.live.com/op/view.aspx?src=http://cbfx3n.natappfree.cc/'+${productionModel[1].pContent}}" class="layui-btn layui-btn-normal preview" target="_blank">	详情预览</a>
 
 
 	</div>
@@ -218,6 +289,7 @@
 		<article class="htmleaf-container">
 			<div id="praise_container">
 				<div class="feed" id="feed1" style="display:inline-block" >
+					<span  style="position: relative;top:16px">赞</span>
 					<div class="heart" id="like"   th:if="${productionModel[0].currentVote} == null" rel="like"></div>
 					<div class="heart heartAnimation" id="like"  th:if="${productionModel[0].currentVote} != null" rel="unlike"></div>
 				</div>
@@ -225,7 +297,7 @@
 		</article>
 		<span class="comment_label">评论</span>
 		<textarea  cols="140" rows="5" placeholder="分享你的想法......" class="comment_box"></textarea>
-		<button class="btn btn-danger comment_summit">发表评论</button>
+		<button class="layui-btn comment_summit">发表评论</button>
 	</div>
 
 	<!-- 评论区 -->

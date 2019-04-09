@@ -173,6 +173,7 @@ $(document).ready(function() {
         var desc = $(".desc textarea").val();
         // 获取文件名
         var file_url = $(".file_choose input").val();
+
         // 后缀名是否正确
         let file_suffix=$(".file_choose input").val().split("\\");
         let ss = fileSuffix(file_suffix[file_suffix.length-1]);

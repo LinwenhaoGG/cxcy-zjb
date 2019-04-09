@@ -6,26 +6,36 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/index.css}" />
+    <style>
+        a:hover{
+            text-decoration: none;
+        }
+        .postdata{
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 <body>
 <div th:replace="top::html"></div>
-<div class="mainbody" style="border: 1px solid #ccc;margin-top: 10px">
+<div class="mainbody" style="padding-top:100px">
     <div class="container clearfix" style="background-color: white ">
         <div class="mainbody_topbg"></div>
         <div class="bread">当前位置：
-            <a th:href="@{/index}">首页</a> >
-            <a th:href="@{/information/showAllNotice}">资讯</a> >
+            <a th:href="@{/index}">首页</a> /
+            <a th:href="@{/information/showAllNotice}">资讯</a> /
             <a th:text="${informationModel.informationCategory.name}" th:href="@{/information/showAllNotice?catagory=}+${informationModel.informationCategory.id}">资讯详情</a>
         </div>
         <div class="maincontent" style="width: 100%">
-            <div class="post">
-                <h2><a th:title="${informationModel.author}" th:text="${informationModel.title}">
-                </a></h2>
-                <div class="postdata">
-                    <div class="cate"> 作者：<a th:text="${informationModel.author}" >x</a> 发表于 </div>
-                    <div class="date" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</div>
-                    阅读量: <i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}"></i>
+            <div class="post" >
+                <h1 th:title="${informationModel.author}" th:text="${informationModel.title}"></h1>
+                <div class="postdata" style="border-bottom:1px solid #e0e0e0;padding-bottom:10px;margin-bottom:20px">
+                    <div class="left" style="display: flex">
+                        <div class="date" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}" style="color:#999;font-size: 14px">2018-03-24</div>
+                        <div class="cate" style="padding-left:30px;color:#999" th:text="${informationModel.author}" ></div>
+                    </div>
+                    <span class="read" style="color:#999"> <i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}" style="font-weight: 700;color:#f54343"></i> 阅读</span>
                 </div>
-                <div class="content" style="margin-left: 50px;margin-right: 50px">
+                <div class="content" style="margin-left: 50px;margin-right: 50px;line-height: 32px">
                     <div class="layui-card-body"  th:utext="${informationModel.htmlContent}">
                         内容
                     </div>

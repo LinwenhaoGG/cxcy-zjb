@@ -5,6 +5,13 @@
 * @Last Modified time: 2018-09-01 00:50:04
 */
 $(document).ready(function() {
+    var layer;
+    layui.use(['layer', 'form', 'element'], function(){
+        layer = layui.layer
+            ,form = layui.form
+            ,element = layui.element
+    });
+
 	Date.prototype.toLocaleString = function(){
 		if((this.getMonth()+1)<10){
 			var month = this.getMonth()+1;
@@ -82,7 +89,7 @@ $(document).ready(function() {
 	$(".post_comment").on('click', '.comment_summit', function() {
         var comment = $(".comment_box").val();
 		var url3 = '/comment/createComment/'+$(".work_data").attr("value");
-		console.info(url3);
+		// console.info(url3);
         $(".comment_box").val("");
 
         $.ajax({
@@ -92,11 +99,13 @@ $(document).ready(function() {
 			},
             type:'post',
             success:function(res){
+                layer.msg('评论发布成功！',   {time: 2000}, {icon: 1});
                 countVotesAndComments();
                 loadComments();
             },
             error:function(err){
-                console.log(err)
+                layer.msg('评论发布失败！',   {time: 2000}, {icon: 2});
+                // console.log(err)
             }
 
         });
@@ -104,23 +113,37 @@ $(document).ready(function() {
 
     // 删除评论
     $(".comments_list").on('click','.delete-btn', function() {
-		var id = $(this).parent().parent().attr("id");
-        var url3 = '/comment/deleteComment?pId='+$(".work_data").attr("value")+'&cId='+id;
-        console.info(url3);
-        $.ajax({
-            url:url3,
-            type:'get',
-            success:function(){
-            	alert("删除成功");
-                countVotesAndComments();
-                loadComments();
-            },
-            error:function(err){
-                alert("删除失败");
-                console.log(err)
-            }
+        var this_ = this;
+        layer.confirm('确定删除该评论？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            //删除评论
+            var id = $(this_).parent().parent().attr("id");
+            var url3 = '/comment/deleteComment?pId='+$(".work_data").attr("value")+'&cId='+id;
+            $.ajax({
+                url:url3,
+                type:'get',
+                success:function(){
+                    layer.msg('删除成功！',   {time: 2000}, {icon: 1});
+                    countVotesAndComments();
+                    loadComments();
+                },
+                error:function(err){
+                    layer.msg('删除失败！',   {time: 2000}, {icon: 2});
+                    console.log(err)
+                }
 
-        })
+            });
+        }, function(){
+            return;
+            // layer.msg('取消', {
+            //             //     time: 20000, //20s后自动关闭
+            //             //     btn: ['明白了', '知道了']
+            //             // });
+        });
+
+
+
 
 
     });
@@ -134,7 +157,7 @@ function loadComments(){
         type:'get',
         success:function(res){
             var data = res.data;
-            console.log(data);
+            // console.log(data);
             var floorNum = 0;
             $(".comments_list").empty();
             $(data).each(function() {
@@ -146,7 +169,7 @@ function loadComments(){
 
                 if(this.flag){
                     var newDom = '<li id="'+object.id+'"><p><span class="floor">#<span class="floor_num">'+floorNum+'</span>楼</span><span class="u_name">'+
-                        u_name+'</span></p><p class="details_comment">'+object.content+'</p><p class="comment_time">'+Createtime+'<button class="btn btn-primary  delete-btn">删除</button></p></li>'
+                        u_name+'</span></p><p class="details_comment">'+object.content+'</p><p class="comment_time">'+Createtime+'<button class="layui-btn layui-btn-danger  delete-btn">删除</button></p></li>'
                     $(".comments_list").append(newDom);
                 }
                 else{

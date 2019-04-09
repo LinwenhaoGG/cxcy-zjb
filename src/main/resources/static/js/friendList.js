@@ -28,7 +28,8 @@ $(function () {
                 $("#showmessage").append("<span class=\"innerspan\"><a href=\"/user/inchat?userId="+per.userId+"\"><img src=\""+img+"\" class=\"imgClass\"><span>"+per.userName+"</span>    未读消息:<span  style=\"color: red;\">"+per.messageNum+"</span> </a></span>");
                 totalRedDot = totalRedDot+per.messageNum;
             });
-            $("#totalRedDot").html(totalRedDot);
+            // $("#totalRedDot").html(totalRedDot);
+            $(".noread").html(totalRedDot);
 
         }
     })
