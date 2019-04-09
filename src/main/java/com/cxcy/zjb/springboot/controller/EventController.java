@@ -17,7 +17,7 @@ import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
 import com.cxcy.zjb.springboot.utils.LongUtils;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
