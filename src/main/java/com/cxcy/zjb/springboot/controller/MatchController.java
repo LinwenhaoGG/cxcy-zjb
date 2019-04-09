@@ -142,7 +142,7 @@ public class MatchController {
                                    Map map) {
         //根据开始时间排序
         Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
-        PageRequest request = new PageRequest(page - 1, size);
+        PageRequest request = new PageRequest(page - 1, size, sort);
         //根据排序查出分页
         Page<Matchs> matchsPage = matchService.findAll(request);
         map.put("matchsPage", matchsPage);

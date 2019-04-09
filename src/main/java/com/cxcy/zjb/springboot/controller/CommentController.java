@@ -9,6 +9,7 @@ import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +42,6 @@ public class CommentController {
      * @return
      */
     @PostMapping("/createComment/{pId}")
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
     public @ResponseBody ResultVO createComment(@PathVariable("pId") Long pId,@RequestParam("comment") String comment) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
@@ -62,21 +62,23 @@ public class CommentController {
 //        根据pid获取作品
         List<Comment> comments ;
         List list = new ArrayList();
-        User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = user1.getUsername();
+        String username = null;
+        //获取登录信息，判断是否已经登录
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!object.toString().equals("anonymousUser")) {
+            username = ((User) object).getUsername();
+        }
         try {
             Production production = productionService.findByPId(pId);
             comments = production.getComments();
             for(Comment comment:comments ){
                 Map<String,Object> map1 = new HashMap<>();
                 Map<String,Object> map = new HashMap<>();
-                Long uId = commentService.findUserByCId(comment.getId());
-                User user = userService.findUserById(uId);
-                String username1 = user.getUsername();
+                String username1 = userService.getUsernameById(comment.getUser());
                 map1.put(username1,comment);
                 //判断是否是自己的评论
                 boolean flag = false;
-                if(username.equals(username1)){
+                if(username1.equals(username)){
                     flag = true;
                 }
                 map.put("flag",flag);
@@ -101,7 +103,11 @@ public class CommentController {
     @GetMapping("/deleteComment")
     public @ResponseBody ResultVO deleteComment(@RequestParam("pId")Long pId,@RequestParam("cId")Long cId) {
 //        获取相应的用户id
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = null;
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!object.toString().equals("anonymousUser")) {
+            user = (User) object;
+        }
         try{
             Long uId = commentService.findUserByCId(cId);
             Long uId1 = user.getId();
@@ -137,8 +143,7 @@ public class CommentController {
                 Map<String,Object> map1 = new HashMap<>();
                 Map<String,Object> map = new HashMap<>();
                 Long uId = commentService.findUserByCId(comment.getId());
-                User user = userService.findUserById(uId);
-                String username1 = user.getUsername();
+                String username1 = userService.getUsernameById(uId);
                 map1.put(username1,comment);
                 map.put("map",map1);
                 list.add(map);

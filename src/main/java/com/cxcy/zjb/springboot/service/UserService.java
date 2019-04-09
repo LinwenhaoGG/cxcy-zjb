@@ -109,6 +109,27 @@ public interface UserService {
     public void giveUserAuthority(Long userId, Long auId);
 
     /**
+     * 通过用户id获取用户名
+     * @param userId
+     * @return
+     */
+    String getUsernameById(Long userId);
+
+    /**
+     * 通过用户id获取学生id
+     * @param userId
+     * @return
+     */
+    Long getStudentIdById(Long userId);
+
+    /**
+     * 通过用户名获取用户id
+     * @param username
+     * @return
+     */
+    Long getUserIdByUsername(String username);
+
+    /**
      * 获取用户统计类型
      * @return
      */

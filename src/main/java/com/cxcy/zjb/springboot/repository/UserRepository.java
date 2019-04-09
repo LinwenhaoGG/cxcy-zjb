@@ -63,6 +63,30 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByStyleAndState(Integer style, Integer state, Pageable pageable);
 
  /**
+  * 通过用户id获取用户名
+  * @param userId
+  * @return
+  */
+ @Query(value = "select username FROM user WHERE id = ?1", nativeQuery = true)
+    String getUsernameById(Long userId);
+
+ /**
+  * 通过用户id获取学生id
+  * @param userId
+  * @return
+  */
+ @Query(value = "select s_id FROM user WHERE id = ?1", nativeQuery = true)
+ Long getStudentIdById(Long userId);
+
+ /**
+  * 通过用户名获取id
+  * @param username
+  * @return
+  */
+ @Query(value = "select id FROM user WHERE username = ?1", nativeQuery = true)
+ Long getUserIdByUsername(String username);
+
+ /**
   * 给用户增加角色
   * @param userId
   * @param auId

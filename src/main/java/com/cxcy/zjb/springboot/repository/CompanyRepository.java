@@ -36,7 +36,7 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
      */
     @Query(value = "select new com.cxcy.zjb.springboot.Vo.UserCompanyVo(u.id, u.name, u.email,u.telephone, u.username, u.avatar, u.state, u.style, " +
             "c.companyName, c.number, c.boss, c.license, c.type,c.contacts, c.phone) " +
-            " from User u,Company c where u.style = 2 and u.state = ?1 and u.company = c.id")
+            " from User u,Company c where u.style = 3 and u.state = ?1 and u.company = c.id")
     Page<UserCompanyVo> findUserCompanyByState(Integer state, Pageable pageable);
 
     /**

@@ -66,16 +66,14 @@ public class ProductionServiceImpl implements ProductionService {
 //        根据pId查找对应的作品
         Production production = productionRepository.findOne(pId);
         production.setReadSize(production.getReadSize()+1);
-        //获取一个用户id
-        Long uId = production.getUser();
         //根据uid获取sid
-        User user = userService.findUserById(uId);
-        Long sId = user.getStudent();
+        Long sId = userService.getStudentIdById(production.getUser());
         //根据学生id查找对应的growth
         Growth growth = growthService.findByUser(sId);
 
-        //添加相应的gid的浏览量+1
+        //添加相应的gid的浏览量+1和积分+1
         growth.setGReadSize(growth.getGReadSize()+1);
+        growth.setGIntegration(growth.getGIntegration()+1);
         //保存更新新的数据
         growthService.save(growth);
 
@@ -93,18 +91,17 @@ public class ProductionServiceImpl implements ProductionService {
     @Override
     public Production createComment(Long pId, String content,User user) {
         Production originalProduction = productionRepository.findOne(pId);
-//        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        根据账号获取用户id
         Long uId = user.getId();
-        User prodcutionUser = userService.findUserById(originalProduction.getUser());
         Comment comment = new Comment(uId, content);//先创建一个评论
         commentService.saveComment(comment);
 
         //根据学生id查找对应的growth
-        Growth growth = growthService.findByUser(prodcutionUser.getStudent());
+        Growth growth = growthService.findByUser(userService.getStudentIdById(originalProduction.getUser()));
 
         //添加相应的gid的评论量+1
         growth.setGReadSize(growth.getGComment()+1);
+        growth.setGIntegration(growth.getGIntegration()+2);
         //保存更新新的数据
         growthService.save(growth);
         originalProduction.addComment(comment);
@@ -117,13 +114,13 @@ public class ProductionServiceImpl implements ProductionService {
         Production originalProduction = productionRepository.findOne(pId);
         //获取一个用户id
         Long uId = originalProduction.getUser();
-        User user = userService.findUserById(uId);
-        Long sId = user.getStudent();
+        Long sId = userService.getStudentIdById(uId);
         //根据学生id查找对应的growth
         Growth growth = growthService.findByUser(sId);
 
         //减少相应的gid的评论量-1
         growth.setGReadSize(growth.getGComment()-1);
+        growth.setGIntegration(growth.getGIntegration()-2);
         //保存更新新的数据
         growthService.save(growth);
         originalProduction.removeComment(cId);
@@ -144,8 +141,8 @@ public class ProductionServiceImpl implements ProductionService {
         //获取当前登录用户id
         Long uId = user.getId();
         //根据学生id查找对应的growth
-        Growth growth = growthService.findByUser(userService.findUserById(puId).getStudent());
-//        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Growth growth = growthService.findByUser(userService.getStudentIdById(puId));
+
         List<Vote> votes = originalProduction.getVotes();
         Vote currentVote = null; // 当前用户的点赞情况
         for (Vote vote : votes) {
@@ -159,9 +156,11 @@ public class ProductionServiceImpl implements ProductionService {
             currentVote = voteService.saveVote(currentVote);
             originalProduction.addVote(currentVote);
             growth.setGVote(growth.getGVote()+1);
+            growth.setGIntegration(growth.getGIntegration()+3);
         }else {
             originalProduction.removeVote(currentVote.getVId());
             growth.setGVote(growth.getGVote() - 1);
+            growth.setGIntegration(growth.getGIntegration()-3);
             voteService.removeByVId(currentVote.getVId());
         }
         productionRepository.save(originalProduction);

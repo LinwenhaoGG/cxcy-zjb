@@ -6,6 +6,7 @@ import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.CheckWordUtil;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
+import com.cxcy.zjb.springboot.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,7 +81,10 @@ public class ProductionController {
     //    跳转上传作品页面
     @RequestMapping(value = "/uploadProduction")
     public ModelAndView uploadProduction(Map map) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = UserUtils.getUser();
+        if (null == user) {
+            return new ModelAndView("/login", map);
+        }
         map.put("userId",user.getId());
 
         return new ModelAndView("production/uploadProduction", map);
@@ -128,7 +133,7 @@ public class ProductionController {
             String dName = direction.getDName();
             productionVo.setDirection(dName);
             productionVo.setCatagorys(caName);
-            productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+            productionVo.setUserName(userService.getUsernameById(production.getUser()));
             productionVo.setProduction(production);
             productionVoList.add(productionVo);
         }
@@ -178,22 +183,27 @@ public class ProductionController {
         }
     }
 
-    // 分页显示用户的所有作品信息
+    /**
+     *  分页显示用户的所有作品信息
+      */
     @GetMapping("/{username}/productionCenter")
-    /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
     public ModelAndView showAllProduction(@PathVariable("username") String username,
                                           @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
                                           @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
                                           Map map) {
-        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User u = null;
+        //获取登录信息，判断是否已经登录
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!object.toString().equals("anonymousUser")) {
+            u = (User) object;
+        }
 
         //设置分页
         Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
-//        根据用户名查找用户
+        //根据用户名查找用户
         Page<Production> productions;
-        User user = userService.findByUsername(username);
-        Long uId = user.getId();
-//      根据用户ID查找所有的作品
+        Long uId = userService.getUserIdByUsername(username);
+        // 根据用户ID查找所有的作品
         productions = productionService.findAllByUserId(uId, pageable);
         System.out.println(uId);
         System.out.println(productions.getTotalPages());
@@ -219,16 +229,19 @@ public class ProductionController {
 
     }
 
-
-    //    删除对应的作品:需要先判断作品是否作者的，好像不用判断，当显示作品详情的时 候已经对作品的作者进行判断了才会显示删除接口
+    /**
+     *  删除对应的作品:需要先判断作品是否作者的
+     * @param username
+     * @param pId
+     * @return
+     */
     @GetMapping("/{username}/deleteProduction/{pId}")
-    /*@PreAuthorize("authentication.name.equals(#username)")*///先不添加，自己判断
+    @PreAuthorize("authentication.name.equals(#username)")
     public @ResponseBody ResultVO deleteProduction(@PathVariable("username") String username,@PathVariable("pId") Long pId) {
         boolean isProductionOwner = false;
         Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
-        User user = userService.findUserById(uId);
-        String username1 = user.getUsername();
+        String username1 = userService.getUsernameById(uId);
         if(username.equals(username1)){
             isProductionOwner = true;
         }
@@ -255,21 +268,13 @@ public class ProductionController {
      * @return
      */
     @RequestMapping(value="/{pId}")
-    public /*@ResponseBody ResultVO*/ModelAndView getProductionByPId( @PathVariable("pId") Long pId,Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ModelAndView getProductionByPId( @PathVariable("pId") Long pId,Model model) {
+        User user = UserUtils.getUser();
         // 每次读取，简单的可以认为阅读量增加1次
         productionService.readingIncrease(pId);
 
 //      查看作品的是否作者本身，初始化否
         boolean isProductionOwner = false;
-        // 判断操作用户是否是作品的所有者
-        /*if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-            User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal !=null && username.equals(principal.getUsername())) {
-                isProductionOwner = true;//作品是作者的，可以显示编辑删除等功能
-            }
-        }*/
 
         Production production = productionService.findByPId(pId);
         //根据production的分类id查找出对应的内容和方向内容
@@ -278,14 +283,12 @@ public class ProductionController {
         Long dId = catagory.getDirection();
         Direction direction = directionService.findById(dId);
         Vote currentVote = null; // 当前用户的点赞情况
-        User userById = userService.findUserById(production.getUser());//根据作品id查找作者昵称
-        String userName = userById.getUsername();
+        String userName = userService.getUsernameById(production.getUser());//根据作品id查找作者昵称
         //根据pid查找对应的作品
         List list = new ArrayList();
         if(user != null){
-            Long uId = production.getUser();
             Long id = user.getId();
-            if(uId.equals(id)){
+            if(production.getUser().equals(user.getId())){
                 isProductionOwner = true;
             }
 
@@ -318,8 +321,8 @@ public class ProductionController {
         list.add(model);
         list.add(production);
         return new ModelAndView("/production/showProduction", "productionModel", list);
-//        return ResultUtils.success(list);
     }
+
     /**
      * 编辑作品回显数据
      * @param username
@@ -328,16 +331,13 @@ public class ProductionController {
      */
     @GetMapping("/{username}/productions/{pId}")
     public @ResponseBody ResultVO refreshing(@PathVariable("username") String username,@PathVariable("pId") Long pId,Model model) {
-        // 每次读取，简单的可以认为阅读量增加1次
-        productionService.readingIncrease(pId);
 
 //      查看作品的是否作者本身，初始化否
         boolean isProductionOwner = false;
 
         Production production = productionService.findByPId(pId);
         Long uId = production.getUser();
-        User user = userService.findUserById(uId);
-        String username1 = user.getUsername();
+        String username1 = userService.getUsernameById(uId);
         if(username.equals(username1)){
             isProductionOwner = true;
         }
@@ -350,8 +350,10 @@ public class ProductionController {
         List<Vote> votes = production.getVotes();
         Vote currentVote = null; // 当前用户的点赞情况
 
+        Long nowUserId = userService.getUserIdByUsername(username);
+
         for (Vote vote : votes) {
-            if(vote.getUser().equals(userService.findByUsername(username).getId())) {
+            if(vote.getUser().equals(nowUserId)) {
                 currentVote = vote;
                 break;
             }
@@ -417,7 +419,7 @@ public class ProductionController {
 
                 productionVo.setDirection(direction);
                 productionVo.setCatagorys(caName);
-                productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+                productionVo.setUserName(userService.getUsernameById(production.getUser()));
                 productionVo.setProduction(production);
 
                 productionVoList.add(productionVo);
@@ -473,7 +475,7 @@ public class ProductionController {
             productionVo.setDirection(directionService.findById(catagorys.getDirection()).getDName());
             productionVo.setCatagorys(catagorys.getCaName());
             //查出作者的昵称
-            productionVo.setUserName(userService.findUserById(production.getUser()).getUsername());
+            productionVo.setUserName(userService.getUsernameById(production.getUser()));
             //加入作品信息
             productionVo.setProduction(production);
             //存储在list里面
@@ -604,6 +606,7 @@ public class ProductionController {
      * @return
      */
     @RequestMapping(value="/saveProduction")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")  // 指定角色权限才能操作方法
     public @ResponseBody ResultVO saveProduction(
                             @RequestParam(value="pId",required = false) Long pId,
                             @RequestParam("pTitle") String pTitle,
@@ -622,7 +625,6 @@ public class ProductionController {
 //                前端允许修改的是作品的内容，视频路径，作品的类别，作品的标题,作品的简介
                 orignalProduction.setPtitle(pTitle);
                 orignalProduction.setPSort(pSort);
-//                orignalProduction.setPVideo(pVideo);
                 orignalProduction.setPsummary(pSummary);
                 production = orignalProduction;
             }else {

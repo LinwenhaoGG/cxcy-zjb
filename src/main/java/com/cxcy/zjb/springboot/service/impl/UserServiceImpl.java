@@ -159,4 +159,19 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         }
         return userChartsVos;
     }
+
+    @Override
+    public String getUsernameById(Long userId) {
+        return repository.getUsernameById(userId);
+    }
+
+    @Override
+    public Long getStudentIdById(Long userId) {
+        return repository.getStudentIdById(userId);
+    }
+
+    @Override
+    public Long getUserIdByUsername(String username) {
+        return repository.getUserIdByUsername(username);
+    }
 }

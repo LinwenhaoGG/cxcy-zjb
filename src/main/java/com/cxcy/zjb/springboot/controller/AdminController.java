@@ -8,6 +8,7 @@ import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
+import com.cxcy.zjb.springboot.utils.MD5Utils;
 import com.cxcy.zjb.springboot.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -120,6 +121,11 @@ public class AdminController {
         return "redirect:/admins/matchslist";
     }
 
+    /**
+     * 新增比赛页面
+     * @param map
+     * @return
+     */
     @GetMapping("/addmatchs")
     public ModelAndView addMathcs(Map map) {
 
@@ -231,13 +237,16 @@ public class AdminController {
     @GetMapping("/toInformationList")
     public String toInformation(@RequestParam(name = "keyword",defaultValue = "") String keyword,
                                 Model model) {
-//        PageRequest request = new PageRequest(page - 1, size);
-//        Page<InformationCategory> informationCategories = informationCategoryService.findAllByPage(request);
         List<Information> informationList = informationService.findByTitleLike(keyword);
         model.addAttribute("informationList", informationList);
         return "admins/pages/news/news_information";
     }
 
+    /**
+     * 新增资讯页面
+     * @param model
+     * @return
+     */
     @GetMapping("/informationAdd")
     public String informationAdd(Model model) {
         //获取所有资讯分类
@@ -248,6 +257,12 @@ public class AdminController {
         return "admins/pages/news/news_add";
     }
 
+    /**
+     * 编辑资讯页面
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/informationUpdate")
     public String informationUpdate(@RequestParam("id") Long id,
                                     Model model) {
@@ -322,6 +337,7 @@ public class AdminController {
             user.setIsUse(1);  //启用状态
             user.setState(UserContants.STATE_IS_ACCEPT);  //已认证
             user.setStyle(UserContants.STYLE_ADMIN); //设置为管理员状态
+            user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
             User newUser = userService.saveUserInfo(user);
             userService.giveUserAuthority(newUser.getId(), UserContants.ROLE_ADMIN_ID); //给管理新增角色
         }

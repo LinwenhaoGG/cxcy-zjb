@@ -1,0 +1,60 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="favicon.ico" >
+    <link rel="Shortcut Icon" href="favicon.ico" />
+    <title>后台管理</title>
+</head>
+<body>
+<!-- 嵌入导航栏 -->
+<div th:replace="admins/nav::html"></div>
+
+
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/admins/checkUserList" class="maincolor">后台管理首页</a>
+        <span class="c-999 en">&gt;</span>
+        <a th:href="@{/admins/matchslist}" class="maincolor">比赛管理</a>
+        <span class="c-999 en">&gt;</span>
+        <span class="c-666">比赛详情</span>
+    </nav>
+    <article class="cl pd-20 show_product">
+        <p class='text-r' th:text="'开始时间:'+${#dates.format(matchs.createTime, 'yyyy-MM-dd HH:mm:ss')} ">发表时间: 2018年8月31日18:33:59</p>
+        <div class="clearfix">
+            <div class="f-l" >
+                <p class='text-r'>作者: <span style="color: #00b050"  th:text="${information.author}"></span></p>
+                <p>分类: <span style="color: #00a0e9" th:text="${information.informationCategory.name}"></span></p>
+            </div>
+            <br>
+            <div class="f-r">
+                <p class="f-l pl-20" th:text="'浏览量:'+${information.readSize}" style="color: #aaaaaa">浏览量: 123</p>
+            </div>
+        </div>
+        <div class="product clearfix">
+            <h2 class="product-title" th:text="'比赛名称'+${matchs.name}">
+                比赛名称：习近平同博茨瓦纳总统马西西举行会谈
+            </h2>
+            <br>
+            <div class="layui-card-body"  th:utext="${matchs.htmlContent}">
+                新华社北京8月31日电（记者白洁、许可）国家主席习近平31日在人民大会堂同博茨瓦纳总统马西西举行会谈。
+
+                习近平指出，8年前我访问贵国，亲身感受到博茨瓦纳人民对中国人民的深厚情谊。我们赞赏博茨瓦纳政府致力于中博友好，全面深化对华合作。双方要登高望远，增进互信，深化合作，把两国关系提升到新的水平。
+
+                习近平强调，中博要密切高层往来，深化政府、立法机构、地方等领域交往，加强治国理政交流。两国要始终在涉及各自发展道路、核心利益和重大关切问题上相互理解和支持。中方愿同博方加强发展战略对接，欢迎博方积极参与“一带一路”建设。要促进人文领域交流，加大野生动物保护合作。要就国际和地区事务加强沟通和协作，共同维护发展中国家权益，推动建设新型国际关系，构建人类命运共同体。
+
+                马西西表示，博茨瓦纳独立以来，一直同中国保持友好关系，博茨瓦纳人民感谢中方长期以来在基础设施建设、医疗、民生等领域给予的宝贵帮助。博茨瓦纳祝贺并希望借鉴中国在发展、减贫等方面取得的巨大成就。我愿通过这次访问，将博中关系提升到新的水平。中国是国际社会的重要力量，是发展中国家的重要伙伴。博茨瓦纳坚定奉行一个中国政策，感谢中国为非洲反殖、争取民族独立和国家发展提供的支持，赞同构建人类命运共同体伟大理念，支持“一带一路”倡议，致力于拓展双方在中非合作论坛框架下合作。
+
+                会谈后，两国元首还共同见证了有关合作文件的签署。
+
+                会谈前，习近平在人民大会堂北大厅为马西西举行欢迎仪式。彭丽媛、丁薛祥、杨洁篪、万鄂湘、王毅、汪永清、何立峰等参加。（完）
+            </div>
+        </div>
+    </article>
+</section>
+
+</body>
+</html>
