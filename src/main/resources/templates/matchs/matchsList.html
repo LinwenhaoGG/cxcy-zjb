@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>查看</title>
-    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/matchlist.css}">
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/animate.min.css}">
     <style>
@@ -37,7 +38,7 @@
             <ul class="thumbnails">
                 <div class="thumbnail" th:if="${isnull} eq 1"><h3>暂无比赛信息</h3></div>
                 <div class="matchWrapper">
-                    <ul class="matchList animated slideInUp">
+                    <ul class="matchList animated fadeIn">
                         <li class="match_item" th:each="matchs : ${matchsPage.content}">
                             <div>
                                 <img th:src="@{/images/iamges/match_logo.png}" class="item_img">

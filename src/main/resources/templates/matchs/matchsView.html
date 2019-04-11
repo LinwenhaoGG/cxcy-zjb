@@ -22,7 +22,7 @@
             min-height: 100%;
         }
         body{
-            background: url("/images/iamges/bgm.png") no-repeat;
+            /*background: url("/images/iamges/bgm.png") no-repeat;*/
             background-size: 100% 100%;
             overflow-x: hidden;
         }
@@ -79,8 +79,8 @@
     <!--</div>-->
 <!--</div>-->
 <div th:replace="top::html"></div>
-<div class="layui-col-md12 contentBox">
-    <div class="bread" style="color:#fff">当前位置：
+<div class="layui-col-md12 contentBox" style="animated fadeIn "  >
+    <div class="bread" style="color:#ccc">当前位置：
         <a th:href="@{/index}">首页</a> >
         <a th:href="@{/match/list}">比赛项目</a> >
         <a href="#">比赛详情</a>
@@ -91,7 +91,7 @@
             <!--<img src="/images/iamges/match_title.png">-->
             <h4 th:align="center" th:text="'比赛名称'+${matchs.name}" class="match_title  animated flipInX">标题</h4>
 
-        <div class="time animated bounce" style="  padding-left:60px;padding-right: 60px; ">
+        <div class="time " style="  padding-left:60px;padding-right: 60px; ">
             <h4><i class="iconfont icon-shijianfenlei"></i><span class="title_text">时间详情</span></h4>
             <p  th:text="'开始报名时间：'+${matchs.startTime}"></p>
             <p  th:text="'最终结束时间：'+${matchs.overTime}"></p>
@@ -102,7 +102,7 @@
         <!--<div  th:align="center" th:text="'比赛最终结束时间为：'+${matchs.overTime}">最终结束时间</div>-->
         <!--<div  th:align="center" th:text="'比赛截止报名时间为：'+${matchs.lastsigntime}">截止报名时间</div>-->
         <!--<div  th:align="center" th:text="'比赛截止提交时间为：'+${matchs.lastsubmittime}">截止提交时间</div>-->
-        <div style="  padding-left:60px;padding-right: 60px;" class=" animated bounce">
+        <div style="  padding-left:60px;padding-right: 60px;">
             <h4><i class="iconfont icon-xiangqingye"></i><span class="title_text">具体详情</span></h4>
             <div  th:align="left" th:utext="${matchs.htmlContent}">内容</div>
         </div>
