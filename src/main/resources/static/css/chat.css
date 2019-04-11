@@ -12,7 +12,7 @@ body{
 #backgroundDiv{
 	/*聊天背景图片*/
 	/*background-image: url(/img/background.jpg);*/
-	background-image: url("/images/iamges/timg.jpg");
+	background-image: url("/images/iamges/timg.png");
 	width: 100%;
 	height: 100%;
 	padding-top:90px;
@@ -156,20 +156,20 @@ tr td span{
 	background: #9eea6a;
 	position: relative;
 }
-.send::after{
-	display: none;
-}
-.send::before{
-	position: absolute;
-	content: "";
-	width:0;
-	height:0;
-	border-top:10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-left: 10px solid #9eea6a;
-	top: 40%;
-	right: -10px;
-}
+/*.send::after{*/
+	/*display: none;*/
+/*}*/
+/*.send::before{*/
+	/*position: absolute;*/
+	/*content: "";*/
+	/*width:0;*/
+	/*height:0;*/
+	/*border-top:10px solid transparent;*/
+	/*border-bottom: 10px solid transparent;*/
+	/*border-left: 10px solid #9eea6a;*/
+	/*top: 40%;*/
+	/*right: -10px;*/
+/*}*/
 hr{
 	margin-top:0px;
 	margin-bottom:0px;
