@@ -8,7 +8,8 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
     <title>title</title>
     <link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
-    <link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <!--<link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">-->
     <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
     <style>
         body,html{
@@ -150,6 +151,7 @@
             transition: all .2s;
             padding-left:20px;
             padding-right:20px;
+            padding-bottom:20px;
         }
         .new_item>a{
             display: flex;
@@ -170,8 +172,6 @@
             font-size: 25px;
             padding-top: 20px;
             line-height: 24px;
-        }
-            /*display: inline-block;*/
         }
         .item_info_title{
             width: 400px;
@@ -222,15 +222,15 @@
 <body>
 <div class="page">
 <div th:replace="top::html"></div>
-
+awedfawefawqerfqwer
 <!--搜索框-->
 <div class="search-box">
-    <input type="search" placeholder="搜索新闻标题" id="search" th:value="${keyword}" class="layui-input">
-    <a id="listAll"><button type="button" id="searchBut" class="layui-btn" th:onclick="'javascript:listAll()'">搜索</button></a>
+    <input type="search" placeholder="搜索新闻标题" id="search" th:value="${keyword}" class="layui-input" autocomplete="off">
+    <a id="listAll"><button type="button" id="searchBut" class="layui-btn" th:onclick="'javascript:listAll()'" >搜索</button></a>
 </div>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span2">
+<div class="container-fluid container">
+    <div class="row-fluid row">
+        <div class="span2 col-md-2">
             <input id="catagory" type="hidden"  th:value="${catagory}">
             <ul id="bar" class="aside-nav" th:style="'background:url('+@{/images/iamges/shad.png}+') no-repeat'">
                 <li>
@@ -243,7 +243,7 @@
             <h1 style="color: #00a8c6">没有符合你要求的作品</h1>
         </div>
 
-        <div class="span8" th:if="${informationList.size()} ne 0" >
+        <div class="span8 col-md-8" th:if="${informationList.size()} ne 0" >
             <div id="production" th:each="information : ${informationList}">
 
                 <!--<div  style="margin-bottom: 30px;border: 10px solid #cccc;padding: 5px;padding-left: 20px;padding-right: 20px">-->
@@ -264,7 +264,7 @@
                                         <span class="title_logo" th:style="'background:url('+ @{/images/iamges/hot.gif}+') no-repeat'"></span>
                                         <span class="text" th:text="${information.title}"></span>
                                     </h3>
-                                    <p class="item_info_intro"  th:text="${information.Content}"></p>
+                                    <!--<p class="item_info_intro"  th:text="${information.Content}"></p>-->
                                 </div>
                                 <span class="read">阅读量：<span th:text="${information.readSize}"></span></span>
                             </a>
@@ -274,7 +274,7 @@
 
             </div>
         </div>
-        <div class="span2"></div>
+        <div class="span2 col-md-2"></div>
     </div>
 </div>
 <div class="col-md-12 column " id="column" th:if="${informationList.size()} ne 0">

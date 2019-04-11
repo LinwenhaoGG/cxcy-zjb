@@ -6,217 +6,225 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
+    <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <script src="../../js/jquery-3.1.1.min.js"  th:src="@{/js/jquery-3.1.1.min.js}"></script>
 
     <script src="../../js/toastr.min.js"  th:src="@{/js/toastr.min.js}"></script>
 
     <script src="../../js/thymeleaf-bootstrap-paginator.js"  th:src="@{/js/thymeleaf-bootstrap-paginator.js}"></script>
-
+    <style>
+        .card a{
+            text-decoration: none;
+        }
+        .card a:hover{
+            text-decoration: none;
+        }
+        body,html{
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            position: relative;
+        }
+        .leftSide{
+            background: #fff;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);
+        }
+        .rightSide{
+            background: #fff;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);
+            margin-left:10px;
+            padding-top:10px;
+        }
+        .card-title{
+            font-size: 18px;
+            font-weight: 600;
+            color:#3d3d3d;
+        }
+        .pageNav{
+            position: absolute;
+            bottom: 41px;
+            right: 5px;
+            height: 40px;
+        }
+        .card a{
+            display: block;
+            height: 100%;
+            width: 100%;
+            padding:15px;
+            padding-bottom:10px;
+            padding-top:18px;
+        }
+        .card a:hover{
+            background-color: #f5f5f5;
+        }
+        .card{
+            border-bottom: 1px solid #f5f5f5;
+        }
+    </style>
 </head>
-<body>
+<body style="background-color: #f5f6f7;padding-top:80px">
 <div th:replace="top::html"></div>
-<div class="container information-content-container" style="margin-top: 10px">
-
+<div class="container information-content-container" style="margin-top: 10px;margin-left:20px">
     <div class="row">
-
         <!-- 左侧栏目 -->
-        <div class="col-md-3 col-xl-2" style="border: 1px solid #ccc;margin-top: 10px">
-
+        <div class="col-md-3 col-xl-2 leftSide" >
             <div class="row" style="margin-top: 10px" align="center">
                 <div class="col-md-12">
                     <span>
-
                         <img style="height: 120px;width: 120px" th:src="${user.avatar} == null ? '/images/avatar-defualt.jpg' : '/img/'+${user.avatar} ">
-
                     </span>
-
-                </div>
-
-            </div>
-            <div class="row" align="center">
-
-                <div class="col-md-12">
-                    <h2 class="card-text" style="color: #00a0e9" th:text="'用户:'+${user.username}"></h2>
                 </div>
             </div>
-
-
             <div class="row" align="center">
                 <div class="col-md-12">
-                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i>邮箱：
+                    <h2 class="card-text" style="color: #3d3d3d" th:text="${user.username}"></h2>
+                </div>
+            </div>
+            <div class="row" align="center">
+                <div class="col-md-12">
+                    <h5 style="color:#ccc"><i class="fa fa-envelope-o" aria-hidden="true"></i>邮箱：
                         <a href="mailto:waylau521@gmail.com" th:href="'mailto:'+ ${user.email}" th:text="${user.email}">waylau521@gmail.com</a></h5>
                 </div>
             </div>
 
         </div>
-
-
-
         <!-- 右侧栏目 -->
-
-
-        <div class="col-md-9 col-xl-10">
+        <div class="col-md-8 col-xl-9 rightSide" style="padding-left:0px;
+            padding-right:0px;">
             <!-- 工具栏 -->
-
-            <ul class="nav nav-tabs mr-auto">
-
+            <ul class="nav nav-tabs mr-auto" style="padding-left:15px;padding-right:15px">
                 <li class="nav-item">
                     <a class="nav-link" data-th-classappend="${order} eq 'new' ? 'active' : ''" href="javascript:void(0)" th:attr="url='/information/'+${user.username}+'?order=new'">最新</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link" data-th-classappend="${order} eq 'hot' ? 'active' : ''" href="javascript:void(0)" th:attr="url='/information/'+${user.username}+'?order=hot'">最热</a>
                 </li>
-
                 <div class="form-inline mt-2 mt-md-0" >
                     <input class="form-control mr-sm-2" type="text" placeholder="搜索" id="keyword" th:value="${keyword}">
-                    <a href="javascript:void(0)" class="btn btn-outline-secondary my-2 my-sm-0" id="searchInformations" >
+                    <a href="javascript:void(0)"  id="searchInformations" style="text-decoration: none" >
                         <i class="fa fa-search" aria-hidden="true" th:text="搜索" ></i></a>
                     <span style="text-align: right">
                     <a style="float: right" th:href="'/information/'+${#authentication.name}+'/create'"><button type="button" class="btn btn-default btn-primary">发布资讯</button></a>
                     </span>
                 </div>
-
-
             </ul>
-
-
-
             <!-- Blog Post -->
             <div id="mainContainer">
                 <div id="mainContainerRepleace">
                     <div class="card mb-4" th:each="information : ${informationList}">
-                        <div class="card-block">
-                            <h2 class="card-title">
-                                <a href="/u/waylau/blogs/1" class="card-link" title="waylau"
-                                   th:href="'/information/' + ${user.username} + '/'+ ${information.id}"  th:title="${user.username}" th:text="${information.title}">
-                                    OAuth 2.0 认证的原理与实践
-                                </a>
-                            </h2>
-                            <div class="card-text">
-                                发表于:<i th:text="${#dates.format(information.createTime, 'yyyy-MM-dd HH:mm')}"></i>
-                                阅读量：<i class="fa fa-eye" aria-hidden="true" th:text="${information.readSize}"></i>
+                        <a th:href="'/information/' + ${user.username} + '/'+ ${information.id}">
+                            <div class="card-block">
+                                <h2 class="card-title" style="margin-top:5px" th:text="${information.title}">
+                                    <!--<a th:href="'/information/' + ${user.username} + '/'+ ${information.id}"  th:title="${user.username}" th:text="${information.title}"></a>-->
+                                </h2>
+                                <div class="card-text" style="padding-top:5px">
+                                    <i th:text="${#dates.format(information.createTime, 'yyyy-MM-dd HH:mm')}" style="color:#6b6b6b;"></i> |
+                                    <span style="color:#6b6b6b"> 阅读数 </span><i class="fa fa-eye" aria-hidden="true" th:text="${information.readSize}" style="color:#8f8ca8;font-weight: 600"></i>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <nav data-th-fragment="page" data-th-if="${page.totalPages gt 0}" data-th-object="${page}">
-
-                        <!-- 处理页数小于等于7 的情况 -->
-                        <ul class="pagination" data-th-if="${page.totalPages le 7}" >
-                            <!-- 总记录数 -->
-                            <li class="tbpage-total-elements disabled"><span th:text="'共'+${page.totalElements}+'条'"></span></li>
-
-                            <!-- 上一页 -->
-                            <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} - 1" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-
-                            <!-- 迭代生成页码 -->
-                            <li class="page-item" data-th-each="i : ${#numbers.sequence(1, page.totalPages)}"
-                                data-th-classappend="${(page.number + 1) eq i} ? 'active' : ''" >
-                                <a class="page-link tbpage-item" data-th-attr="pageIndex=${i} - 1" href="javascript:void(0);">
-                                    <span data-th-text="${i}"></span>
-                                </a>
-                            </li>
-
-                            <!-- 下一页 -->
-                            <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 1" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <!-- 处理页数大于7 的情况 -->
-                        <ul class="pagination" data-th-if="${page.totalPages gt 7}" >
-                            <!-- 总记录数 -->
-                            <li class="tbpage-total-elements disabled">共[[${page.totalElements}]]条</li>
-
-
-                            <!-- 上一页 -->
-                            <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} - 1" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-
-                            <!-- 首页 -->
-                            <li class="page-item" data-th-classappend="${(page.number + 1) eq 1} ? 'active' : ''" >
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=0">1</a>
-                            </li>
-
-
-                            <!-- 当前页面小于等于4 -->
-                            <li class="page-item" data-th-if="${(page.number + 1) le 4}" data-th-each="i : ${#numbers.sequence(2,5)}"
-                                data-th-classappend="${(page.number + 1) eq i} ? 'active' : ''" >
-                                <a class="page-link tbpage-item" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1">
-                                    <span data-th-text="${i}"></span>
-                                </a>
-                            </li>
-
-                            <li class="page-item disabled" data-th-if="${(page.number + 1) le 4}">
-                                <a href="javascript:void(0);" class="page-link tbpage-item">
-                                    <span aria-hidden="true">...</span>
-                                </a>
-                            </li>
-
-                            <!-- 最后一页与当前页面之差，小于等于3 -->
-                            <li class="page-item disabled" data-th-if="${(page.totalPages-(page.number + 1)) le 3}">
-                                <a href="javascript:void(0);" class="page-link tbpage-item">
-                                    <span aria-hidden="true">...</span>
-                                </a>
-                            </li>
-                            <li class="page-item" data-th-if="${(page.totalPages-(page.number + 1)) le 3}" data-th-each="i : ${#numbers.sequence(page.totalPages-4, page.totalPages-1)}"
-                                data-th-classappend="${(page.number + 1) eq i} ? 'active' : ''" >
-                                <a class="page-link tbpage-item" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1">
-                                    <span data-th-text="${i}"></span>
-                                </a>
-                            </li>
-
-                            <!-- 最后一页与当前页面之差大于3，且  当前页面大于4-->
-
-                            <li class="page-item disabled" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
-                                <a href="javascript:void(0);" class="page-link tbpage-item">
-                                    <span aria-hidden="true">...</span>
-                                </a>
-                            </li>
-                            <li class="page-item" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}" >
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number}">[[${page.number}]]</a>
-                            </li>
-                            <li class="page-item active" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 1">[[${page.number + 1}]]</a>
-                            </li>
-                            <li class="page-item" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 2">[[${page.number + 2}]]</a>
-                            </li>
-
-                            <li class="page-item disabled"  data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
-                                <a href="javascript:void(0);" class="page-link tbpage-item">
-                                    <span aria-hidden="true">...</span>
-                                </a>
-                            </li>
-
-                            <!-- 最后一页 -->
-                            <li class="page-item" data-th-classappend="${(page.number + 1) eq page.totalPages} ? 'active' : ''" >
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.totalPages} - 1">[[${page.totalPages}]]</a>
-                            </li>
-
-                            <!-- 下一页 -->
-                            <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
-                                <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 1" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
-
-
         </div>
+        <!--分页-->
+        <nav data-th-fragment="page" data-th-if="${page.totalPages gt 0}" data-th-object="${page}" class="pageNav">
+            <!-- 处理页数小于等于7 的情况 -->
+            <ul class="pagination" data-th-if="${page.totalPages le 7}" >
+                <!-- 总记录数 -->
+                <li class="tbpage-total-elements disabled"><span th:text="'共'+${page.totalElements}+'条'"></span></li>
+                <!-- 上一页 -->
+                <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} - 1" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+                <!-- 迭代生成页码 -->
+                <li class="page-item" data-th-each="i : ${#numbers.sequence(1, page.totalPages)}"
+                    data-th-classappend="${(page.number + 1) eq i} ? 'active' : ''" >
+                    <a class="page-link tbpage-item" data-th-attr="pageIndex=${i} - 1" href="javascript:void(0);">
+                        <span data-th-text="${i}"></span>
+                    </a>
+                </li>
+                <!-- 下一页 -->
+                <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 1" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- 处理页数大于7 的情况 -->
+            <ul class="pagination" data-th-if="${page.totalPages gt 7}" >
+                <!-- 总记录数 -->
+                <li class="tbpage-total-elements disabled">共[[${page.totalElements}]]条</li>
+                <!-- 上一页 -->
+                <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} - 1" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+                <!-- 首页 -->
+                <li class="page-item" data-th-classappend="${(page.number + 1) eq 1} ? 'active' : ''" >
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=0">1</a>
+                </li>
+                <!-- 当前页面小于等于4 -->
+                <li class="page-item" data-th-if="${(page.number + 1) le 4}" data-th-each="i : ${#numbers.sequence(2,5)}"
+                    data-th-classappend="${(page.number + 1) eq i} ? 'active' : ''" >
+                    <a class="page-link tbpage-item" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1">
+                        <span data-th-text="${i}"></span>
+                    </a>
+                </li>
+                <li class="page-item disabled" data-th-if="${(page.number + 1) le 4}">
+                    <a href="javascript:void(0);" class="page-link tbpage-item">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                <!-- 最后一页与当前页面之差，小于等于3 -->
+                <li class="page-item disabled" data-th-if="${(page.totalPages-(page.number + 1)) le 3}">
+                    <a href="javascript:void(0);" class="page-link tbpage-item">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                <li class="page-item" data-th-if="${(page.totalPages-(page.number + 1)) le 3}" data-th-each="i : ${#numbers.sequence(page.totalPages-4, page.totalPages-1)}"
+                    data-th-classappend="${(page.number + 1) eq i} ? 'active' : ''" >
+                    <a class="page-link tbpage-item" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1">
+                        <span data-th-text="${i}"></span>
+                    </a>
+                </li>
+                <!-- 最后一页与当前页面之差大于3，且  当前页面大于4-->
+                <li class="page-item disabled" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
+                    <a href="javascript:void(0);" class="page-link tbpage-item">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                <li class="page-item" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}" >
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number}">[[${page.number}]]</a>
+                </li>
+                <li class="page-item active" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 1">[[${page.number + 1}]]</a>
+                </li>
+                <li class="page-item" data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 2">[[${page.number + 2}]]</a>
+                </li>
+
+                <li class="page-item disabled"  data-th-if="${((page.number + 1) gt 4) && ((page.totalPages-(page.number + 1)) gt 3 )}">
+                    <a href="javascript:void(0);" class="page-link tbpage-item">
+                        <span aria-hidden="true">...</span>
+                    </a>
+                </li>
+                <!-- 最后一页 -->
+                <li class="page-item" data-th-classappend="${(page.number + 1) eq page.totalPages} ? 'active' : ''" >
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.totalPages} - 1">[[${page.totalPages}]]</a>
+                </li>
+                <!-- 下一页 -->
+                <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
+                    <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} + 1" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 </body>
@@ -229,7 +237,6 @@
     $(function() {
         //存储用于搜索
         var _pageSize=5;
-
 
         // 根据用户名、页面索引、页面大小获取用户列表
         function getInformationByName(pageIndex, pageSize) {

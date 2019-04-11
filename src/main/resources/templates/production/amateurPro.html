@@ -8,7 +8,9 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 	<title>title</title>
 	<link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
-	<link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">
+
+	<!--<link href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css">-->
+	<link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 	<script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 	<style>
 		body,html{
@@ -17,6 +19,9 @@
 		}
 		body{
 			position: relative;
+		}
+		a:hover{
+			color:#8f8ca8;
 		}
 		.searchBox{
 			position: absolute;
@@ -54,6 +59,8 @@
 		.aside-nav{
 			padding: 60px 0px 60px 0px;
 			width: 200px;
+			position: relative;
+			right:80px
 		}
 		.aside-nav>li{
 			border-left:none;
@@ -98,7 +105,7 @@
 		}
 		.column{
 			position: absolute;
-			bottom:0px;
+			bottom:-100px;
 			right:10px;
 		}
 		.proList{
@@ -161,20 +168,24 @@
 		.pro_a:hover{
 			text-decoration: none;
 		}
+        .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-submenu:hover>a, .dropdown-submenu:focus>a {
+            text-decoration: none;
+            color: #ffffff;
+            background-color:#8f8ca8;}
 	</style>
 </head>
 <body>
 <div th:replace="top::html"></div>
 
 <!--搜索框-->
-<div class="searchBox">
-	<input type="search" placeholder="搜索作品" id="search" th:value="${keyword}">
+<div class="searchBox form-group">
+	<input type="search" placeholder="搜索作品" id="search" th:value="${keyword}" class="form-control" autocomplete="off">
 	<a id="listAll"><button type="button" id="searchBut" class="layui-btn  layui-btn-sm" th:onclick="'javascript:listAll()'">搜索</button></a><br><br>
 </div>
 
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span2">
+<div class="container-fluid container">
+	<div class="row-fluid row ">
+		<div class="span2 col-md-1">
 			<input id="catagory" type="hidden"  th:value="${catagory}">
 			<ul id="bar" class="aside-nav" th:style="'background:url('+@{/images/iamges/shad.png}+') no-repeat'">
 				<li><a href="/browse/recommend" id="recommend">推荐</a></li>
@@ -183,11 +194,11 @@
 				<li class="nav-header"></li>
 			</ul>
 		</div>
-		<div th:if="${totalSize} eq 0" align="center">
+		<div th:if="${totalSize} eq 0" align="center" class=" col-md-11">
 			<h1 style="color: #00a8c6">没有符合你要求的作品</h1>
 		</div>
 
-		<div  th:if="${productionPage} != null" >
+		<div  th:if="${productionPage} != null" class=" col-md-11">
 			<div >
 				<ul class="proList" >
 					<li class="proItem" id="production" th:each="p : ${productionPage}">
@@ -272,7 +283,7 @@
 			</div>
 
 		</div>
-		<div class="span10 " th:if="${productionPage} == null">无相关作品</div>
+		<div class="col-md-10 " th:if="${productionPage} == null">无相关作品</div>
 	</div>
 </div>
 

@@ -16,7 +16,7 @@
         }
         .container{
             padding-top:70px;
-            background: url("/images/iamges/match_bgm.png");
+            /*background: url("/images/iamges/match_bgm.png");*/
         }
         .table tr:nth-child(2n+1){
             background: #62bad3;
@@ -27,13 +27,13 @@
         }
     </style>
 </head>
-<body style="  background: #0d101c;">
+<body>
 <div th:replace="top::html"></div>
 <div class="container">
-    <div class="row clearfix animated fadeInDown ">
-        <img src="/images/iamges/match_head.png" style="width: 100%">
-        <div class="col-md-12 column">
-            <h3 class="text-center" th:text="${matchsName}" >
+    <div class="row clearfix animated fadeIn" style="text-align: center">
+        <img src="/images/iamges/match_head.png" style="width:60%">
+        <div class="col-md-12 column" >
+            <h3 class="text-center" th:text="${matchsName}" style="padding-top:10px;padding-bottom:10px;background:#f1f3f4">
                 第一届IT文化节<br />
             </h3>
             <table class="table table-condensed table-bordered" th:each="achievementList : ${eventAchievementList}" style="text-align: center">
