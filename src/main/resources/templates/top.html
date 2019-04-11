@@ -145,80 +145,85 @@
         </ul>
     </div>
     <div class="header-right" style="display: flex">
-        <a href="/register" id="register" style="display:none"><div class="register">注册</div></a>
-        <a href="/login" id="login" style="display:none"> <div class="login">登录</div></a>
-        <ul class="nav  navbar-nav navbar-right" id="userul" >
-            <li><a></a></li>
-            <li class="divider-vertical"></li>
-            <li class="divider-vertical"></li>
+        <a href="/register" id="register"  sec:authorize="!isAuthenticated()" ><div class="register">注册</div></a>
+        <a href="/login" id="login"  sec:authorize="!isAuthenticated()" > <div class="login">登录</div></a>
+
+        <ul class="nav navbar-nav navbar-right" id="userul" sec:authorize="isAuthenticated()">
+            <li><a>你好，<span sec:authentication="name"></span></a></li><li class="divider-vertical"></li>
             <li class="dropdown">
                 <a class=" dropdown-toggle btn_button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span class="typeselect"></span>
-                    <span class="caret"></span>
-                </a>
+                <span class="typeselect">个人中心</span>
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li sec:authorize="hasRole('ROLE_USER')" ><a href='/production/center/user'>作品中心</a></li>
+                    <li sec:authorize="hasRole('ROLE_USER')"><a href='/group/list'>比赛中心</a></li>
+                    <li sec:authorize="hasRole('ROLE_TEACHER')"><a href='/information/aaa'>资讯中心</a></li>
+                    <li sec:authorize="hasRole('ROLE_TEACHER')"><a href='/match/teacherList'>比赛中心</a></li>
+                    <li sec:authorize="hasRole('ROLE_TEACHER')"><a href='/event/teacherEvent'>评审中心</a></li>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')"><a href='/admins/checkUserList'>管理中心</a></li>
+                    <li><a href='/user/friendList'>消息</a></li>
+                    <li><a href='#'>设置</a></li>
+                    <li><a href='/logout' methods='post'>退出</a></li>
+                </ul>
             </li>
         </ul>
     </div>
 </header>
-<script type="text/javascript">
-    $(function() {
-       find2();
-    });
-    function find2() {
-        $.ajax({
-            type:"get",
-            url:"/user/person",
-            async: false,
-            contentType:"application/json;charset=utf-8",
-            data:{},
-            success:function(datas){
-                $("#userul").html("");
-                if(datas == "anonymousUser"){
-                    $("#register").show();
-                    $("#login").show();
-                   /* var li1 = $("<li><a href='/login'>登录</a></li>");
-                    var li2 = $("<li><a href='/register'>注册</a></li>");*/
-                }else{
-                    var li1 = $("<li><a>你好，"+datas.username+"</a></li><li class=\"divider-vertical\"></li>");
-                    var li2 = $("<li class=\"dropdown\">" +
-                        "<a class=\" dropdown-toggle btn_button\" id=\"dropdownMenu1\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">" +
-                        "<span class=\"typeselect\">个人中心</span>" +
-                        "<span class=\"caret\"></span></a></li>"
-                        );
-                    var li6 = $("<ul class=\"dropdown-menu\" aria-labelledby=\"dropdownMenu1\"></ul>");
-                    if (datas.style == '1') {//如果是学生，就有作品中心和比赛中心
-                        var li3 = $( "<li><a href='/production/center/user"+datas.id+"'>作品中心</a></li>");
-                        var li4 = $("<li><a href='/group/list'>比赛中心</a></li>");
+<!--<script type="text/javascript">-->
+    <!--$(function() {-->
+       <!--find2();-->
+    <!--});-->
+    <!--function find2() {-->
+        <!--$.ajax({-->
+            <!--type:"get",-->
+            <!--url:"/user/person",-->
+            <!--async: false,-->
+            <!--contentType:"application/json;charset=utf-8",-->
+            <!--data:{},-->
+            <!--success:function(datas){-->
+                <!--$("#userul").html("");-->
+                <!--if(datas == "anonymousUser"){-->
+                <!--}else{-->
+                    <!--var li1 = $("<li><a>你好，"+datas.username+"</a></li><li class=\"divider-vertical\"></li>");-->
+                    <!--var li2 = $("<li class=\"dropdown\">" +-->
+                        <!--"<a class=\" dropdown-toggle btn_button\" id=\"dropdownMenu1\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">" +-->
+                        <!--"<span class=\"typeselect\">个人中心</span>" +-->
+                        <!--"<span class=\"caret\"></span></a></li>"-->
+                        <!--);-->
+                    <!--var li6 = $("<ul class=\"dropdown-menu\" aria-labelledby=\"dropdownMenu1\"></ul>");-->
+                    <!--if (datas.style == '1') {//如果是学生，就有作品中心和比赛中心-->
+                        <!--var li3 = $( "<li><a href='/production/center/user"+datas.id+"'>作品中心</a></li>");-->
+                        <!--var li4 = $("<li><a href='/group/list'>比赛中心</a></li>");-->
 
-                    }else if(datas.style == '2'){//如果是老师，就有资讯中心和比赛中心
-                        var li3 = $("<li><a href='/information/"+datas.username+"'>资讯中心</a></li>");
-                        var li4 = $("<li><a href='/match/teacherList'>比赛中心</a></li>" +
-                            "<li><a href='/event/teacherEvent'>评审中心</a></li>");
+                    <!--}else if(datas.style == '2'){//如果是老师，就有资讯中心和比赛中心-->
+                        <!--var li3 = $("<li><a href='/information/"+datas.username+"'>资讯中心</a></li>");-->
+                        <!--var li4 = $("<li><a href='/match/teacherList'>比赛中心</a></li>" +-->
+                            <!--"<li><a href='/event/teacherEvent'>评审中心</a></li>");-->
 
-                    }else if(datas.style == '3'){//如果是企业家，就都没有
-                        var li3 = $("");
-                        var li4 = $("");
+                    <!--}else if(datas.style == '3'){//如果是企业家，就都没有-->
+                        <!--var li3 = $("");-->
+                        <!--var li4 = $("");-->
 
-                    }else if(datas.style == '4') {//如果是超级管理员，就有个管理中心
-                        var li3 = $("<li><a href='/admins/checkUserList'>管理中心</a></li>");
-                        var li4 = $("");
-                    }
-                    var li5 = $("<li><a href='/user/friendList'>消息</a></li>" +
-                                "<li><a href='#'>设置</a></li>" +
-                                "<li><a href='/logout' methods='post'>退出</a></li>");
-                    $(li6).append.call($(li6),li3,li4,li5);
-                    $(li2).append.call($(li2),li6);
-                }
-                $("#userul").append.call($("#userul"),li1,li2);
-            },
-            error : function(result) {
-                $("#userul").html("");
-                var li1 = $("<li><a href='/login'>登录</a></li>");
-                var li2 = $("<li><a href='/register'>注册</a></li>");
-            }
-        });
+                    <!--}else if(datas.style == '4') {//如果是超级管理员，就有个管理中心-->
+                        <!--var li3 = $("<li><a href='/admins/checkUserList'>管理中心</a></li>");-->
+                        <!--var li4 = $("");-->
+                    <!--}-->
+                    <!--var li5 = $("<li><a href='/user/friendList'>消息</a></li>" +-->
+                                <!--"<li><a href='#'>设置</a></li>" +-->
+                                <!--"<li><a href='/logout' methods='post'>退出</a></li>");-->
+                    <!--$(li6).append.call($(li6),li3,li4,li5);-->
+                    <!--$(li2).append.call($(li2),li6);-->
+                <!--}-->
+                <!--$("#userul").append.call($("#userul"),li1,li2);-->
+            <!--},-->
+            <!--error : function(result) {-->
+                <!--$("#userul").html("");-->
+                <!--var li1 = $("<li><a href='/login'>登录</a></li>");-->
+                <!--var li2 = $("<li><a href='/register'>注册</a></li>");-->
+            <!--}-->
+        <!--});-->
 
-    }
-</script>
+    <!--}-->
+<!--</script>-->
 </body>
 </html>

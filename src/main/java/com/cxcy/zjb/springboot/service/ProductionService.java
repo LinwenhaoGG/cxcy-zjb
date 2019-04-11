@@ -169,4 +169,9 @@ public interface ProductionService {
      */
     Page<Production> listHotestProductions(String keyword, Pageable pageable);
 
+    /**
+     * 拿到最新的N个作品
+     * @return
+     */
+    List<Production> getProductionListTop(Integer len);
 }

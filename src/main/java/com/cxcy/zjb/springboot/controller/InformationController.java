@@ -11,6 +11,7 @@ import com.cxcy.zjb.springboot.service.InformationService;
 import com.cxcy.zjb.springboot.service.UserService;
 import com.cxcy.zjb.springboot.utils.ConstraintViolationExceptionHandler;
 import com.cxcy.zjb.springboot.utils.ResultUtils;
+import com.cxcy.zjb.springboot.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,14 +70,6 @@ public class InformationController {
         Pageable pageable = new PageRequest(pageIndex,pageSize,sort);
         Page<Information> page = informationService.findAllByPage(pageable);
         List<Information> list = page.getContent();
-//        List<InformationVo> volist = new ArrayList<InformationVo>();
-//        for (Information information : list
-//             ) {
-//            InformationVo informationVo = new InformationVo();
-//            BeanUtils.copyProperties(information,informationVo);
-//            volist.add(informationVo);
-//
-//        }
         model.addAttribute("informationList",list);
         return "index :: #informationShowByCategory";
 
@@ -151,7 +144,7 @@ public class InformationController {
                                          @RequestParam(value = "pageSize",required = false,defaultValue = "5") int pageSize,
                                          Model model){
         //获取当前登录的用户
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = UserUtils.getUser();
 
         Page<Information> page = null;
 

@@ -351,11 +351,14 @@ a{
 .readNum{
 position: absolute;
 bottom:10px;
-right:30px;
+right:100px;
 color:#8a8a8a;
 }
 .commentsNum{
-    margin-left:20px;
+    /*margin-left:20px;*/
+    position: absolute;
+    bottom:10px;
+    right:30px;
     color:#8a8a8a;
 }
 .readNum>span,.commentsNum>span{

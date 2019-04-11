@@ -43,7 +43,7 @@
         <div class="container clearfix" style="background-color: white ">
             <div class="mainbody_topbg"></div>
             <div class="bread">当前位置：
-                <a th:href="@{/index}">首页</a> >
+                <a th:href="@{/}">首页</a> >
                 <a th:href="@{/information/showAllNotice}">资讯</a> >
                 <a th:text="${informationModel.informationCategory.name}" th:href="@{/information/showAllNotice?catagory=}+${informationModel.informationCategory.id}">资讯详情</a>
             </div>

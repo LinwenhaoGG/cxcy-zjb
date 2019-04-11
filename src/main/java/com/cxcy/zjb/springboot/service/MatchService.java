@@ -15,6 +15,8 @@ import com.cxcy.zjb.springboot.domain.Matchs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -64,5 +66,10 @@ public interface MatchService {
     */
     Page<Matchs> findByNameLike(String name,Pageable pageable);
 
-
+    /**
+     * 获取最新的n条比赛
+     * @param len
+     * @return
+     */
+    List<Matchs> getMatchListTop(Integer len);
 }

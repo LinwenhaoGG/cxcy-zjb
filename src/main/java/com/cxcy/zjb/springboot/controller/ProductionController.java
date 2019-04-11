@@ -150,32 +150,30 @@ public class ProductionController {
     /**
      * 用户查询自己所有的作品，包括未审核和审核不通过的
      *
-     * @param userId
      * @param pageIndex
      * @param pageSize
      * @return
      */
     @GetMapping("/center/user{userId}")
-    public ModelAndView centerShowProduction(@PathVariable("userId") Long userId,
-                                             @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                             @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")  // 指定角色权限才能操作方法
+    public ModelAndView centerShowProduction(@RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                             @RequestParam(value = "size", required = false, defaultValue = "4") Integer pageSize,
                                              Map map) {
-
+        User user = UserUtils.getUser();
         //设置分页
         Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
-        Page<Production> productions = productionService.findAllByUserId(userId, pageable);
+        Page<Production> productions = productionService.findAllByUserId(user.getId(), pageable);
         if (productions.getTotalPages() == 0) {
             map.put("productionPage", null);
         } else {
             map.put("productionPage", productions);
         }
-        String url = "/production/center/user" + userId;
-        User user = userService.findUserById(userId);
+        String url = "/production/center/user" + user.getId();
         map.put("url", url);
         map.put("userName", user.getUsername());
         map.put("page", pageIndex);
         map.put("size", pageSize);
-        if (userId.equals(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
+        if (user.getId().equals(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
             return new ModelAndView("production/productionCenter", map);
         } else {
             map.put("user", user.getUsername());
@@ -189,7 +187,7 @@ public class ProductionController {
     @GetMapping("/{username}/productionCenter")
     public ModelAndView showAllProduction(@PathVariable("username") String username,
                                           @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                          @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                          @RequestParam(value = "size", required = false, defaultValue = "4") Integer pageSize,
                                           Map map) {
         User u = null;
         //获取登录信息，判断是否已经登录
@@ -399,7 +397,7 @@ public class ProductionController {
     @GetMapping("/nav/cata{catagory}")
     public ModelAndView displayPro( @PathVariable("catagory") Long catagory,
                                      @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                     @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                     @RequestParam(value = "size", required = false, defaultValue = "4") Integer pageSize,
                                     Map map){
         List<Production> productions = productionService.findProductionsByCategoryId(catagory);
         String url = "/production/nav/cata"+catagory;
@@ -452,7 +450,7 @@ public class ProductionController {
     @GetMapping("/nav/{nh}")
     public ModelAndView displayProASNewHot(@PathVariable("nh") String nh,
                                                    @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                                   @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+                                                   @RequestParam(value = "size", required = false, defaultValue = "4") Integer pageSize,
                                                    Map map){
         String url = "/production/nav/"+nh;
         map.put("catagory",nh);
@@ -564,7 +562,7 @@ public class ProductionController {
      */
     public String saveFile(MultipartFile file){
         String filePath = "";
-        String parentFile = "E:\\Workspace\\Temp\\file\\";
+        String parentFile = "D:\\upload\\file\\";
         filePath =  file.getOriginalFilename();
         //文件名称在服务器有可能重复
         String newFileName="";

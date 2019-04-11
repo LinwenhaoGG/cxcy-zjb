@@ -150,4 +150,9 @@ import java.util.List;
     public List<ChartsValueCountVo> informationCountByHot(Pageable pageable) {
         return informationRepository.informationCountByHot(pageable);
     }
+
+    @Override
+    public List<Information> getInformationListTop(int len) {
+        return informationRepository.getInformationListTop(len);
+    }
 }

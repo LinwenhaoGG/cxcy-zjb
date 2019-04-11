@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -67,6 +68,16 @@ public interface ProductionRepository extends JpaRepository<Production,Long> {
      */
     Page<Production> findByUserContaining(Long userId,Pageable pageable);
 
-    //按上传时间降序分页查找
+    /**
+     *     按上传时间降序分页查找
+     */
     Page<Production> findByPCheckOrderByPuploadTimeDesc(Integer pCheck,Pageable pageable);
+
+    /**
+     * 拿到最新的N个作品
+     * @return
+     */
+    @Query(value = "select * from production ORDER BY p_upload_time " +
+            "limit 0, ?1",nativeQuery = true)
+    List<Production> getProductionListTop(Integer len);
 }

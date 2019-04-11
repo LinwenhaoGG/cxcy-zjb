@@ -109,6 +109,11 @@
 			right: 70px;
 			bottom:0px;
 		}
+		.btn-login {
+			position: absolute;
+			right: 70px;
+			bottom: 0px;
+		}
 		.comment_label{
 			border-left: 4px solid #5079b7;
 			padding-left:10px;
@@ -298,8 +303,8 @@
 		</article>
 		<span class="comment_label">评论</span>
 		<textarea  cols="140" rows="5" placeholder="分享你的想法......" class="comment_box"></textarea>
-		<a th:href="@{/login}"><button class="btn btn-danger comment_summit"  sec:authorize="!isAuthenticated()">请登录后进行发言</button></a>
-		<button class="layui-btn comment_summit">发表评论</button>
+		<a th:href="@{/login}"><button class="layui-btn layui-btn-danger btn-login"   sec:authorize="!isAuthenticated()">请登录后进行发言</button></a>
+		<button class="layui-btn comment_summit" sec:authorize="isAuthenticated()">发表评论</button>
 	</div>
 
 	<!-- 评论区 -->

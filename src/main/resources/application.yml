@@ -43,7 +43,7 @@ server:
   port: 8080
 
 file:
-  FilePath: E:/Workspace/Temp/file/
+  FilePath: D:/upload/file
 
 img:
   location: D:/upload/
@@ -54,6 +54,6 @@ img:
 
 
 video:
-  VideoPath: file:/E:/temp/
+  VideoPath: file:/D:/upload/temp/
 
 

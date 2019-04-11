@@ -124,4 +124,11 @@ public interface InformationService {
      * @return
      */
     List<ChartsValueCountVo> informationCountByHot(Pageable pageable);
+
+    /**
+     * 获取最新的n条咨询
+     * @param len
+     * @return
+     */
+    List<Information> getInformationListTop(int len);
 }

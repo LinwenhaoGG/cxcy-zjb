@@ -26,36 +26,6 @@
 <body>
 <div th:replace="top::html"></div>
 <div class="Container">
-    <!--<div th:replace="top::html"></div>-->
-    <!--<header class="header animated fadeIn">-->
-        <!--<div class="header-left ">-->
-            <!--<img th:src="@{/images/iamges/logot.png}" class="logo">-->
-            <!--<h4 class="header-title">创新创业</h4>-->
-        <!--</div>-->
-        <!--<div class="header-middle">-->
-            <!--<ul class="linkTo">-->
-                <!--<li><a href="/" style="color:#8f8ca8;text-decoration: none">首页&nbsp;&nbsp;&nbsp;&nbsp;</a></li>-->
-                <!--<li><a href="/information/showAllNotice" style="color:#8f8ca8;text-decoration: none">新闻资讯</a></li>-->
-                <!--<li><a href="/match/list" style="color:#8f8ca8;text-decoration: none">比赛项目</a></li>-->
-                <!--<li><a href="/browse/recommend" style="color:#8f8ca8;text-decoration: none">业余作品</a></li>-->
-            <!--</ul>-->
-        <!--</div>-->
-        <!--<div class="header-right">-->
-            <!--<a href="/register"><div class="register">注册</div></a>-->
-            <!--<a href="/login"> <div class="login">登录</div></a>-->
-        <!--</div>-->
-    <!--</header>-->
-    <!--<div id="informationShow">-->
-    <!--<div class="columnBox" style="margin-top: 10px" id="informationShowByCategory">-->
-        <!--<div class="columnBoxLeft"><p>新闻动态</p></div>-->
-        <!--<div class="columnBoxRight"><p><a style="color: #00aaaa" href="/information/showAllNotice">查看更多</a></p></div>-->
-
-        <!--<ul class="news" style="margin: 60px 50px 50px 0;line-height: 30px;color: #7f7f7f" >-->
-            <!--<li th:each="information : ${informationList}" th:object="${information}"><a th:href="'/information/showOneInformation/'+*{id}" target="_blank" style="text-decoration: none;color: #7f7f7f">-->
-                <!--<span style="float: left" th:text="*{title}"></span><span style="float: right" th:text="*{#dates.format(createTime, 'yyyy-MM-dd')}"></span></a></li>-->
-        <!--</ul>-->
-    <!--</div>-->
-    <!--</div>-->
 
     <div class="swiperContainers ">
         <div class="imgwrapper">
@@ -80,30 +50,17 @@
     <div class="newContainer animated slideInUp ">
         <div class="Titlewrapper">
             <h2 class="containerTitle">新闻资讯</h2>
-            <span class="more">MORE >></span>
+            <span class="more"><a href="/information/showAllNotice">MORE >></a></span>
         </div>
         <div class="newWrapper">
             <ul class="newList">
-                <li class="new_item">
-                    <div class="item_time">2019-03-19</div>
-                    <div class="item_info">
-                        <h3 class="item_info_title" ><a href="">
-                            <span class="title_logo" th:style="'background:url('+ @{/images/iamges/hot.gif}+') no-repeat'"></span>
-                            <span class="text">新闻标题</span>
-                        </a></h3>
-                        <p class="item_info_intro">
-                            新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
-                            新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
-                        </p>
-                    </div>
-                </li>
 
-                <li class="new_item">
-                    <div class="item_time">2019-03-19</div>
+                <li class="new_item" th:each="information : ${informationList}" th:object="${information}">
+                    <div class="item_time" th:text="*{#dates.format(createTime, 'yyyy-MM-dd')}">2019-03-19</div>
                     <div class="item_info">
-                        <h3 class="item_info_title"><a href="">
+                        <h3 class="item_info_title"><a th:href="'/information/showOneInformation/'+*{id}">
                             <span class="title_logo"  th:style="'background:url('+ @{/images/iamges/hot.gif}+') no-repeat'"></span>
-                            <span class="text">新闻标题</span>
+                            <span class="text" th:text="*{title}">新闻标题</span>
                         </a></h3>
                         <p class="item_info_intro">
                             新闻简介新闻简介新闻简介新闻简介新闻简介新闻简介
@@ -111,12 +68,8 @@
                         </p>
                     </div>
                 </li>
-
-        <ul class="news" style="margin: 60px 50px 50px 0;line-height: 30px;color: #7f7f7f" >
-            <li th:each="information : ${informationList}" th:object="${information}"><a th:href="'/information/showOneInformation/'+*{id}" target="_blank" style="text-decoration: none;color: #7f7f7f">
-                <span style="float: left" th:text="*{title}"></span><span style="float: right" th:text="*{#dates.format(createTime, 'yyyy-MM-dd')}"></span></a></li>
-        </ul>
-    </div>
+            </ul>
+        </div>
     </div>
 
     <!-- 比赛项目 -->
@@ -126,62 +79,29 @@
         </div>
         <div class="matchWrapper">
             <ul class="matchList animated">
-                <li class="match_item">
+                <li class="match_item" th:each="matchs : ${matchList}" >
                     <div>
                         <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
                     </div>
-                    <p class="match_title">中国软件设计大赛</p>
+                    <p class="match_title" th:text="${matchs.name}">中国软件设计大赛</p>
                     <div class="match_container">
                         <div class="match_info">
-                            <p>开始报名时间：2018-09-02 00:00:00</p>
-                            <p>截止报名时间：2018-09-02 00:00:00</p>
-                            <p>公布成绩时间：2018-09-02 00:00:00</p>
+                            <p th:text="'开始报名时间:'+${#dates.format(matchs.startTime, 'yyyy-MM-dd HH:mm:ss')}">开始报名时间：2018-09-02 00:00:00</p>
+                            <p th:text="'截止报名时间:'+${#dates.format(matchs.lastsigntime, 'yyyy-MM-dd HH:mm:ss')}">截止报名时间：2018-09-02 00:00:00</p>
+                            <p th:text="'发布成绩时间:'+${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')}">公布成绩时间：2018-09-02 00:00:00</p>
                         </div>
                         <div class="match_button">
-                            <button class="btn btn-primary">查看比赛</button>
-                            <button class="btn btn-danger">查看成绩</button>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="match_item">
-                    <div>
-                        <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
-                    </div>
-                    <p class="match_title">IT文化节</p>
-                    <div class="match_container">
-                        <div class="match_info">
-                            <p>开始报名时间：2018-09-02 00:00:00</p>
-                            <p>截止报名时间：2018-09-02 00:00:00</p>
-                            <p>公布成绩时间：2018-09-02 00:00:00</p>
-                        </div>
-                        <div class="match_button">
-                            <button class="btn btn-primary">查看比赛</button>
-                            <button class="btn btn-danger">查看成绩</button>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="match_item">
-                    <div>
-                        <img th:src="@{/images/iamges/match_logo.png}" class="item_img">
-                    </div>
-                    <p class="match_title">蓝桥杯省级大赛</p>
-                    <div class="match_container">
-                        <div class="match_info">
-                            <p>开始报名时间：2018-09-02 00:00:00</p>
-                            <p>截止报名时间：2018-09-02 00:00:00</p>
-                            <p>公布成绩时间：2018-09-02 00:00:00</p>
-                        </div>
-                        <div class="match_button">
-                            <button class="btn btn-primary">查看比赛</button>
-                            <button class="btn btn-danger">查看成绩</button>
+                            <a th:href="'/match/preview/'+ ${matchs.id}" href="#"><button class="btn btn-primary">查看比赛</button></a>
+                            <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default btn-danger disabled" >成绩未发布</button>
+                            <a th:href="'/match/matchAchievement/'+ ${matchs.id}" th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(matchs.overTime, 'yyyy-MM-dd HH:mm:ss')} ">
+                                <button class="btn btn-danger">查看成绩</button>
+                            </a>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
-        <span class="matchmore">MORE >></span>
+        <span class="matchmore"><a href="/match/list">MORE >></a></span>
     </div>
 
     <!-- 业余作品 -->
@@ -191,45 +111,17 @@
         </div>
         <div class="worksWrapper">
             <ul class="worksList ">
-                <li class="work_item  animated">
+                <li class="work_item  animated" th:each="production : ${productionList}">
                     <div class="work_item_img">
                         <img th:src="@{/images/iamges/pro_icon.png}" class="pro_logo">
                     </div>
-                    <div class="work_item_info">
-                        <p class="work_tname">个人作品的名字</p>
-                        <p class="work_info">这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介</p>
+                    <div class="work_item_info" >
+                        <a th:href="'/production/'+${production.pId}"><p class="work_tname" th:text="${production.ptitle}">个人作品的名字</p></a>
+                        <p class="work_info" th:text="${production.psummary}">这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介这是作品的简介</p>
                         <div class="work_info_bottom">
-                            <span class="work_time">2019-03-22</span>
-                            <span class="readNum">阅读数 <span>1110<span></span>
-                                    <span class="commentsNum">评论数 <span>99</span></span>
-                        </div>
-                    </div>
-                </li>
-                <li class="work_item">
-                    <div class="work_item_img">
-                        <img th:src="@{/images/iamges/pro_icon.png}" class="pro_logo">
-                    </div>
-                    <div class="work_item_info">
-                        <p class="work_tname">个人作品的名字</p>
-                        <p class="work_info">这品的简这品的简介这介</p>
-                        <div class="work_info_bottom">
-                            <span class="work_time">2019-03-22</span>
-                            <span class="readNum">阅读数 <span>1110<span></span>
-                                        <span class="commentsNum">评论数 <span>99</span></span>
-                        </div>
-                    </div>
-                </li>
-                <li class="work_item">
-                    <div class="work_item_img">
-                        <img th:src="@{/images/iamges/pro_icon.png}" class="pro_logo">
-                    </div>
-                    <div class="work_item_info">
-                        <p class="work_tname">个人作品的名字</p>
-                        <p class="work_info">这品的简这品的简介这介</p>
-                        <div class="work_info_bottom">
-                            <span class="work_time">2019-03-22</span>
-                            <span class="readNum">阅读数 <span>1110<span></span>
-                                <span class="commentsNum">评论数 <span>99</span></span>
+                            <span class="work_time" th:text="${#dates.format(production.puploadTime, 'yyyy-MM-dd')}">2019-03-22</span>
+                            <span class="readNum">阅读数 <span th:text="${production.readSize}">1110<span></span></span></span>
+                            <span class="commentsNum">评论数 <span th:text="${production.commentSize}">99</span></span>
                         </div>
                     </div>
                 </li>
@@ -242,33 +134,6 @@
 </div>
 <script>
 
-    $(function () {
-        function getTop8Information() {
-            $.ajax({
-                url: '/information/showTop8',
-                type: 'GET',
-                // dataType:"json",
-                success: function (data) {
-                    // for (var i = 0 ; i <= data.length ; i++){
-                    //     var arr = data[i];
-                    //     var value = arr.createTime;
-                    //     var time  = new Date(value).toLocaleString();
-                    //     $("#informationList").append("<a href='/information/showOneInformation/'  class=\"showOneInformation\">\n" +
-                    //          "                        <span th:text=\"*{title}\">"+arr.title+"</span>\n" +
-                    //          "                        <span th:text=\"*{createTime}\">"+time+"</span>\n" +
-                    //          "                    </a>");
-                    //
-                    //
-                    // }
-                    console.log(data);
-                    $("#informationShow").html(data);
-                },
-                error: function () {
-                    toastr.error("error");
-                }
-            })
-        }
-    });
     var mySwiper = new Swiper ('.swiper-container', {
         effect:'coverflow',
         direction: 'horizontal',

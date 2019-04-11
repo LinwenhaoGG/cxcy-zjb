@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -87,5 +89,10 @@ public class MatchServiceImpl implements MatchService {
     public Page<Matchs> findByNameLike(String name, Pageable pageable) {
         name = "%" + name + "%";
         return matchRepository.findByNameLike(name,pageable);
+    }
+
+    @Override
+    public List<Matchs> getMatchListTop(Integer len) {
+        return matchRepository.getMatchListTop(len);
     }
 }

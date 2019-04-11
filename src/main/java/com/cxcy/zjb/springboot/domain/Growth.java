@@ -27,7 +27,7 @@ public class Growth implements Serializable{
     private Integer gComment = 0;              //总评论数
 
     @Column(name="g_readSize")
-    private Integer gReadSize = 0;              //总评论数
+    private Integer gReadSize = 0;              //总查看数
 
     @Column(name="g_integration")
     private Integer gIntegration = 0;          //总积分数

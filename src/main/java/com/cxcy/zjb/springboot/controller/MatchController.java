@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -93,7 +94,7 @@ public class MatchController {
 
         map.put("userList",userList);
         map.put("matchs",matchs);
-        return new ModelAndView("matchs/matchsEdit", map);
+        return new ModelAndView("matchs/matchsAdd", map);
     }
 
     /**
@@ -107,12 +108,33 @@ public class MatchController {
     public ModelAndView edit(@PathVariable(value = "id") long id, Map map) {
 
         Matchs matchs = matchService.getMatchById(id);
-        //通过类型查找用户列表，2为教师
-        List<User> userList = userService.findUserListByStyle(2);
 
-        map.put("userList",userList);
         map.put("matchs", matchs);
-        return new ModelAndView("matchs/matchsEdit", map);
+        return new ModelAndView("matchs/matchsAlter", map);
+    }
+
+    /**
+     * 保存比赛对象
+     * @param matchs
+     * @return
+     */
+    @PostMapping("/saveMatchs")
+    @Transactional
+    public String matchSave(Matchs matchs) {
+        //通过id获取比赛类
+        Matchs savemaths = matchService.getMatchById(matchs.getId());
+        //更新比赛信息
+        savemaths.setName(matchs.getName());
+        savemaths.setStartTime(matchs.getStartTime());
+        savemaths.setLastsigntime(matchs.getLastsigntime());
+        savemaths.setLastsubmittime(matchs.getLastsubmittime());
+        savemaths.setOverTime(matchs.getOverTime());
+        savemaths.setContent(matchs.getContent());
+        savemaths.setHtmlContent(matchs.getHtmlContent());
+        //保存更新后的比赛信息
+        matchService.saveMatch(savemaths);
+        //返回比赛列表
+        return "redirect:/match/teacherList";
     }
 
     /**
@@ -125,7 +147,6 @@ public class MatchController {
     public ModelAndView preview(@PathVariable(value = "id") Long id, Map map) {
 
         Matchs matchs = matchService.getMatchById(id);
-
 
         map.put("matchs", matchs);
         return new ModelAndView("matchs/matchsView", map);
@@ -172,7 +193,7 @@ public class MatchController {
         Long uid = loginUser.getId();
         //根据开始时间排序
         Sort sort = new Sort(org.springframework.data.domain.Sort.Direction.DESC,"StartTime");
-        PageRequest request = new PageRequest(page - 1, size);
+        PageRequest request = new PageRequest(page - 1, size, sort);
         //根据排序查出分页
         Page<Matchs> matchsPage = matchService.findAllByUser(uid,request);
         map.put("matchsPage", matchsPage);

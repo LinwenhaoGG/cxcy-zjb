@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -104,6 +105,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/saveMatchs")
+    @Transactional
     public String matchSave(Matchs matchs) {
         //通过id获取比赛类
         Matchs savemaths = matchService.getMatchById(matchs.getId());

@@ -77,4 +77,13 @@ public interface InformationRepository extends JpaRepository<Information,Long> {
     @Query(value = "select new com.cxcy.zjb.springboot.Vo.ChartsValueCountVo(infor.title, infor.readSize)" +
             "from Information infor ORDER BY infor.readSize desc")
     List<ChartsValueCountVo> informationCountByHot(Pageable pageable);
+
+    /**
+     * 获取最新的n条咨询
+     * @param len
+     * @return
+     */
+    @Query(value = "select * from information ORDER BY create_time desc " +
+            "limit 0, ?1",nativeQuery = true)
+    List<Information> getInformationListTop(Integer len);
  }

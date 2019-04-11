@@ -235,4 +235,9 @@ public class ProductionServiceImpl implements ProductionService {
 
         return productionRepository.findByPtitleContainingOrPsummaryContainingAndPCheck(keyword, keyword,0, pageable);
     }
+
+    @Override
+    public List<Production> getProductionListTop(Integer len) {
+        return productionRepository.getProductionListTop(len);
+    }
 }

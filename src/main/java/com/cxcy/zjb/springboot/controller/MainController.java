@@ -1,6 +1,12 @@
 package com.cxcy.zjb.springboot.controller;
 
+import com.cxcy.zjb.springboot.domain.Information;
+import com.cxcy.zjb.springboot.domain.Matchs;
+import com.cxcy.zjb.springboot.domain.Production;
 import com.cxcy.zjb.springboot.domain.User;
+import com.cxcy.zjb.springboot.service.InformationService;
+import com.cxcy.zjb.springboot.service.MatchService;
+import com.cxcy.zjb.springboot.service.ProductionService;
 import com.cxcy.zjb.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 主页控制层
@@ -25,6 +32,14 @@ public class MainController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private InformationService informationService;
+
+    @Autowired
+    private MatchService matchService;
+
+    @Autowired
+    private ProductionService productionService;
     /**
      * 获取登录界面
      *
@@ -70,6 +85,12 @@ public class MainController {
                 return new ModelAndView("login","model",model);
             }
             if (UserInfo.getState().equals(1)) { //如果已经认证，跳转主页
+                List<Information> informationList = informationService.getInformationListTop(4); //获取前四个咨询
+                List<Matchs> matchList = matchService.getMatchListTop(3); //获取前三个比赛
+                List<Production> productionList = productionService.getProductionListTop(3); //拿到最新的3个作品
+                model.addAttribute("informationList", informationList);
+                model.addAttribute("matchList", matchList);
+                model.addAttribute("productionList", productionList);
                 return new ModelAndView("index","model",model);
             } else if (UserInfo.getState().equals(0)){
                 Integer uStyle = UserInfo.getStyle();
@@ -85,14 +106,16 @@ public class MainController {
         return new ModelAndView("login","model",model);
     }
     @GetMapping("/")
-    public String getMain(){
+    public String getMain(Model model){
+        List<Information> informationList = informationService.getInformationListTop(4); //获取前四个咨询
+        List<Matchs> matchList = matchService.getMatchListTop(3); //获取前三个比赛
+        List<Production> productionList = productionService.getProductionListTop(3); //拿到最新的3个作品
+        model.addAttribute("informationList", informationList);
+        model.addAttribute("matchList", matchList);
+        model.addAttribute("productionList", productionList);
         return "index";
     }
 
-    @GetMapping("/index")
-    public String index(){
-        return "index";
-    }
 
     @GetMapping("/admin")
     public String admin(){

@@ -3,6 +3,7 @@ package com.cxcy.zjb.springboot.controller;
 
 import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.service.*;
+import com.cxcy.zjb.springboot.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,18 +46,16 @@ public class BrowseController {
 
     /**
      * 个性化推荐（推荐10条作品），最多7条按分类推荐优秀作品，再按时间顺序取最新发表的作品，凑到10条
-     * @param request
      * @return
      */
     @GetMapping("/recommend")
-    public @ResponseBody Object recommend(HttpServletRequest request,
-                                          @RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
-                                          @RequestParam(value = "size", required = false, defaultValue = "3") Integer pageSize,
+    public @ResponseBody Object recommend(@RequestParam(value = "page", required = false, defaultValue = "1") Integer pageIndex,
+                                          @RequestParam(value = "size", required = false, defaultValue = "4") Integer pageSize,
                                           Map map) {
         String url = "/browse/recommend";
         map.put("url", url);
         map.put("catagory", "recommend");
-        User user = (User)request.getSession().getAttribute("user");
+        User user = UserUtils.getUser();
         Set<Production> set = new HashSet<>();//将查到的数据存储在set中，再去加上最新推荐，凑到10条
         if(user != null) {
             Long userId = user.getId();

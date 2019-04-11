@@ -4,6 +4,9 @@ import com.cxcy.zjb.springboot.domain.Matchs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  *Match 仓库
@@ -26,4 +29,13 @@ public interface MatchRepository extends JpaRepository<Matchs,Long> {
      * @return
      */
     Page<Matchs> findByNameLike(String name, Pageable pageable);
+
+    /**
+     * 获取最新的n条比赛
+     * @param len
+     * @return
+     */
+    @Query(value = "select * from matchs ORDER BY create_time desc " +
+            "limit 0, ?1",nativeQuery = true)
+    List<Matchs> getMatchListTop(Integer len);
 }
