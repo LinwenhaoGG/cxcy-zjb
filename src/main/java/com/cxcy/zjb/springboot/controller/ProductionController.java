@@ -203,8 +203,6 @@ public class ProductionController {
         Long uId = userService.getUserIdByUsername(username);
         // 根据用户ID查找所有的作品
         productions = productionService.findAllByUserId(uId, pageable);
-        System.out.println(uId);
-        System.out.println(productions.getTotalPages());
         if (productions.getTotalPages() == 0) {
             map.put("productionPage", null);
         } else {
@@ -403,7 +401,6 @@ public class ProductionController {
         String url = "/production/nav/cata"+catagory;
         map.put("url",url);
         map.put("catagory","cata"+catagory);
-        System.out.println(productions);
         if(productions.size()==0){//找不到作品的情况
             map.put("productionPage", null);
         }else {
@@ -512,11 +509,9 @@ public class ProductionController {
             try {
                 String path = VideoPath.substring(VideoPath.indexOf("/")+1);
                 String filePath = path + url +"/"+ file.getOriginalFilename();
-                System.out.println(filePath);
                 video=url+"/"+file.getOriginalFilename();
                 // 转存文件
                 file.transferTo(new File(filePath));
-                System.out.println(video);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -708,7 +703,6 @@ public class ProductionController {
         }else if(optionValue==1){
             Long userId;
                 userId = Long.parseLong(selectStr);
-            System.out.println(userId);
                 production = productionService.findAllByUserId(userId, pageable);
         }else{
             production = productionService.findByPtitleLike(selectStr,pageable);
