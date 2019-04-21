@@ -40,7 +40,7 @@
                         内容
                     </div>
                     <br /><br />
-                    <p style="text-align: right;margin-right: 50px;" th:text="'编辑者:'+${informationModel.author}">小帅哥</p>
+                    <p style="text-align: right;margin-right: 50px;" th:text="${informationModel.author}">小帅哥</p>
                     <p style="text-align: right;margin-right: 50px;" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</p>
                 </div>
             </div>
