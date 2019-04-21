@@ -8,42 +8,88 @@
         ul{
             list-style: none;
         }
+        .titleDiv {
+            background-image:url('/images/iamges/trainblock.png');
+            background-repeat: no-repeat;
+            text-align: center;
+            font-size: 18px;
+            color: #252b3a;
+            height: 79px;
+        }
+        .thumbnails>li {
+            width: 380px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.10);
+            float: left;
+            margin-left:30px;
+            padding-bottom:10px;
+        }
+        .thumbnails>li p {
+            text-align: center;
+            margin: 5px 30px 0;
+            font-size: 12px;
+            color: #A0A2A8;
+        }
+        .captionName{
+            font-weight: 600;
+            color: #ff55ff;
+        }
     </style>
 </head>
 <body>
 <div th:replace="top::html"></div>
-<div class="container-fluid">
+<div class="container-fluid" style="padding-top:60px">
     <div class="row-fluid">
         <div class="span12">
+            <h1 style="color: orangered" align="center" style="height: 50px;line-height: 50px; padding-left: 40px;font-size: 24px; color: #999;letter-spacing: 2px;">负责比赛项目</h1>
             <ul class="thumbnails">
-                <h1 style="color: orangered" align="center">负责的比赛项目</h1>
-                <li class="span4">
-                    <div class="thumbnail" th:if="${isnull} eq 1">
-                        <div class="caption">
-                            <h3 style="color:#FF9900;">暂无负责的比赛信息</h3>
-                        </div>
+                <li th:each="teacherEvent : ${teacherEventList}">
+                    <div class="titleDiv">
+                        <h3 style="line-height: 79px;border-bottom: 1px solid #ddd;color: #252b3a;font-size: 18px;"  th:text="${teacherEvent.mName}">比赛名称</h3>
                     </div>
-                    <div class="thumbnail" th:each="teacherEvent : ${teacherEventList}">
-                        <div class="caption">
-                            <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
-                            <h2 th:text="'比赛名称：'+${teacherEvent.mName}"></h2></a>
-                            <a th:href="'/match/preview/'+ ${teacherEvent.mId}">
-                            <h3 th:text="'项目名称：'+${teacherEvent.eName}"></h3></a>
-                            <p th:text="'比赛开始报名时间为:'+ ${#dates.format(teacherEvent.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p th:text="'比赛开始评审时间为:'+${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p th:text="'比赛正式结束时间为:'+ ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <p style="text-align: right">
-                                <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}
+                    <div class="captionText">
+                        <a th:href="'/match/preview/'+ ${teacherEvent.mId}"><p class="captionName" th:text="'项目名称：'+${teacherEvent.eName}"></p></a>
+                        <p class="startTime"  th:text="'开始评审时间:'+${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}">开始时间</p>
+                        <p class="lastTime" th:text="'正式结束时间:'+ ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')}">结束时间</p>
+                    </div>
+                    <div>
+                        <p style="text-align: center">
+                            <a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}
                                 and ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} lt ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} "
-                                   class="btn btn-info"  href="#"
-                                th:href="@{/event/groupPreview?eventid=}+${teacherEvent.eId}">作品评审</a>
-                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>
-                                <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>
-                                <a class="btn btn-default btn-success" th:href="'/match/preview/'+ ${teacherEvent.mId}" href="#">查看比赛</a>
-                            </p>
-                        </div>
+                               class="btn btn-info"  href="#"
+                               th:href="@{/event/groupPreview?eventid=}+${teacherEvent.eId}">作品评审</a>
+                            <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>
+                            <button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>
+                            <a class="btn btn-default btn-success" th:href="'/match/preview/'+ ${teacherEvent.mId}" href="#">查看比赛</a>
+                        </p>
                     </div>
                 </li>
+                <!--<li class="span4">-->
+                    <!--<div class="thumbnail" th:if="${isnull} eq 1">-->
+                        <!--<div class="caption">-->
+                            <!--<h3 style="color:#FF9900;">暂无负责的比赛信息</h3>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="thumbnail" th:each="teacherEvent : ${teacherEventList}">-->
+                        <!--<div class="caption">-->
+                            <!--<a th:href="'/match/preview/'+ ${teacherEvent.mId}">-->
+                            <!--<h2 th:text="'比赛名称：'+${teacherEvent.mName}"></h2></a>-->
+                            <!--<a th:href="'/match/preview/'+ ${teacherEvent.mId}">-->
+                            <!--<h3 th:text="'项目名称：'+${teacherEvent.eName}"></h3></a>-->
+                            <!--<p th:text="'比赛开始报名时间为:'+ ${#dates.format(teacherEvent.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+                            <!--<p th:text="'比赛开始评审时间为:'+${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+                            <!--<p th:text="'比赛正式结束时间为:'+ ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')}"></p>-->
+                            <!--<p style="text-align: right">-->
+                                <!--<a th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} gt ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}-->
+                                <!--and ${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} lt ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} "-->
+                                   <!--class="btn btn-info"  href="#"-->
+                                <!--th:href="@{/event/groupPreview?eventid=}+${teacherEvent.eId}">作品评审</a>-->
+                                <!--<button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} le ${#dates.format(teacherEvent.lastsubmittime, 'yyyy-MM-dd HH:mm:ss')}" type="button" class="btn btn-default disabled btn-danger">评审时间未到</button>-->
+                                <!--<button th:if="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')} ge ${#dates.format(teacherEvent.overTime, 'yyyy-MM-dd HH:mm:ss')} " type="button" class="btn btn-default disabled btn-danger">比赛已结束</button>-->
+                                <!--<a class="btn btn-default btn-success" th:href="'/match/preview/'+ ${teacherEvent.mId}" href="#">查看比赛</a>-->
+                            <!--</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</li>-->
             </ul>
         </div>
     </div>

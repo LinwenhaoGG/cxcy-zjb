@@ -7,13 +7,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!--<script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>-->
     <link rel="stylesheet" href="../css/style.css" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="../css/layui.css"  th:href="@{/css/layui.css}"/>
    <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
     <script th:src="@{/editormd/js/editormd.js}" src="/editormd/js/editormd.js"></script>
-    <script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
     <script th:src="@{/js/toastr.min.js}"></script>
     <style>
@@ -61,6 +61,7 @@
             </div>
             </div>
             <!-- markdown代码 -->
+
             <div class="editormd" id="test-editormd" >
                 <textarea class="editormd-markdown-textarea" name="content" id="content" th:text="*{content}" ></textarea>
                 <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
@@ -106,6 +107,10 @@
 </section>
 <script>
     //发布资讯
+    var layer;
+    layui.use(['layer'], function(){
+        layer = layui.layer
+    });
     $(function() {
         $("#submitInformation").click(function () {
             var  username = $("#username").val();
@@ -124,10 +129,19 @@
                 }),
                 success: function(data){
                     if (data.success) {
-                        // 成功后，重定向
-                        window.location = data.body;
+                        layer.alert('发布成功！', {icon: 1});
+                        window.setTimeout(jumpMethod,2000);
+                        function jumpMethod() {
+                            // 成功后，重定向
+                            window.location = data.body;
+                        }
+
                     } else {
-                        toastr.error("error!"+data.message);
+                        // toastr.error(data.message);
+                        layer.confirm(data.message, { btn: [] ,icon: 2, title:'提示'}, function(){
+                            return ;
+                        });
+
                     }
 
                 },

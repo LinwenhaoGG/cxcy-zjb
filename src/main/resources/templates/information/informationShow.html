@@ -10,22 +10,90 @@
     <link rel="stylesheet" th:href="@{/css/index.css}" />
     <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"></head>
     <link rel="stylesheet" th:href="@{/css/layui.css}" href="//res.layui.com/layui/dist/css/layui.css"  media="all">
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
     <script th:inline="javascript">
         var informationId = [[${informationModel.id}]];
         var informationUrl = '/information/' + [[${user.username}]] + '/'+ [[${informationModel.id}]] ;
     </script>
-    <script>
+    <style>
+        body{
+            background-color: #f5f6f7;
+        }
+        .mainbody{
+            padding-top:80px;
+        }
+        .container{
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);
+        }
+        .info-title {
+            font-size: 24px;
+            word-wrap: break-word;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #333;
+        }
+    </style>
+<body style="background-color: #f5f6f7">
+<div th:replace="top::html"></div>
+    <div class="mainbody" style="margin-top: 10px">
+        <div class="container clearfix" style="background-color: white ">
+            <div class="mainbody_topbg"></div>
+            <div class="bread" style="padding-top:20px">当前位置：
+                <a th:href="@{/}">首页</a> >
+                <a th:href="@{/information/showAllNotice}">资讯</a> >
+                <a th:text="${informationModel.informationCategory.name}" th:href="@{/information/showAllNotice?catagory=}+${informationModel.informationCategory.id}">资讯详情</a>
+            </div>
+            <div class="maincontent" style="width: 100%">
+                <div class="post">
+                    <h2><a th:href="'/information/'+ ${user.username} + '/' + ${informationModel.id} "
+                           th:title="${user.username}" th:text="${informationModel.title}" class="info-title">
+                    </a></h2>
+                    <div class="postdata" style="display: flex; justify-content: space-between;" >
+                        <div class="left" style="display: flex">
+                            <div class="date" style="color:#999;font-size: 14px" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</div>
+                            <div class="cate" style="margin-left:30px;margin-right:30px;"> <a style="color:#999"  th:text="${informationModel.author}" >x</a> </div>
+                            <span style="color:#999"><i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}" style="font-weight: 700;color:#f54343"></i> 阅读</span>
+                        </div>
+                       <div class="right" style="margin-left:100px;">
+                           <a th:if="${isInformationOwner}" th:href="'/information/' + ${user.username}+ '/edit/'+ ${informationModel.id}" >编辑</a>
+                           <a th:href="'javascript:void(0)'" th:if="${isInformationOwner}" class="information-delete" style="margin-left:30px">删除</a>
+                       </div>
+                    </div>
+                    <div class="content" style="margin-left: 50px;margin-right: 50px">
+                        <div class="layui-card-body"  th:utext="${informationModel.htmlContent}">
+                            内容
+                        </div>
+                        <!--<br /><br />-->
+                        <p style="text-align: right;margin-right: 50px;" th:text="'编辑者:'+${informationModel.author}">小帅哥</p>
+                        <p style="text-align: right;margin-right: 50px; " th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</p>
+                    </div>
+                </div>
 
-        //删除资讯
-        $(function () {
-            $(".mainbody").on("click",".information-delete",function () {
+            </div>
+            <!--<div class="mainbody_bottombg"></div>-->
+        </div>
+    </div>
+<script>
+    var layer;
+    layui.use(['layer'],function(){
+        layer = layui.layer
+    })
+
+    //删除资讯
+    $(function () {
+        $(".mainbody").on("click",".information-delete",function () {
+            layer.confirm('确认删除此资讯？', { btn: ['确定','取消'] , title:'提示'}, function(){
                 $.ajax({
                     url: informationUrl,
                     type: 'DELETE',
                     success: function(data){
                         if (data.success) {
                             // 成功后，重定向
-                            window.location = data.body;
+                            layer.alert('删除成功！',{btn:[],icon: 1});
+                            window.setTimeout(jumpMethod,2000);
+                            function jumpMethod() {
+                                window.location = data.body;
+                            }
                         } else {
                             toastr.error(data.message);
                         }
@@ -34,45 +102,10 @@
                         toastr.error("error!");
                     }
                 })
-            })
+            },function(){ return; });
+
         })
-    </script>
-<body>
-<div th:replace="top::html"></div>
-    <div class="mainbody" style="border: 1px solid #ccc;margin-top: 10px">
-        <div class="container clearfix" style="background-color: white ">
-            <div class="mainbody_topbg"></div>
-            <div class="bread">当前位置：
-                <a th:href="@{/}">首页</a> >
-                <a th:href="@{/information/showAllNotice}">资讯</a> >
-                <a th:text="${informationModel.informationCategory.name}" th:href="@{/information/showAllNotice?catagory=}+${informationModel.informationCategory.id}">资讯详情</a>
-            </div>
-            <div class="maincontent" style="width: 100%">
-                <div class="post">
-                    <h2><a th:href="'/information/'+ ${user.username} + '/' + ${informationModel.id} "
-                           th:title="${user.username}" th:text="${informationModel.title}">
-                    </a></h2>
-                    <div class="postdata">
-                        <div class="cate"> 作者：<a  th:text="${informationModel.author}" >x</a> 发表于 </div>
-                        <div class="date" th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</div>
-                         阅读量: <i class="fa fa-eye" aria-hidden="true" th:text="${informationModel.readSize}"></i>
-                        <a th:if="${isInformationOwner}" th:href="'/information/' + ${user.username}+ '/edit/'+ ${informationModel.id}" >编辑</a>
-                        <a th:href="'javascript:void(0)'" th:if="${isInformationOwner}" class="information-delete">删除</a>
-                    </div>
-                    <div class="content" style="margin-left: 50px;margin-right: 50px">
-                        <div class="layui-card-body"  th:utext="${informationModel.htmlContent}">
-                            内容
-                        </div>
-                        <br /><br />
-                        <p style="text-align: right;margin-right: 50px;" th:text="'编辑者:'+${informationModel.author}">小帅哥</p>
-                        <p style="text-align: right;margin-right: 50px; " th:text="${#dates.format(informationModel.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-24</p>
-                    </div>
-                </div>
-
-            </div>
-            <div class="mainbody_bottombg"></div>
-        </div>
-    </div>
-
+    })
+</script>
 </body>
 </html>
