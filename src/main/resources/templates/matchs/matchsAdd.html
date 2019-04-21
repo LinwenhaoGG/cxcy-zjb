@@ -5,14 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="../css/layui.css" th:href="@{/css/layui.css}" />
     <link rel="Bookmark" href="favicon.ico" >
     <link rel="Shortcut Icon" href="favicon.ico" />
     <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
     <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
     <script th:src="@{/editormd/js/editormd.js}" src="/editormd/js/editormd.js"></script>
     <script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/style.css" th:href="@{/h-ui.admin/css/style.css}"/>
+    <!--<link rel="stylesheet" type="text/css" href="../../../../../static/h-ui.admin/css/style.css" th:href="@{/h-ui.admin/css/style.css}"/>-->
     <title>仲恺创新创业平台</title>
     <style>
         .btnBox{
@@ -71,46 +73,104 @@
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
             background-color:#c1c1c1;  /*滚动条的背景颜色*/
         }
+        .alter-detail {
+            margin-left: 0px
+        }
+        .mylabel {
+            width: 200px;
+        }
+        .myform{
+            padding-top:20px;
+            padding-bottom:20px;
+            background-color: #fff;
+            width: 90%;
+            margin: 0 auto;
+        }
+        .myinputname{
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            padding-left: 16px;
+            border: none;
+            background-color: #efefef;
+            color: #4f4f4f;
+            outline: none;
+        }
+        .layui-form input[type=checkbox] {
+            display: inline-block;
+        }
+
+        .alter-detail #test-editormd {
+            width: 90% !important;
+        }
     </style>
 </head>
-<body>
+<body style="background-color: #f4f4f4">
 <!-- 嵌入导航栏 -->
 <div th:replace="top::html"></div>
 
 
-<section class="Hui-article-box" style="border: 1px solid #ccc;margin-top: 10px">
-    <h1 align="center">发布比赛</h1>
+<section class="Hui-article-box" style="margin-top: 100px;background: #fff;margin-left: 10%;margin-right: 10%;">
+    <!--<h1 align="center">发布比赛</h1>-->
     <article class="cl pd-20">
-        <div class="alter-detail">
+        <div class="alter-detail" style="margin-bottom:30px">
             <input type="hidden" th:value="${matchs.id}" id="matchsId">
-            <div class="form-item">
-                <span>比赛名称：</span>
-                <input type="text" th:value="${matchs.name}" id="title" class="input-text radius size-M" name="name">
+            <div class="layui-form myform">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label mylabel">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input"  placeholder="yyyy-MM-dd HH:mm:ss" id="startTime" name="startTime">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label  mylabel">报名结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" placeholder="yyyy-MM-dd HH:mm:ss" name="lastsigntime"  id="lastsigntime">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label  mylabel">提交截止时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input"  placeholder="yyyy-MM-dd HH:mm:ss"  id="lastsubmittime" name="lastsubmittime">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label  mylabel">结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input"  placeholder="yyyy-MM-dd HH:mm:ss"  id="overTime" name="overTime">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-item">
-                <span>比赛开始时间：</span>
-                <input type="date" th:field="${matchs.startTime}" id="startTime" class="input-text radius size-M" name="startTime">
+            <div class="form-item" style="width: 90%;margin: 20px 0;background: #fff;margin: 0 auto; padding-bottom: 20px;">
+                <!--<span>比赛名称：</span>-->
+                <input type="text" th:value="${matchs.name}" id="title" class="input-text radius size-M myinputname" name="name" style="width: 100%">
             </div>
-            <div class="form-item">
-                <span>比赛截止报名时间：</span>
-                <input type="date" th:field="${matchs.lastsigntime}" id="lastsigntime"  class="input-text radius size-M" name="lastsigntime">
-            </div>
-            <div class="form-item">
-                <span>比赛截止提交时间：</span>
-                <input type="date" th:field="${matchs.lastsubmittime}" id="lastsubmittime" class="input-text radius size-M" name="lastsubmittime">
-            </div>
-            <div class="form-item">
-                <span>比赛结束时间：</span>
-                <input type="date" th:field="${matchs.overTime}" id="overTime" class="input-text radius size-M" name="overTime">
-            </div>
+            <!--<div class="form-item">-->
+                <!--<span>比赛开始时间：</span>-->
+                <!--<input type="date" th:field="${matchs.startTime}" id="startTime" class="input-text radius size-M" name="startTime">-->
+            <!--</div>-->
+            <!--<div class="form-item">-->
+                <!--<span>比赛截止报名时间：</span>-->
+                <!--<input type="date" th:field="${matchs.lastsigntime}" id="lastsigntime"  class="input-text radius size-M" name="lastsigntime">-->
+            <!--</div>-->
+            <!--<div class="form-item">-->
+                <!--<span>比赛截止提交时间：</span>-->
+                <!--<input type="date" th:field="${matchs.lastsubmittime}" id="lastsubmittime" class="input-text radius size-M" name="lastsubmittime">-->
+            <!--</div>-->
+            <!--<div class="form-item">-->
+                <!--<span>比赛结束时间：</span>-->
+                <!--<input type="date" th:field="${matchs.overTime}" id="overTime" class="input-text radius size-M"  th:field="${matchs.overTime}">-->
+            <!--</div>-->
             <!-- markdown代码 -->
-            <div class="editormd" id="test-editormd" >
-                <textarea class="editormd-markdown-textarea" name="content" id="content" th:text="*{matchs.content}"></textarea>
-                <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
-                <textarea class="editormd-html-textarea" name="htmlContent" id="htmlContent" th:text="*{matchs.htmlContent}"></textarea>
-            </div>
+                <div class="editormd" id="test-editormd" style="width: 100%">
+                    <textarea class="editormd-markdown-textarea" name="content" id="content" th:text="*{matchs.content}" ></textarea>
+                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                    <textarea class="editormd-html-textarea" name="htmlContent" id="htmlContent" th:text="*{matchs.htmlContent}" ></textarea>
+                </div>
             <!-- 添加子项目模块 -->
-            <div class="btnBox" th:if="${#lists.isEmpty(matchs.id)}">
+            <div class="btnBox" th:if="${#lists.isEmpty(matchs.id)}" style="text-align: center">
                 <!-- 触发模态框 -->
                 <button  class="btn btn-default btn-success" data-toggle="modal" data-target="#myModal">添加子项目</button>
             </div>
@@ -153,16 +213,44 @@
                     </div>
                 </div>
             </div>
-            <div class="subprojects">
+            <div class="subprojects" style="text-align: center">
                 <!-- 发布按钮 -->
+
             </div>
-            <button type="button" id="submitBtn" class="btn btn-default btn-primary" >发布</button>
+                <div style="text-align: center">
+                    <button type="button" id="submitBtn" class="btn btn-default btn-primary" >发布</button>
+                </div>
+
         </div>
     </article>
 </section>
 
 <script type="text/javascript">
     $(function() {
+        var layer;
+        layui.use(['layer'], function(){
+            layer = layui.layer
+        });
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#startTime'
+                ,type: 'datetime'
+            });
+            laydate.render({
+                elem: '#lastsigntime'
+                ,type: 'datetime'
+            });
+            laydate.render({
+                elem: '#lastsubmittime'
+                ,type: 'datetime'
+            });
+            laydate.render({
+                elem: '#overTime'
+                ,type: 'datetime'
+            });
+        })
+
         editormd("test-editormd", {
             width   : "100%",
             height  : 640,
@@ -287,16 +375,21 @@
                         contentType:"application/json;charsetset=UTF-8",
                         data: JSON.stringify({eventList:itemList,mid:result1.data}),
                         success:function () {
-                            alert("发布比赛成功");
-                            window.location.href="/match/list";
+                            layer.alert('发布成功！', {icon: 1});
+                            window.setTimeout(jumpMethod,2000);
+                            function jumpMethod() {
+                                // 成功后，重定向
+                                window.location.href="/match/teacherList";
+                            }
+
                         },
                         error:function () {
-                            alert("发布失败");
+                            layer.alert('发布失败！', {icon: 2});
                         }
                     })
                 },
                 error:function () {
-                    alert("发布失败");
+                    layer.alert('发布失败！', {icon: 2});
                 }
             })
         }

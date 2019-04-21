@@ -7,11 +7,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+
     <script src="../../js/jquery-3.1.1.min.js"  th:src="@{/js/jquery-3.1.1.min.js}"></script>
-
     <script src="../../js/toastr.min.js"  th:src="@{/js/toastr.min.js}"></script>
-
-    <script src="../../js/thymeleaf-bootstrap-paginator.js"  th:src="@{/js/thymeleaf-bootstrap-paginator.js}"></script>
     <style>
         .card a{
             text-decoration: none;
@@ -136,6 +134,7 @@
             <ul class="pagination" data-th-if="${page.totalPages le 7}" >
                 <!-- 总记录数 -->
                 <li class="tbpage-total-elements disabled"><span th:text="'共'+${page.totalElements}+'条'"></span></li>
+
                 <!-- 上一页 -->
                 <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
                     <a href="javascript:void(0);" class="page-link tbpage-item" data-th-attr="pageIndex=${page.number} - 1" aria-label="Previous">
@@ -234,6 +233,7 @@
     var username = [[${user.username}]];
     var categoryId = [[${categoryId}]];
 </script>
+<script src="../../js/thymeleaf-bootstrap-paginator.js"  th:src="@{/js/thymeleaf-bootstrap-paginator.js}"></script>
 <script>
 
     $(function() {
@@ -266,7 +266,11 @@
                 }
             });
         }
-
+        // 分页
+        // $.tbpage("#mainContainer", function (pageIndex, pageSize) {
+        //     getInformationByName(pageIndex, pageSize);
+        //     _pageSize = pageSize;
+        // });
 
         // 关键字搜索
         $("#searchInformations").click(function() {
@@ -299,12 +303,10 @@
         });
 
         // 分页
-        $.tbpage("#mainContainer", function (pageIndex, pageSize) {
+        $.tbpage("#mainContainer", function (pageIndex, _pageSize) {
             getInformationByName(pageIndex, _pageSize);
         });
-
     });
-
 
 </script>
 </html>
