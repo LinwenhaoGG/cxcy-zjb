@@ -95,4 +95,9 @@ public class MatchServiceImpl implements MatchService {
     public List<Matchs> getMatchListTop(Integer len) {
         return matchRepository.getMatchListTop(len);
     }
+
+    @Override
+    public Matchs getOnlyMatchByid(Long id) {
+        return matchRepository.getMatchById(id);
+    }
 }

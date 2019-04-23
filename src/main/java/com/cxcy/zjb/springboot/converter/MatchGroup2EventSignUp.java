@@ -2,6 +2,7 @@ package com.cxcy.zjb.springboot.converter;
 
 import com.cxcy.zjb.springboot.domain.Event;
 import com.cxcy.zjb.springboot.domain.MatchGroup;
+import com.cxcy.zjb.springboot.domain.Matchs;
 import com.cxcy.zjb.springboot.dto.EventSignUp;
 
 /**
@@ -16,7 +17,7 @@ public class MatchGroup2EventSignUp {
      * @param event
      * @return
      */
-    public static EventSignUp conver(MatchGroup matchGroup, Event event) {
+    public static EventSignUp conver(MatchGroup matchGroup, Event event, Matchs matchs) {
         EventSignUp eventSignUp = new EventSignUp();
 
         //matchgroup数据封装到eventSignUp
@@ -25,7 +26,8 @@ public class MatchGroup2EventSignUp {
         eventSignUp.setName(matchGroup.getName());
         eventSignUp.setSigntime(matchGroup.getSigntime());
         eventSignUp.setAchievement(matchGroup.getAchievement());
-        eventSignUp.setLastsubmittime(matchGroup.getSigntime());
+        eventSignUp.setLastsubmittime(matchs.getLastsubmittime());
+        eventSignUp.setMatchName(matchs.getName());
 
         //event数据封装到eventSignUp
         eventSignUp.setEvent(event);

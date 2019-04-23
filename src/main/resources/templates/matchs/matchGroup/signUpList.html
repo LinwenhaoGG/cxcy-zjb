@@ -116,7 +116,7 @@
                     <div class="caption_info">
                         <h3 class="tit">
                             <span class="tit-tip">已报名</span>
-                            <a  class="link" href="/" th:text="${eventSignUp.event.name}" style="color:#666666;text-decoration: none;font-weight: 600">2019年第九届MathorCup高校数学建模挑战赛</a>
+                            <a  class="link" href="/" th:href="'/match/preview/'+ ${eventSignUp.event.matchId}" th:text="${eventSignUp.matchName}+ '--' +${eventSignUp.event.name}" style="color:#666666;text-decoration: none;font-weight: 600">2019年第九届MathorCup高校数学建模挑战赛</a>
                         </h3>
                         <p class="teamItem">
                             <span class="item-tip">参赛队名</span>

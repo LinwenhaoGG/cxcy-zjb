@@ -28,5 +28,7 @@ public class EventSignUp {
 
     private Event event;   //参加的项目
 
+    private String matchName; //比赛名称
+
     private Long user;   //报名参加的用户id
 }

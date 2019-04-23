@@ -163,8 +163,9 @@ public class MatchGroupController {
         for (MatchGroup matchGroup : matchGroupPage.getContent()) {
             //获取该队伍报名的项目
             Event event = eventService.getEventById(matchGroup.getEvent());
+            Matchs matchs = matchService.getOnlyMatchByid(event.getMatchId());
             //通过转换器转换后添加进去
-            eventSignUpList.add(MatchGroup2EventSignUp.conver(matchGroup, event));
+            eventSignUpList.add(MatchGroup2EventSignUp.conver(matchGroup, event, matchs));
         }
         map.put("eventSignUpList", eventSignUpList);
         map.put("page", page);

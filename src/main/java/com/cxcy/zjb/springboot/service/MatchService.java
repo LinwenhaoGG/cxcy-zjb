@@ -72,4 +72,7 @@ public interface MatchService {
      * @return
      */
     List<Matchs> getMatchListTop(Integer len);
+
+
+    Matchs getOnlyMatchByid(Long id);
 }

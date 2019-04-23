@@ -38,4 +38,12 @@ public interface MatchRepository extends JpaRepository<Matchs,Long> {
     @Query(value = "select * from matchs ORDER BY create_time desc " +
             "limit 0, ?1",nativeQuery = true)
     List<Matchs> getMatchListTop(Integer len);
+
+    /**
+     * id获取比赛
+     * @param id
+     * @return
+     */
+    @Query(value = "select * from matchs where id = ?1",nativeQuery = true)
+    Matchs getMatchById(Long id);
 }
