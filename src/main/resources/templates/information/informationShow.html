@@ -56,7 +56,9 @@
                         </div>
                        <div class="right" style="margin-left:100px;">
                            <a th:if="${isInformationOwner}" th:href="'/information/' + ${user.username}+ '/edit/'+ ${informationModel.id}" >编辑</a>
+                           <a th:if="${isCompanyStyle}" th:href="'/information/companyInformationEdit?id='+ ${informationModel.id}" >编辑</a>
                            <a th:href="'javascript:void(0)'" th:if="${isInformationOwner}" class="information-delete" style="margin-left:30px">删除</a>
+                           <a th:href="'javascript:void(0)'" th:if="${isCompanyStyle}" class="information-delete" style="margin-left:30px">删除</a>
                        </div>
                     </div>
                     <div class="content" style="margin-left: 50px;margin-right: 50px">

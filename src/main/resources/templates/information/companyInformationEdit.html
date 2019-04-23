@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<script th:src="@{/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>-->
+    <link rel="stylesheet" href="../css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"href="/editormd/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/layui.css"  th:href="@{/css/layui.css}"/>
+   <script th:src="@{/js/jquery.min.js}" src="/js/jquery.min.js"></script>
+    <script th:src="@{/editormd/js/editormd.js}" src="/editormd/js/editormd.js"></script>
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
+    <script th:src="@{/js/toastr.min.js}"></script>
+    <style>
+        .article{
+            background-color: #fff;
+            margin-left:80px;
+            margin-right: 80px;
+            padding-top:30px;
+            margin-bottom:90px;
+            box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.0)
+        }
+        .item-title{
+            margin-bottom:10px;
+        }
+        .item-title input{
+            width: 90%;
+            height: 40px;
+            line-height: 40px;
+            padding-left: 16px;
+            border: none;
+            background-color: #efefef;
+            color: #4f4f4f;
+            outline: none;
+        }
+        .mylabel{
+            width: 100px;
+        }
+        .needCode{
+            color:red
+        }
+    </style>
+</head>
+<body style="padding-top:70px;background: #f4f4f4">
+<!-- 嵌入导航栏 -->
+<div th:replace="top::html"></div>
+<section class="Hui-article-box" style="margin-top: 10px">
+    <!--<h1 align="center">发布资讯</h1>-->
+    <article class="cl pd-20 article">
+        <div class="alter-detail" th:object="${information}">
+            <input type="hidden" name="id" th:value="*{id}" id="informationId">
+            <div class="form-item item-title">
+                <!--<span>资讯标题:</span>-->
+                <input name="title" placeholder="请输入资讯标题" th:value="*{title}" id="title" type="text" class="input-text radius size-M" >
+            </div>
+            </div>
+            <!-- markdown代码 -->
+
+            <div class="editormd" id="test-editormd" >
+                <textarea class="editormd-markdown-textarea" name="content" id="content" th:text="*{content}" ></textarea>
+                <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                <textarea class="editormd-html-textarea" name="htmlContent" id="htmlContent" th:text="*{htmlContent}"></textarea>
+            </div>
+        </div>
+        <div class="layui-form" style="text-align: left;padding-left:40px" >
+            <div class="layui-inline">
+                <label class="layui-form-label mylabel"><span class="needCode">* </span>资讯作者</label>
+                <div class="layui-input-inline">
+                    <input type="text"  lay-verify="required" autocomplete="off" class="layui-input" name="author" th:value="*{author}" id="author">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label mylabel"> <span class="needCode">* </span>资讯分类</label>
+                <div class="layui-input-inline">
+                    <select name="interest" id="interest" lay-filter="required" id="informationCategory">
+                        <option value="4" selected>招聘信息</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+            <!--<div class="form-item item-author">-->
+                <!--<span>资讯作者:</span>-->
+                <!--<input placeholder="请输入作者" name="author" th:value="*{author}" id="author" type="text"  class="input-text radius size-M" >-->
+            <!--</div>-->
+            <!--<div class="form-item item-type">-->
+                <!--资讯分类：<select id="informationCategory" th:placeholder="请选择">-->
+                             <!--<option th:value="*{id}" th:text="*{name}" th:each="informationCategory : ${categories}" th:object="${informationCategory}"-->
+                        <!--th:selected="${informationCategory eq information.informationCategory}">java</option>-->
+                           <!--</select>-->
+            <!--</div>-->
+            <!--<div style="clear:both"></div>-->
+        <div class="subprojects" style="text-align: right;padding-right:40px;padding-bottom:30px">
+            <!-- 发布按钮 -->
+            <button type="button" id="submitInformation" class="layui-btn" >发布</button>
+            <!--返回按钮-->
+            <button class="layui-btn layui-btn-primary" onclick='javascript:history.back(-1)'>返回</button>
+        </div>
+    </article>
+</section>
+<script>
+    //发布资讯
+    var layer;
+    layui.use(['layer'], function(){
+        layer = layui.layer
+    });
+    $(function() {
+        $("#submitInformation").click(function () {
+            $.ajax({
+                url: '/information/companyEdit',
+                type: 'POST',
+                contentType: "application/json;charset=utf-8",
+
+                data: JSON.stringify({
+                    "id": $('#informationId').val(),
+                    "title": $('#title').val(),
+                    "author": $('#author').val(),
+                    "content": $('#content').val(),
+                    "htmlContent":$("#htmlContent").val(),
+                    "informationCategory": {"id": $('#informationCategory').val()},
+                }),
+                success: function(data){
+                    if (data.success) {
+                        layer.alert('发布成功！', {icon: 1});
+                        window.setTimeout(jumpMethod,2000);
+                        function jumpMethod() {
+                            // 成功后，重定向
+                            window.location = data.body;
+                        }
+
+                    } else {
+                        // toastr.error(data.message);
+                        layer.confirm(data.message, { btn: [] ,icon: 2, title:'提示'}, function(){
+                            return ;
+                        });
+
+                    }
+
+                },
+                error : function() {
+                    toastr.error("error!");
+                }
+            })
+        })
+    })
+</script>
+
+
+    <script type="text/javascript">
+        $(function() {
+            editormd("test-editormd", {
+                width   : "90%",
+                height  : 640,
+                syncScrolling : "single",
+                //你的lib目录的路径，我这边用JSP做测试的
+                tocm : true, // Using [TOCM]
+                tex : true, // 开启科学公式TeX语言支持，默认关闭
+                flowChart : true, // 开启流程图支持，默认关闭
+                path    : "/editormd/lib/",
+                //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+                saveHTMLToTextarea : true,
+                imageUpload : true,
+                imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp", "webp" ],
+                imageUploadURL : "/file/uploadimg",
+                onload: function () {
+                    //console.log('onload', this);
+                    //this.fullscreen();
+                    //this.unwatch();
+                    //this.watch().fullscreen();
+                    // this.width("90%");
+                    // this.height(640);
+                    //this.resize("100%", 640);
+                }
+
+
+            });
+            layui.use('form', function() {
+                var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+            });
+
+            });
+
+
+
+    </script>
+</body>
+</html>
+
+

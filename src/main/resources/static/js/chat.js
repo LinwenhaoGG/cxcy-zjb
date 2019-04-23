@@ -112,7 +112,7 @@ function getUserMessage(){
             $("#receiverImage").prop("src",data.object[0].avatar);
 
             $("#senderId").val(data.object[1].id);
-            $("#senderImage").prop("src",+data.object[1].avatar);
+            $("#senderImage").prop("src",data.object[1].avatar);
 
         },
         error:function(jqXHR){

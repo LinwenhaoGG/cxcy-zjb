@@ -79,17 +79,17 @@
     <ul class="pagination pull-right" style="height: 10px">
         <li class="disabled" ><a style="background-color: #b2b2b2;color: white" th:text="${page}+'/'+${matchsPage.getTotalPages()}+' 页'"></a></li>
         <li class="disabled" th:if="${page} eq '1'" ><a >首页</a></li>
-        <li th:if="${page} ne '1'"><a th:href="'/match/adminslist?page=1'+'&&size='+${size}">首页</a></li>
+        <li th:if="${page} ne '1'"><a th:href="'/match/teacherList?page=1'+'&&size='+${size}">首页</a></li>
         <li class="disabled" th:if="${page} le '1'"><a >上一页</a></li>
-        <li th:if="${page} gt '1'"><a th:href="'/match/adminslist?page='+${page-1}+'&&size='+${size}">上一页</a></li>
+        <li th:if="${page} gt '1'"><a th:href="'/match/teacherList?page='+${page-1}+'&&size='+${size}">上一页</a></li>
         <li th:each="pageNo : ${#numbers.sequence(1, matchsPage.getTotalPages())}">
         <a th:if="${pageNo} eq ${page}" style="background-color: #b2b2b2;color: white" th:text="${pageNo}"></a>
-        <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/match/adminslist?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
+        <a th:if="${pageNo} ne ${page} and ${pageNo} le ${page+2} and ${pageNo} ge ${page-2}" th:href="'/match/teacherList?page='+${pageNo}+'&&size='+${size}" th:text="${pageNo}"></a>
         </li>
-        <li th:if="${page} lt ${matchsPage.getTotalPages()}"><a th:href="'/match/adminslist?page='+${page+1}+'&&size='+${size}">下一页</a></li>
+        <li th:if="${page} lt ${matchsPage.getTotalPages()}"><a th:href="'/match/teacherList?page='+${page+1}+'&&size='+${size}">下一页</a></li>
         <li class="disabled" th:if="${page} ge ${matchsPage.getTotalPages()}"><a >下一页</a></li>
         <li class="disabled" th:if="${page} eq ${matchsPage.getTotalPages()}"><a >尾页</a></li>
-        <li th:if="${page} ne ${matchsPage.getTotalPages()}"><a th:href="'/match/adminslist?page='+${matchsPage.getTotalPages()}+'&&size='+${size}">尾页</a></li>
+        <li th:if="${page} ne ${matchsPage.getTotalPages()}"><a th:href="'/match/teacherList?page='+${matchsPage.getTotalPages()}+'&&size='+${size}">尾页</a></li>
     </ul>
 </div>
 </body>

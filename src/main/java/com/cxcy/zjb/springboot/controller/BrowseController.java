@@ -1,6 +1,7 @@
 package com.cxcy.zjb.springboot.controller;
 
 
+import com.cxcy.zjb.springboot.domain.Browse;
 import com.cxcy.zjb.springboot.domain.User;
 import com.cxcy.zjb.springboot.service.*;
 import com.cxcy.zjb.springboot.utils.UserUtils;
@@ -59,16 +60,20 @@ public class BrowseController {
         Set<Production> set = new HashSet<>();//将查到的数据存储在set中，再去加上最新推荐，凑到10条
         if(user != null) {
             Long userId = user.getId();
-            Long catagory = browseService.findCatagoryByUserId(userId).getCatagory();//查询到该用户最后一条浏览记录的分类
-            //按点赞数、评论量、阅读量排序
-            Sort sort = new Sort(Sort.Direction.DESC, "eVoteSize", "commentSize", "readSize");
-            //通过分类查询7条作品记录
-            List<Production> productions = productionService.findFirst7ByCatagorysAndPCheck(catagory, sort);
+            Browse browse = browseService.findCatagoryByUserId(userId);
+            if (browse != null) {
+                Long catagory = browse.getCatagory();//查询到该用户最后一条浏览记录的分类
+                //按点赞数、评论量、阅读量排序
+                Sort sort = new Sort(Sort.Direction.DESC, "eVoteSize", "commentSize", "readSize");
+                //通过分类查询7条作品记录
+                List<Production> productions = productionService.findFirst7ByCatagorysAndPCheck(catagory, sort);
 
-            for (Production production : productions) {
-                System.out.println(production);
-                set.add(production);
+                for (Production production : productions) {
+                    System.out.println(production);
+                    set.add(production);
+                }
             }
+
         }
         List<Production> orderByTimeDesc = productionService.findOrderByTimeDesc();
         for (int i = 0; i < orderByTimeDesc.size() && set.size() < 10; i++) {//共10条数据或数据库没有10条数据时停止

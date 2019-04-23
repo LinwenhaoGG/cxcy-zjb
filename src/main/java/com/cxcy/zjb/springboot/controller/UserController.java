@@ -362,6 +362,7 @@ public class UserController {
         BeanUtils.copyProperties(register,userInfo);
         userInfo.setAuthorities(authorities);
         userInfo.setStyle(Integer.parseInt(register.getStyle()));
+        userInfo.setPassword(MD5Utils.MD5Encode(register.getPassword()));
         //若该用户为管理员，则直接将认证状态改为认证中
         if (register.getStyle().equalsIgnoreCase("4")){
             userInfo.setState(2);
