@@ -69,7 +69,7 @@
                         <td class="td-manage">
                             <a style="text-decoration:none" th:if="${company.isUse}" th:onClick="'member_stop(this,\''+ ${company.id} +'\')'" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
                             <a style="text-decoration:none" th:unless="${company.isUse}" th:onClick="'member_start(this,\''+ ${company.id} +'\')'" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe6e1;</i></a>
-                            <a title="编辑" href="javascript:;" th:onclick="'member_show(\'修改学生信息\',\'/user/updateCompanyMsg?id=' + ${company.id} + '\',\'4\',\'\',\'510\')'" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+                            <a title="编辑" href="javascript:;" th:onclick="'member_show(\'修改企业信息\',\'/user/updateCompanyMsg?id=' + ${company.id} + '\',\'4\',\'\',\'510\')'" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
                             <a style="text-decoration:none" class="ml-5" th:onClick="'member_show(\'修改密码\',\'/user/updateUserPassword?id='+ ${company.id} +'\',\'10001\',\'600\',\'270\')'" href="javascript:;" title="修改密码"><i class="Hui-iconfont">&#xe63f;</i></a>
                         </td>
                     </tr>

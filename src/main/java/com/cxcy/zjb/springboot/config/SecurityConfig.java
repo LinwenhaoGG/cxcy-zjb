@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MyAuthenticationFailHandler authenticationFailHandler;
 
 
-    @Bean
+
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();   // 使用 BCrypt 加密
     }

@@ -80,4 +80,12 @@ public interface ProductionRepository extends JpaRepository<Production,Long> {
     @Query(value = "select * from production ORDER BY p_upload_time " +
             "limit 0, ?1",nativeQuery = true)
     List<Production> getProductionListTop(Integer len);
+
+    /**
+     * 统计用户的作品数目
+     * @return
+     */
+    @Query(value = "select count(1) from production " +
+            "where u_id = ?1",nativeQuery = true)
+    Integer getProductCountByUser(Long uId);
 }

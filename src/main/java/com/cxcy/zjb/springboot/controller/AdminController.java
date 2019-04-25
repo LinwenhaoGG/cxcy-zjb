@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -55,6 +56,9 @@ public class AdminController {
 
     @Autowired
     private CompanyService companyService;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     /**
      * 管理员查看所有比赛
@@ -339,7 +343,7 @@ public class AdminController {
             user.setIsUse(1);  //启用状态
             user.setState(UserContants.STATE_IS_ACCEPT);  //已认证
             user.setStyle(UserContants.STYLE_ADMIN); //设置为管理员状态
-            user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
+            user.setPassword((encoder.encode(user.getPassword())));
             User newUser = userService.saveUserInfo(user);
             userService.giveUserAuthority(newUser.getId(), UserContants.ROLE_ADMIN_ID); //给管理新增角色
         }

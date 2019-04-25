@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -68,6 +69,10 @@ public class UserController {
     private CompanyService companyService;
     @Autowired
     private GrowthService growthService;
+    @Autowired
+    ProductionService productionService;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     /**
      * 获取当前登录的用户
@@ -362,7 +367,7 @@ public class UserController {
         BeanUtils.copyProperties(register,userInfo);
         userInfo.setAuthorities(authorities);
         userInfo.setStyle(Integer.parseInt(register.getStyle()));
-        userInfo.setPassword(MD5Utils.MD5Encode(register.getPassword()));
+        userInfo.setPassword(encoder.encode(register.getPassword()));
         //若该用户为管理员，则直接将认证状态改为认证中
         if (register.getStyle().equalsIgnoreCase("4")){
             userInfo.setState(2);
@@ -393,6 +398,29 @@ public class UserController {
         }
         return result;
     }
+
+    /**
+     * 根据学生用户id获取用户详情
+     * @param id
+     * @return
+     */
+    @RequestMapping("/showUserGrowth")
+    public String showUserGrowth(Long id, Model model) {
+        UserStudentVo userStudentVo = studentService.findById(id);
+        //如果用户信息不是为学生
+        if (userStudentVo == null || !userStudentVo.getStyle().equals(UserContants.STYLE_STUDENT)) {
+            return "/index";
+        }
+        Growth growth = growthService.findByUser(userStudentVo.getSId());
+        Integer productCount = productionService.getProductCountByUser(id);
+
+        model.addAttribute("student", userStudentVo);
+        model.addAttribute("growth", growth);
+        model.addAttribute("productCount", productCount);
+
+        return "/users/student_detail";
+    }
+
 
         //------------------------------------------------
       //            管理员端接口
@@ -775,7 +803,7 @@ public class UserController {
                 User oldUser = userService.findUserById(user.getId());
                 oldUser.setSex(user.getSex());
                 oldUser.setName(user.getName());
-                oldUser.setPassword(MD5Utils.MD5Encode(user.getPassword()));
+                oldUser.setPassword(encoder.encode(user.getPassword()));
 
                 userService.saveUserInfo(oldUser);
             }
@@ -816,7 +844,7 @@ public class UserController {
         }
         User user = userService.findUserById(id);
         if (null != user) {
-            user.setPassword(MD5Utils.MD5Encode(newpassword));
+            user.setPassword(encoder.encode(newpassword));
             userService.saveUserInfo(user);
         }
         return ResultUtil.success();

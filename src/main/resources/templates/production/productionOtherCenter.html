@@ -10,7 +10,7 @@
 <div class="span10 " th:if="${productionPage} == null"><span th:text="${user}+'还没有发表过作品'"></span>
     <button class="btn btn-info" type="button" style="float:right;margin-top:20px;margin-right:20px">发表作品</button>
 </div>
-<div class="container-fluid" th:if="${productionPage} != null">
+<div class="container-fluid" th:if="${productionPage} != null" style="margin-top: 80px;">
 <h3 style="text-align:center" th:text="${user}+'的作品'"></h3>
     <div class="row-fluid">
         <div class="span12" >

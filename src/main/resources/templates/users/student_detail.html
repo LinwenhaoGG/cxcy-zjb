@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/user_detail.css" th:href="@{/css/user_detail.css}"/>
+</head>
+<body>
+<div th:replace="top::html"></div>
+    <div class="user-detail-wrapper">
+        <div class="user-info" >
+            <div class="user-info-top">
+                <div class="user-avatar">
+                    <img src="./images/head.jpg" alt="" th:src="${student.avatar} == null ? '/images/avatar-defualt.jpg' : ${student.avatar} ">
+                </div>
+                <div class="user-ext">
+                    <p class="user-ext-left">
+                        <span class="username" th:text="${student.name}">abc</span>
+                        <span>学号: <i class="number" th:text="${student.number}">12345678</i></span>
+                    </p>
+                    <p class="user-desc" th:text="${student.credential}">
+                        清明时节雨纷纷，路上行人欲断魂。
+                        借问酒家何处有？牧童遥指杏花村。
+                        <i class="panpel glyphicon glyphicon-pencil"></i>
+                    </p>
+                </div>
+            </div>
+            <div class="user-info-main">
+                <p class="user-info-item">
+                    <span class="title">性别: </span>
+                    <span class="description" th:if="${student.sex}">男</span>
+                    <span class="description" th:unless="${student.sex}">女</span>
+                </p>
+                <p class="user-info-item">
+                    <span class="title">民族: </span>
+                    <span class="description" th:text="${student.nation}">汉族</span>
+                </p>
+                <p class="user-info-item">
+                    <span class="title">邮箱: </span>
+                    <span class="description" th:text="${student.email}">12345678@qq.com</span>
+                </p>
+                <p class="user-info-item">
+                    <span class="title">政治面貌: </span>
+                    <span class="description" th:text="${student.politicsstatus}">共青团员</span>
+                </p>
+                <p class="user-info-item">
+                    <span class="title">年级: </span>
+                    <span class="description" th:text="${student.edu} + '届'">2015届</span>
+                </p>
+                <p class="user-info-item">
+                    <span class="title">班级: </span>
+                    <span class="description" th:text="${student.classes}">计算机科学与技术123班</span>
+                </p>
+            </div>
+            <div class="line"></div>
+            <div class="user-composition">
+                <div class="name">作 品</div>
+                <div class="review">
+                    <p class="review-item">
+                        <span class="title">总积分</span>
+                        <span class="number" th:text="${growth.gIntegration}">256</span>
+                    </p>
+                    <p class="review-item">
+                        <span class="title">浏览量</span>
+                        <span class="number" th:text="${growth.gReadSize}">231</span>
+                    </p>
+                    <p class="review-item">
+                        <span class="title">获赞量</span>
+                        <span class="number" th:text="${growth.gVote}">34</span>
+                    </p>
+                    <p class="review-item">
+                        <span class="title">评论量</span>
+                        <span class="number" th:text="${growth.gComment}">42</span>
+                    </p>
+                </div>
+                <div class="user-last">
+                    <p class="user-composition-num">该用户供发布了 <span th:text="${productCount}">8</span> 个作品, <a href="#" th:href="'/production/' + ${student.username} + '/productionCenter'">点击进行查看</a></p>
+                    <a th:href="'/user/inchat?userId='+ ${student.id}"><button type="button" class="btn btn-success" sec:authorize="isAuthenticated()" >发送消息</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

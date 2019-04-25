@@ -240,4 +240,9 @@ public class ProductionServiceImpl implements ProductionService {
     public List<Production> getProductionListTop(Integer len) {
         return productionRepository.getProductionListTop(len);
     }
+
+    @Override
+    public Integer getProductCountByUser(Long uId) {
+        return productionRepository.getProductCountByUser(uId);
+    }
 }

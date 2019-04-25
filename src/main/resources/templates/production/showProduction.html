@@ -254,10 +254,14 @@
 				</span>
 
 			<!-- 分类 -->
-			<span>
+			<span class="data data_types">
 					标签：
 					<a href="#" class="data_type"><span th:text="${productionModel[0].catagory.caName}"></span></a>
-				</span>
+			</span>
+			<span style="">
+					作者：
+					<a href="#" th:href="'/user/showUserGrowth?id=' + ${productionModel[1].user}" class="data_type"><span th:text="${productionModel[0].userName}"></span></a>
+			</span>
 
 		</p>
 	</div>

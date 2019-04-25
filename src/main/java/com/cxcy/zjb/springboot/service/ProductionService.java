@@ -174,4 +174,11 @@ public interface ProductionService {
      * @return
      */
     List<Production> getProductionListTop(Integer len);
+
+    /**
+     * 获取用户的产品数量
+     * @param uId
+     * @return
+     */
+    Integer getProductCountByUser(Long uId);
 }
