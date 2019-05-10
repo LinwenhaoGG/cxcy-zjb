@@ -76,6 +76,13 @@
                     </select>
                 </div>
             </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="password" class="layui-input password" disabled>
+                </div>
+            </div>
             <div class="editBtn">
                 <button type="button" class="layui-btn editBtn">修改资料</button>
             </div>
@@ -170,10 +177,10 @@
             var position = $(".position").val()
             var params = {
                 desc: $(".desc").val(),
-                school = $(".school").val(),
-                college = $(".college").val(),
-                major = $(".major").val(),
-                position = $(".position").val(),
+                school : $(".school").val(),
+                college : $(".college").val(),
+                major : $(".major").val(),
+                position : $(".position").val(),
                 nation:  $(".nation").val(),
                 role:  $(".role").val(),
                 teacherId: 0
@@ -189,6 +196,8 @@
                 return
             }else if (position == "") {
                 alert("职位不能为空")
+            }else if ($(".password").val() == "") {
+                alert("密码不能为空")
             }
             else {
                 $.ajax({
@@ -204,6 +213,9 @@
                 })
             }
         })
+
+        //获取密码
+        fetchPassword()
 
     });
 
@@ -234,6 +246,29 @@
                 $(".role").val(res.role)
                 //获取教师工号
                 $(".No").text(res.No)
+            }
+        })
+    }
+
+    //获取密码
+    function fetchPassword() {
+        $.ajax({
+            url: '',
+            method: "get",
+            success: function(res) {
+                $(".password").val(res.password)
+            }
+        })
+    }
+
+    //修改密码
+    function editpassword() {
+        $.ajax({
+            url: '',
+            method: "post",
+            data: $(".password").val(),
+            success: function(){
+                alert("修改成功")
             }
         })
     }

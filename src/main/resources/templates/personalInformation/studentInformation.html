@@ -101,6 +101,12 @@
                     </select>
                 </div>
             </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="password" class="layui-input password" disabled>
+                </div>
+            </div>
             <div class="editBtn">
                 <button type="button" class="layui-btn editBtn">修改资料</button>
             </div>
@@ -223,7 +229,10 @@
             }else if (grade=="") {
                 alert("年级不能为空")
                 return
-            }else {
+            }else if ($(".password").val() == "") {
+                alert("密码不能为空")
+            }
+            else {
                 $.ajax({
                     url:'提交学生数据',
                     method: 'post',
@@ -275,6 +284,31 @@
                 $(".parise").text(res.parise)
                 //获取评论
                 $(".comment").text(res.comment)
+            }
+        })
+        //获取密码
+        fetchPassword()
+    }
+
+    //获取密码
+    function fetchPassword() {
+        $.ajax({
+            url: '',
+            method: "get",
+            success: function(res) {
+                $(".password").val(res.password)
+            }
+        })
+    }
+
+    //修改密码
+    function editpassword() {
+        $.ajax({
+            url: '',
+            method: "post",
+            data: $(".password").val(),
+            success: function(){
+                alert("修改成功")
             }
         })
     }
