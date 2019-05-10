@@ -217,15 +217,15 @@ $(document).ready(function() {
             if(desc==""){
                 $(".desc-warning").show();
             }
-            if(ss){
+          /*  if(ss){
                 $(".details-warning").show();
-            }
-            // 判断是否有上传介绍文件
+            }*/
+            /*// 判断是否有上传介绍文件
             if(file_url==""){
                 $(".details-warning").show();
-            }
+            }*/
         }
-        else if(desc==""){
+      /*  else if(desc==""){
             $(".desc-warning").show();
             // 判断是否有上传介绍文件
             if(file_url==""){
@@ -234,16 +234,16 @@ $(document).ready(function() {
             if(ss){
                 $(".details-warning").show();
             }
-        }
-        else if(ss){
+        }*/
+      /*  else if(ss){
             $(".details-warning").show();
             if(file_url==""){
                 $(".details-warning").show();
             }
-        }
-        else if(file_url==""){
+        }*/
+        /*else if(file_url==""){
             $(".details-warning").show();
-        }
+        }*/
         else{
             $.ajax({
                 url:'/production/saveProduction',

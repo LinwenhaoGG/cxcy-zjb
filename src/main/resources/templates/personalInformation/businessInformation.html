@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/layui.css"  th:href="@{/css/layui.css}"/>
+    <script type="text/javascript" src="../js/layui.js" th:src="@{/js/layui.js}"></script>
+    <link rel="stylesheet" href="../css/personalInfor.css" th:href="@{/css/personalInfor.css}">
+    <script src="../../static/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+
+</head>
+
+<body>
+<div class="infoContainer">
+    <h3 class="title">企业资料</h3>
+    <div class="stu-info" >
+        <div class="avatorWrapper">
+            <img src="./image/avator.png" class="avator">
+            <p class="Name">公司名</p>
+        </div>
+    </div>
+    <div class="infoWrapper">
+        <form action="" method="" class="layui-form">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">社会代码</label>
+                <div class="layui-input-block">
+                    <input type="text"  class="layui-input Code" disabled></input>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">法定代表人</label>
+                <div class="layui-input-block">
+                    <input type="text" disabeld class="layui-input Legal" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司类型</label>
+                <div class="layui-input-block">
+                    <input type="text"   class="layui-input type" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系人</label>
+                <div class="layui-input-block">
+                    <input type="text"   class="layui-input Contacts" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text"   class="layui-input realName" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input phone" disabled>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    // layui组件初始化
+    layui.use(['form'], function(){
+        var form = layui.form,
+            layer = layui.layer
+    });
+
+    $(function(){
+        //获取学生数据
+        fetchData();
+    });
+
+    //获取数据
+    function fetchData() {
+        var teacherId = 0
+        $.ajax({
+            url:'获取企业数据',
+            method: 'get',
+            data: teacherId,
+            success: function(res) {
+                //获取简介
+                $(".desc").val(res.desc)
+                //获取社会代码
+                $(".Code").val(res.Code)
+                //获取公司名称
+                $(".Name").text(res.Name)
+                //获取法定代表人
+                $(".Legal").val(res.Legal)
+                //获取公司类型
+                $(".type").val(res.type)
+                //获取联系人
+                $(".Contacts").val(res.Contacts)
+                //获取真实姓名
+                $(".realName").val(res.realName)
+                //获取手机号
+                $(".phone").val(res.phone)
+            }
+        })
+    }
+
+</script>
+</body>
+</html>
