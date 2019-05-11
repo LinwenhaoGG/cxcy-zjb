@@ -16,10 +16,7 @@ import com.cxcy.zjb.springboot.constants.UserContants;
 import com.cxcy.zjb.springboot.domain.*;
 import com.cxcy.zjb.springboot.enums.ResultEnum;
 import com.cxcy.zjb.springboot.service.*;
-import com.cxcy.zjb.springboot.utils.MD5Utils;
-import com.cxcy.zjb.springboot.utils.ResultUtil;
-import com.cxcy.zjb.springboot.utils.SendSmsUtil;
-import com.cxcy.zjb.springboot.utils.UUIDUtil;
+import com.cxcy.zjb.springboot.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
@@ -421,6 +418,20 @@ public class UserController {
         return "/users/student_detail";
     }
 
+    /**
+     * 学生修改基本信息
+     * @return
+     */
+    @GetMapping("/studentUpdateMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")  // 指定角色权限才能操作方法
+    public String studentUpdateMsg(Model model) {
+        User user = UserUtils.getUser();
+        UserStudentVo userStudentVo = studentService.findById(user.getId());
+        Growth growth = growthService.findByUser(userStudentVo.getSId());
+        model.addAttribute("student", userStudentVo);
+        model.addAttribute("growth", growth);
+        return "personalInformation/studentInformation";
+    }
 
         //------------------------------------------------
       //            管理员端接口
