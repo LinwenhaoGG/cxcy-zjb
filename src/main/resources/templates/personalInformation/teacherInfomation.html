@@ -18,11 +18,11 @@
     <h3 class="title">个人资料</h3>
     <div class="stu-info" >
         <div class="avatorWrapper">
-            <img src="./image/avator.png" class="avator">
-            <p class="teaName">教师姓名</p>
+            <img src="./image/avator.png" th:src="${teacher.avatar}" class="avator">
+            <p class="teaName" th:text="${teacher.name}">教师姓名</p>
         </div>
         <div class="right" style="border:none">
-            <p class="uNo">教师工号：<span class="No">20151022415</span></p>
+            <p class="uNo">教师工号：<span class="No" th:text="${teacher.number}">20151022415</span></p>
         </div>
     </div>
     <div class="infoWrapper">
@@ -30,32 +30,32 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">个人简介</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea desc"></textarea>
+                    <textarea placeholder="请输入内容" th:text="${teacher.credential}" class="layui-textarea desc"></textarea>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">在职学校</label>
                 <div class="layui-input-block">
-                    <input type="text" name="school"  autocomplete="off" class="layui-input school">
+                    <input type="text" name="school"  th:value="${teacher.school}" autocomplete="off" class="layui-input school">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">所在学院</label>
                 <div class="layui-input-block">
-                    <input type="text" name="college"  autocomplete="off" class="layui-input college">
+                    <input type="text" name="college" th:value="${teacher.college}"  autocomplete="off" class="layui-input college">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">专业领域</label>
                 <div class="layui-input-block">
-                    <input type="text" name="major"  autocomplete="off" class="layui-input major">
+                    <input type="text" name="major" th:value="${teacher.specially}"  autocomplete="off" class="layui-input major">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">职位</label>
                 <div class="layui-input-block">
-                    <input type="text" name="position"  autocomplete="off" class="layui-input position">
+                    <input type="text" name="position" th:value="${teacher.position}"  autocomplete="off" class="layui-input position">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -70,9 +70,9 @@
                 <label class="layui-form-label">政治面貌</label>
                 <div class="layui-input-inline">
                     <select name="role" lay-verify="required" class="role">
-                        <option value="1">共青团员</option>
-                        <option value="2">党员</option>
-                        <option value="3">群众</option>
+                        <option value="共青团员" th:selected="${teacher.politicsstatus} eq '共青团员'">共青团员</option>
+                        <option value="党员" th:selected="${teacher.politicsstatus} eq '党员'">党员</option>
+                        <option value="群众" th:selected="${teacher.politicsstatus} eq '群众'">群众</option>
                     </select>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                     <!--<input type="password" class="layui-input password" disabled>-->
                 <!--</div>-->
             <!--</div>-->
-            <div class="editBtn">
+            <div class="updateMsg">
                 <button type="button" class="layui-btn editBtn">修改资料</button>
             </div>
         </form>
@@ -166,7 +166,7 @@
             })(i)
         }
         //提交修改数据
-        $(".editBtn").onclick(function() {
+        $(".updateMsg").onclick(function() {
             //检查数据是否为空
             var desc =  $(".desc").val();
             var nation = $(".nation").val()
@@ -176,14 +176,13 @@
             var major = $(".major").val()
             var position = $(".position").val()
             var params = {
-                desc: $(".desc").val(),
+                credential: $(".desc").val(),
                 school : $(".school").val(),
                 college : $(".college").val(),
-                major : $(".major").val(),
+                specially : $(".major").val(),
                 position : $(".position").val(),
                 nation:  $(".nation").val(),
-                role:  $(".role").val(),
-                teacherId: 0
+                politicsstatus:  $(".role").val(),
             }
             if(school="") {
                 alert("在职学校能为空")
@@ -199,7 +198,7 @@
             }
             else {
                 $.ajax({
-                    url:'提交学生数据',
+                    url:'/user/teacherUpdateMsg',
                     method: 'post',
                     data: params,
                     success: function() {

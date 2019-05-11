@@ -56,4 +56,9 @@ public class TeacherServiceImpl implements TeacherService {
         }
         return repository.findTeacherListByName(personName);
     }
+
+    @Override
+    public Teacher getTeacher(Long id) {
+        return repository.findOne(id);
+    }
 }

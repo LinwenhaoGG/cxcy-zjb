@@ -35,6 +35,13 @@ public interface TeacherService {
     public Teacher saveTeacher(Teacher teacher);
 
     /**
+     * 获取教师信息
+     * @param id
+     * @return
+     */
+    public Teacher getTeacher(Long id);
+
+    /**
      * 通过用户状态获取教师信息
      * @param state
      * @return
