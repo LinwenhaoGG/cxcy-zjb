@@ -17,12 +17,12 @@
 <div class="infoContainer">
     <h3 class="title">企业资料</h3>
     <div class="stu-info" >
-        <div class="avatorWrapper">
+        <div class="avatorWrapper" style="width: 100%">
             <img src="./image/avator.png" th:src = "${company.avatar}" class="avator">
-            <p class="Name" th:text="${company.companyName}">公司名</p>
+            <p class="Name" th:text="${company.companyName}"  style="display: inline-block;margin-left:20px;">公司名</p>
         </div>
     </div>
-    <div class="infoWrapper">
+    <div class="infoWrapper" style="margin-left:100px;">
         <form action="" method="" class="layui-form">
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">社会代码</label>
@@ -68,7 +68,7 @@
                 </div>
             </div>-->
             <div class="editBtn">
-                <button type="button" class="layui-btn editBtn">修改资料</button>
+                <button type="button" class="layui-btn Btn">修改资料</button>
             </div>
         </form>
     </div>
@@ -84,7 +84,7 @@
         // //获取企业数据
         // fetchData();
 
-        $(".editBtn").click(function() {
+        $(".Btn").click(function() {
             //检查数据是否为空
             var Contacts = $(".Contacts").val();
             var phone = $(".phone").val();
