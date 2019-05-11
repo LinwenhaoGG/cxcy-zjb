@@ -66,6 +66,7 @@
                 <label class="layui-form-label" style="width: 100px;">民族</label>
                 <div class="layui-input-inline">
                     <select name="nation" lay-verify="required" class="nation" id="nation">
+                        <option th:value="${student.nation}" th:text="${student.nation}">汉族</option>
                     </select>
                 </div>
             </div>
