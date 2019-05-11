@@ -422,15 +422,26 @@ public class UserController {
      * 学生修改基本信息
      * @return
      */
-    @GetMapping("/studentUpdateMsg")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")  // 指定角色权限才能操作方法
+    @GetMapping("/userUpdateMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_COMPANY','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public String studentUpdateMsg(Model model) {
         User user = UserUtils.getUser();
-        UserStudentVo userStudentVo = studentService.findById(user.getId());
-        Growth growth = growthService.findByUser(userStudentVo.getSId());
-        model.addAttribute("student", userStudentVo);
-        model.addAttribute("growth", growth);
-        return "personalInformation/studentInformation";
+        if (user.getStyle().equals(UserContants.STYLE_STUDENT)) {
+            UserStudentVo userStudentVo = studentService.findById(user.getId());
+            Growth growth = growthService.findByUser(userStudentVo.getSId());
+            model.addAttribute("student", userStudentVo);
+            model.addAttribute("growth", growth);
+            return "personalInformation/studentInformation";
+        } else if (user.getStyle().equals(UserContants.STYLE_COMAPNY)) {
+            UserCompanyVo userCompanyVo = companyService.findUserCompanyById(user.getId());
+            model.addAttribute("company", userCompanyVo);
+            return "personalInformation/businessInformation";
+        } else if (user.getStyle().equals(UserContants.STYLE_TEACHER)) {
+            UserTeacherVo userTeacherVo = teacherService.findTeacherById(user.getId());
+            model.addAttribute("teacher", userTeacherVo);
+            return "personalInformation/teacherInformation";
+        }
+        return "redirect:/login";
     }
 
     /**
@@ -452,6 +463,22 @@ public class UserController {
         oldStudent.setCredential(student.getCredential());
         userService.saveUserInfo(user);
         studentService.saveStudent(oldStudent);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 企业修改基本信息
+     * @return
+     */
+    @PostMapping("/companyUpdateMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_COMPANY')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result companyUpdateMsgPost(Company newCompany) {
+        User user = UserUtils.getUser();
+        Company company = companyService.getCompany(user.getCompany());
+        company.setContacts(newCompany.getContacts());
+        company.setPhone(newCompany.getPhone());
+        companyService.saveCompany(company);
         return ResultUtil.success();
     }
 

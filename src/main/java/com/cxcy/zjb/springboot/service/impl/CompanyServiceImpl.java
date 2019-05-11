@@ -55,6 +55,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Company getCompany(Long id) {
+        return repository.findOne(id);
+    }
+
+    @Override
     public UserCompanyVo findUserCompanyById(Long id) {
         return repository.findById(id);
     }

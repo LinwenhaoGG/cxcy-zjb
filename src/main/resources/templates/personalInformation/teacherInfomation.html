@@ -157,8 +157,8 @@
     ];
 
     $(function(){
-        //获取学生数据
-        fetchData();
+        // //获取学生数据
+        // fetchData();
         //动态添加民族
         for (var i = 0; i < nations.length; i++) {
             (function (i) {
@@ -217,36 +217,36 @@
 
     });
 
-    //获取数据
-    function fetchData() {
-        var teacherId = 0
-        $.ajax({
-            url:'获取教师数据',
-            method: 'get',
-            data: teacherId,
-            success: function(res) {
-                //获取个人简介
-                $(".desc").val(res.desc)
-                //获取姓名
-                $(".teaName").text(res.stuName)
-                //获取在职学校
-                $(".school").val(res.school)
-                //获取所在学院
-                $(".college").val(res.college)
-                //获取专业领域
-                $(".major").val(res.major)
-                //获取职位
-                $(".position").val(res.position)
-                //获取民族
-                $(".nation").val(res.nation)
-                //获取政治身份
-                //1-团员 2-党员 3-群众
-                $(".role").val(res.role)
-                //获取教师工号
-                $(".No").text(res.No)
-            }
-        })
-    }
+    // //获取数据
+    // function fetchData() {
+    //     var teacherId = 0
+    //     $.ajax({
+    //         url:'获取教师数据',
+    //         method: 'get',
+    //         data: teacherId,
+    //         success: function(res) {
+    //             //获取个人简介
+    //             $(".desc").val(res.desc)
+    //             //获取姓名
+    //             $(".teaName").text(res.stuName)
+    //             //获取在职学校
+    //             $(".school").val(res.school)
+    //             //获取所在学院
+    //             $(".college").val(res.college)
+    //             //获取专业领域
+    //             $(".major").val(res.major)
+    //             //获取职位
+    //             $(".position").val(res.position)
+    //             //获取民族
+    //             $(".nation").val(res.nation)
+    //             //获取政治身份
+    //             //1-团员 2-党员 3-群众
+    //             $(".role").val(res.role)
+    //             //获取教师工号
+    //             $(".No").text(res.No)
+    //         }
+    //     })
+    // }
 
     //获取密码
   /*  function fetchPassword() {

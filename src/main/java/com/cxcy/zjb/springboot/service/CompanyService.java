@@ -27,7 +27,19 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface CompanyService {
+    /**
+     * 保存company
+     * @param company
+     * @return
+     */
     public Company saveCompany(Company company);
+
+    /**
+     * 获取company
+     * @param id
+     * @return
+     */
+    public Company getCompany(Long id);
 
     /**
      * 通过用户状态获取企业信息

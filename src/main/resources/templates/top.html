@@ -163,7 +163,7 @@
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href='/admins/checkUserList'>管理中心</a></li>
                     <li sec:authorize="hasRole('ROLE_COMPANY')"><a href='/information/companyInformation'>招聘中心</a></li>
                     <li><a href='/user/friendList'>消息</a></li>
-                    <li sec:authorize="hasRole('ROLE_USER')"><a href='/user/studentUpdateMsg'>设置</a></li>
+                    <li sec:authorize="hasRole('ROLE_USER') or hasRole('ROLE_COMPANY') or hasRole('ROLE_TEACHER')"><a href='/user/userUpdateMsg'>设置</a></li>
                     <li><a href='/logout' methods='post'>退出</a></li>
                 </ul>
             </li>
