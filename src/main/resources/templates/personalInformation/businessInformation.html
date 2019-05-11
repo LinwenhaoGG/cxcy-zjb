@@ -109,11 +109,15 @@
                     url: "/user/companyUpdateMsg",
                     method: "post",
                     data: params,
-                    success: function() {
-                        alert("修改成功")
+                    success: function(data) {
+                        if (data.code == 1) {
+                            alert("修改成功");
+                        } else {
+                            alert("修改失败");
+                        }
                     },
                     error: function() {
-                        alert("修改失败")
+                        alert("请求错误")
                     }
                 })
             }

@@ -419,13 +419,14 @@ public class UserController {
     }
 
     /**
-     * 学生修改基本信息
+     * 用户修改基本信息
      * @return
      */
     @GetMapping("/userUpdateMsg")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_COMPANY','ROLE_TEACHER')")  // 指定角色权限才能操作方法
     public String userUpdateMsg(Model model) {
         User user = UserUtils.getUser();
+        //根据不同的类型跳转不同的页面
         if (user.getStyle().equals(UserContants.STYLE_STUDENT)) {
             UserStudentVo userStudentVo = studentService.findById(user.getId());
             Growth growth = growthService.findByUser(userStudentVo.getSId());
@@ -501,6 +502,33 @@ public class UserController {
         teacher.setPoliticsstatus(userTeacherVo.getPoliticsstatus());
         teacherService.saveTeacher(teacher);
         return ResultUtil.success();
+    }
+
+    /**
+     * 用户修改密码页面
+     * @param
+     * @return
+     */
+    @GetMapping("/userUpdatePassword")
+    public String ToUserUpdatePassword() {
+        return "personalInformation/editPassword";
+    }
+
+    /**
+     * 用户修改密码
+     * @param oldPassword
+     * @return
+     */
+    @PostMapping("/userUpdatePassword")
+    @ResponseBody
+    public Result userUpdatePassword(String oldPassword, String newPassword) {
+        User user = UserUtils.getUser();
+        if (null != user && encoder.matches(oldPassword,user.getPassword())) {
+            user.setPassword(encoder.encode(newPassword));
+            userService.saveUserInfo(user);
+            return ResultUtil.success();
+        }
+        return ResultUtil.error();
     }
 
         //------------------------------------------------
