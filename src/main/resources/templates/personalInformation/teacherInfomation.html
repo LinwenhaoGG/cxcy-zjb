@@ -14,52 +14,53 @@
 </head>
 
 <body>
-<div class="infoContainer">
+<div th:replace="top::html" ></div>
+<div class="infoContainer" style="margin-top:90px;>
     <h3 class="title">个人资料</h3>
     <div class="stu-info" >
         <div class="avatorWrapper">
             <img src="./image/avator.png" th:src="${teacher.avatar}" class="avator">
-            <p class="teaName" th:text="${teacher.name}">教师姓名</p>
+            <p class="teaName" th:text="${teacher.name}" style="padding-left:20px;">教师姓名</p>
         </div>
-        <div class="right" style="border:none">
+        <div class="right" style="border:none;padding-left: 20px;">
             <p class="uNo">教师工号：<span class="No" th:text="${teacher.number}">20151022415</span></p>
         </div>
     </div>
     <div class="infoWrapper">
         <form action="" method="" class="layui-form">
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">个人简介</label>
-                <div class="layui-input-block">
+                <label class="layui-form-label" style="width: 120px;">个人简介</label>
+                <div class="layui-input-block" style="padding-left: 10px;">
                     <textarea placeholder="请输入内容" th:text="${teacher.credential}" class="layui-textarea desc"></textarea>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">在职学校</label>
+                <label class="layui-form-label" style="width: 120px;">在职学校</label>
                 <div class="layui-input-block">
                     <input type="text" name="school"  th:value="${teacher.school}" autocomplete="off" class="layui-input school">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">所在学院</label>
+                <label class="layui-form-label" style="width: 120px;">所在学院</label>
                 <div class="layui-input-block">
                     <input type="text" name="college" th:value="${teacher.college}"  autocomplete="off" class="layui-input college">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">专业领域</label>
+                <label class="layui-form-label" style="width: 120px;">专业领域</label>
                 <div class="layui-input-block">
                     <input type="text" name="major" th:value="${teacher.specially}"  autocomplete="off" class="layui-input major">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">职位</label>
+                <label class="layui-form-label" style="width: 120px;">职位</label>
                 <div class="layui-input-block">
                     <input type="text" name="position" th:value="${teacher.position}"  autocomplete="off" class="layui-input position">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">民族</label>
+                <label class="layui-form-label" style="width: 120px;">民族</label>
                 <div class="layui-input-inline">
                     <select name="nation" lay-verify="required" class="nation">
                     </select>
@@ -67,7 +68,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">政治面貌</label>
+                <label class="layui-form-label" style="width: 120px;">政治面貌</label>
                 <div class="layui-input-inline">
                     <select name="role" lay-verify="required" class="role">
                         <option value="共青团员" th:selected="${teacher.politicsstatus} eq '共青团员'">共青团员</option>

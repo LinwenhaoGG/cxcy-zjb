@@ -13,8 +13,9 @@
 
 </head>
 
-<body>
-<div class="infoContainer">
+<body style="overflow-y: hidden">
+<div th:replace="top::html" ></div>
+<div class="infoContainer" style="margin-top:90px;>
     <h3 class="title">企业资料</h3>
     <div class="stu-info" >
         <div class="avatorWrapper" style="width: 100%">
@@ -25,38 +26,38 @@
     <div class="infoWrapper" style="margin-left:100px;">
         <form action="" method="" class="layui-form">
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">社会代码</label>
+                <label class="layui-form-label" style="width: 120px;">社会代码</label>
                 <div class="layui-input-block">
                     <input type="text"  class="layui-input Code" th:value="${company.number}" disabled></input>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">法定代表人</label>
+                <label class="layui-form-label" style="width: 120px;">法定代表人</label>
                 <div class="layui-input-block">
                     <input type="text" disabeld class="layui-input Legal" th:value="${company.boss}" disabled>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">公司类型</label>
+                <label class="layui-form-label" style="width: 120px;">公司类型</label>
                 <div class="layui-input-block">
                     <input type="text"  th:value="${company.type}" class="layui-input type" disabled>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">姓名</label>
+                <label class="layui-form-label" style="width: 120px;">姓名</label>
                 <div class="layui-input-block">
                     <input type="text" th:value="${company.name}"  class="layui-input realName" disabled>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">联系人</label>
+                <label class="layui-form-label" style="width: 120px;">联系人</label>
                 <div class="layui-input-block">
                     <input type="text" th:value="${company.contacts}"  class="layui-input Contacts">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">手机号</label>
+                <label class="layui-form-label" style="width: 120px;">手机号</label>
                 <div class="layui-input-block">
                     <input type="text" th:value="${company.phone}" class="layui-input phone">
                 </div>

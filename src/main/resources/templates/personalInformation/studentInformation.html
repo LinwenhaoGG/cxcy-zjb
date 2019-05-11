@@ -14,15 +14,16 @@
 </head>
 
 <body>
-<div class="infoContainer">
+<div th:replace="top::html" ></div>
+<div class="infoContainer" style="margin-top:90px;>
     <h3 class="title">个人资料</h3>
     <div class="stu-info">
         <div class="avatorWrapper">
             <img src="./image/avator.png" th:src="${student.avatar}"  class="avator">
-            <p class="stuName" th:text="${student.name}">学生姓名</p>
+            <p class="stuName" th:text="${student.name}" style="padding-left:20px;">学生姓名</p>
         </div>
         <div class="right">
-            <p class="uNo">学号：<span class="No" th:text="${student.number}">20151022415</span></p>
+            <p class="uNo" style="padding-left:20px;">学号：<span class="No" th:text="${student.number}">20151022415</span></p>
             <div class="view">
                 <p class="view-item">
                     <span class="item-title">总积分</span>
@@ -47,13 +48,13 @@
         <form action="" method="" class="layui-form">
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">个人简介</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" th:text="${student.credential}" class="layui-textarea desc"></textarea>
+                <label class="layui-form-label" style="width: 100px;">个人简介</label>
+                <div class="layui-input-block" >
+                    <textarea placeholder="请输入内容" th:text="${student.credential}" class="layui-textarea desc" style="margin-left: -10px;"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">性别</label>
+                <label class="layui-form-label" style="width: 100px;">性别</label>
                 <div class="layui-input-inline">
                     <select name="sex" lay-verify="required" class="sex">
                         <option value="1" th:selected="${student.sex} eq 1">男</option>
@@ -62,7 +63,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">民族</label>
+                <label class="layui-form-label" style="width: 100px;">民族</label>
                 <div class="layui-input-inline">
                     <select name="nation" lay-verify="required" class="nation" id="nation">
                     </select>
@@ -70,8 +71,8 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">邮箱</label>
-                    <div class="layui-input-block">
+                    <label class="layui-form-label" style="width: 100px;">邮箱</label>
+                    <div class="layui-input-inline">
                         <input type="email" name="date" th:value="${student.email}"  autocomplete="off" class="layui-input email">
                     </div>
                 </div>
@@ -79,8 +80,8 @@
 
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">班级</label>
-                    <div class="layui-input-block">
+                    <label class="layui-form-label" style="width: 100px;">班级</label>
+                    <div class="layui-input-inline">
                         <input type="text" name="classes"  th:value="${student.classes}" autocomplete="off" class="layui-input classes">
                     </div>
                 </div>
@@ -88,15 +89,15 @@
 
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">年级</label>
-                    <div class="layui-input-block">
+                    <label class="layui-form-label" style="width: 100px;">年级</label>
+                    <div class="layui-input-inline">
                         <input type="text" name="grade"  th:value="${student.edu}" autocomplete="off" class="layui-input grade">
                     </div>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">政治面貌</label>
+                <label class="layui-form-label" style="width: 100px;">政治面貌</label>
                 <div class="layui-input-inline">
                     <select name="role" lay-verify="required" class="role">
                         <option value="共青团员" th:selected="${student.politicsstatus} eq '共青团员'">共青团员</option>
