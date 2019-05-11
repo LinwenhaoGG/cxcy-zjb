@@ -61,12 +61,12 @@
                     <input type="text" class="layui-input phone">
                 </div>
             </div>
-            <div class="layui-form-item">
+           <!-- <div class="layui-form-item">
                 <label class="layui-form-label">密码</label>
                 <div class="layui-input-block">
                     <input type="password" class="layui-input password" disabled>
                 </div>
-            </div>
+            </div>-->
             <div class="editBtn">
                 <button type="button" class="layui-btn editBtn">修改资料</button>
             </div>
@@ -103,8 +103,6 @@
             }else if (phone == "") {
                 alert("手机号不能为空")
                 return
-            }else if ($(".password").val() == "") {
-                alert("密码不能为空")
             }
             else {
                 $.ajax({
@@ -112,7 +110,7 @@
                     method: "post",
                     data: params,
                     success: function(){
-                        editpassword()
+
                     }
                 })
             }
@@ -146,11 +144,11 @@
             }
         })
         //获取密码
-        fetchPassword()
+      /*  fetchPassword()*/
     }
 
     //获取密码
-    function fetchPassword() {
+  /*  function fetchPassword() {
         $.ajax({
             url: '',
             method: "get",
@@ -158,10 +156,10 @@
                 $(".password").val(res.password)
             }
         })
-    }
+    }*/
 
     //修改密码
-    function editpassword() {
+  /*  function editpassword() {
         $.ajax({
             url: '',
             method: "post",
@@ -170,7 +168,7 @@
                 alert("修改成功")
             }
         })
-    }
+    }*/
 
 </script>
 </body>
