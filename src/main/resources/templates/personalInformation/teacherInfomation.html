@@ -77,12 +77,12 @@
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">密码</label>
-                <div class="layui-input-block">
-                    <input type="password" class="layui-input password" disabled>
-                </div>
-            </div>
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">密码</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<input type="password" class="layui-input password" disabled>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="editBtn">
                 <button type="button" class="layui-btn editBtn">修改资料</button>
             </div>
@@ -196,8 +196,6 @@
                 return
             }else if (position == "") {
                 alert("职位不能为空")
-            }else if ($(".password").val() == "") {
-                alert("密码不能为空")
             }
             else {
                 $.ajax({
@@ -214,8 +212,8 @@
             }
         })
 
-        //获取密码
-        fetchPassword()
+        // //获取密码
+        // fetchPassword()
 
     });
 
@@ -251,7 +249,7 @@
     }
 
     //获取密码
-    function fetchPassword() {
+  /*  function fetchPassword() {
         $.ajax({
             url: '',
             method: "get",
@@ -260,9 +258,9 @@
             }
         })
     }
-
+*/
     //修改密码
-    function editpassword() {
+  /*  function editpassword() {
         $.ajax({
             url: '',
             method: "post",
@@ -271,7 +269,7 @@
                 alert("修改成功")
             }
         })
-    }
+    }*/
 
 </script>
 </body>
