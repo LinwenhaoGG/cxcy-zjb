@@ -34,6 +34,13 @@ public interface StudentService {
     public Student saveStudent(Student student);
 
     /**
+     * 获取学生信息
+     * @param id
+     * @return
+     */
+    public Student getStudent(Long id);
+
+    /**
      * 通过用户状态获取学生信息
      * @param style
      * @param state

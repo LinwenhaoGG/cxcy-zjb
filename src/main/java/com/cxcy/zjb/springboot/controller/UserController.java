@@ -433,6 +433,28 @@ public class UserController {
         return "personalInformation/studentInformation";
     }
 
+    /**
+     * 学生修改基本信息
+     * @return
+     */
+    @PostMapping("/studentUpdateMsg")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")  // 指定角色权限才能操作方法
+    @ResponseBody
+    public Result studentUpdateMsgPost(UserStudentVo student) {
+        User user = UserUtils.getUser();
+        user.setSex(student.getSex());
+        user.setEmail(student.getEmail());
+        Student oldStudent = studentService.getStudent(user.getStudent());
+        oldStudent.setClasses(student.getClasses());
+        oldStudent.setEdu(student.getEdu());
+        oldStudent.setNation(student.getNation());
+        oldStudent.setPoliticsstatus(student.getPoliticsstatus());
+        oldStudent.setCredential(student.getCredential());
+        userService.saveUserInfo(user);
+        studentService.saveStudent(oldStudent);
+        return ResultUtil.success();
+    }
+
         //------------------------------------------------
       //            管理员端接口
     //------------------------------------------

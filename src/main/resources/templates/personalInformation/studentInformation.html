@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" data-th-fragment="header">
 
 <head>
     <meta charset="UTF-8">
@@ -17,27 +18,27 @@
     <h3 class="title">个人资料</h3>
     <div class="stu-info">
         <div class="avatorWrapper">
-            <img src="./image/avator.png" class="avator">
-            <p class="stuName">学生姓名</p>
+            <img src="./image/avator.png" th:src="${student.avatar}"  class="avator">
+            <p class="stuName" th:text="${student.name}">学生姓名</p>
         </div>
         <div class="right">
-            <p class="uNo">学号：<span class="No">20151022415</span></p>
+            <p class="uNo">学号：<span class="No" th:text="${student.number}">20151022415</span></p>
             <div class="view">
                 <p class="view-item">
                     <span class="item-title">总积分</span>
-                    <span class="item-number sum">120</span>
+                    <span class="item-number sum" th:text="${growth.gIntegration}">120</span>
                 </p>
                 <p class="view-item">
                     <span class="item-title">浏览量</span>
-                    <span class="item-number read">120</span>
+                    <span class="item-number read" th:text="${growth.gReadSize}">120</span>
                 </p>
                 <p class="view-item">
                     <span class="item-title">获赞量</span>
-                    <span class="item-number parise">120</span>
+                    <span class="item-number parise" th:text="${growth.gVote}">120</span>
                 </p>
                 <p class="view-item">
                     <span class="item-title">评论量</span>
-                    <span class="item-number comment">120</span>
+                    <span class="item-number comment" th:text="${growth.gComment}">120</span>
                 </p>
             </div>
         </div>
@@ -48,15 +49,15 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">个人简介</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea desc"></textarea>
+                    <textarea placeholder="请输入内容" th:text="${student.credential}" class="layui-textarea desc"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">性别</label>
                 <div class="layui-input-inline">
                     <select name="sex" lay-verify="required" class="sex">
-                        <option value="0">男</option>
-                        <option value="1">女</option>
+                        <option value="1" th:selected="${student.sex} eq 1">男</option>
+                        <option value="0" th:selected="${student.sex} eq 0">女</option>
                     </select>
                 </div>
             </div>
@@ -71,7 +72,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">邮箱</label>
                     <div class="layui-input-block">
-                        <input type="email" name="date"  autocomplete="off" class="layui-input email">
+                        <input type="email" name="date" th:value="${student.email}"  autocomplete="off" class="layui-input email">
                     </div>
                 </div>
             </div>
@@ -80,7 +81,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">班级</label>
                     <div class="layui-input-block">
-                        <input type="text" name="date"  autocomplete="off" class="layui-input classes">
+                        <input type="text" name="classes"  th:value="${student.classes}" autocomplete="off" class="layui-input classes">
                     </div>
                 </div>
             </div>
@@ -89,7 +90,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">年级</label>
                     <div class="layui-input-block">
-                        <input type="text" name="date"  autocomplete="off" class="layui-input grade">
+                        <input type="text" name="grade"  th:value="${student.edu}" autocomplete="off" class="layui-input grade">
                     </div>
                 </div>
             </div>
@@ -98,16 +99,10 @@
                 <label class="layui-form-label">政治面貌</label>
                 <div class="layui-input-inline">
                     <select name="role" lay-verify="required" class="role">
-                        <option value="1">共青团员</option>
-                        <option value="2">党员</option>
-                        <option value="3">群众</option>
+                        <option value="共青团员" th:selected="${student.politicsstatus} eq '共青团员'">共青团员</option>
+                        <option value="党员" th:selected="${student.politicsstatus} eq '党员'">党员</option>
+                        <option value="群众" th:selected="${student.politicsstatus} eq '群众'">群众</option>
                     </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">密码</label>
-                <div class="layui-input-block">
-                    <input type="password" class="layui-input password" disabled>
                 </div>
             </div>
             <div class="editBtn">
@@ -198,7 +193,7 @@
             })(i)
         }
         //获取学生数据
-        fetchData();
+        // fetchData();
 
         //提交修改数据
         $(".editBtn").click(function() {
@@ -214,11 +209,10 @@
                 sex: $(".sex").val(),
                 email:  $(".email").val(),
                 classes: $(".classes").val(),
-                grade: $(".grade").val(),
+                edu: $(".grade").val(),
                 nation:  $(".nation").val(),
-                role:  $(".role").val(),
-                desc: $(".desc").val(),
-                studentId: 0
+                politicsstatus:  $(".role").val(),
+                credential: $(".desc").val(),
             }
             if(desc == "") {
                 alert("个人简介不能为空")
@@ -226,18 +220,16 @@
             }else if(email=="") {
                 alert("邮箱不能为空")
                 return
-            }else if(calsses=="") {
+            }else if(classes=="") {
                 alert("班级不能为空")
                 return
             }else if (grade=="") {
                 alert("年级不能为空")
                 return
-            }else if ($(".password").val() == "") {
-                alert("密码不能为空")
             }
             else {
                 $.ajax({
-                    url:'提交学生数据',
+                    url:'/user/studentUpdateMsg',
                     method: 'post',
                     data: params,
                     success: function() {
@@ -252,49 +244,49 @@
 
     });
 
-    //获取数据
-    function fetchData() {
-        var studentId = 0
-        $.ajax({
-            url:'获取学生数据',
-            method: 'get',
-            data: studentId,
-            success: function(res) {
-                //获取个人简介
-                $(".desc").val(res.desc)
-                //获取姓名
-                $(".stuName").text(res.stuName);
-                //获取性别,男“0”，女“1”
-                $(".sex").val(res.sex)
-                //获取邮箱
-                $(".email").val(res.email)
-                //获取班级
-                $(".classes").val(res.calsses)
-                //获取年级
-                $(".grade").val(res.grade)
-                //获取民族
-                $(".nation").val(res.nation)
-                //获取政治身份
-                //1-团员 2-党员 3-群众
-                $(".role").val(res.role)
-                //获取学号
-                $(".No").text(res.No)
-                //获取作品总量
-                $(".sum").text(res.sum)
-                //获取阅读量
-                $(".read").text(res.read)
-                //获取赞
-                $(".parise").text(res.parise)
-                //获取评论
-                $(".comment").text(res.comment)
-            }
-        })
-        //获取密码
-        fetchPassword()
-    }
+    // //获取数据
+    // function fetchData() {
+    //     var studentId = 0
+    //     $.ajax({
+    //         url:'获取学生数据',
+    //         method: 'get',
+    //         data: studentId,
+    //         success: function(res) {
+    //             //获取个人简介
+    //             $(".desc").val(res.desc)
+    //             //获取姓名
+    //             $(".stuName").text(res.stuName);
+    //             //获取性别,男“0”，女“1”
+    //             $(".sex").val(res.sex)
+    //             //获取邮箱
+    //             $(".email").val(res.email)
+    //             //获取班级
+    //             $(".classes").val(res.calsses)
+    //             //获取年级
+    //             $(".grade").val(res.grade)
+    //             //获取民族
+    //             $(".nation").val(res.nation)
+    //             //获取政治身份
+    //             //1-团员 2-党员 3-群众
+    //             $(".role").val(res.role)
+    //             //获取学号
+    //             $(".No").text(res.No)
+    //             //获取作品总量
+    //             $(".sum").text(res.sum)
+    //             //获取阅读量
+    //             $(".read").text(res.read)
+    //             //获取赞
+    //             $(".parise").text(res.parise)
+    //             //获取评论
+    //             $(".comment").text(res.comment)
+    //         }
+    //     })
+    //     //获取密码
+    //
+    // }
 
     //获取密码
-    function fetchPassword() {
+   /* function fetchPassword() {
         $.ajax({
             url: '',
             method: "get",
@@ -302,19 +294,19 @@
                 $(".password").val(res.password)
             }
         })
-    }
+    }*/
 
-    //修改密码
-    function editpassword() {
-        $.ajax({
-            url: '',
-            method: "post",
-            data: $(".password").val(),
-            success: function(){
-                alert("修改成功")
-            }
-        })
-    }
+    // //修改密码
+    // function editpassword() {
+    //     $.ajax({
+    //         url: '',
+    //         method: "post",
+    //         data: $(".password").val(),
+    //         success: function(){
+    //             alert("修改成功")
+    //         }
+    //     })
+    // }
 
 </script>
 </body>
